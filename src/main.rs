@@ -52,11 +52,11 @@ fn from_variable_map(config: &Config, inst: &FromVariableMap) -> Vec<CSSRule> {
         .get(&inst.map_name)
         .expect(&err_msg_for_missing_map);
 
-    for (key, val) in variable_map {
+    for (key, _val) in variable_map {
         let inject_variables = |string: &String| {
             string
                 .replace("{{ VAR_KEY }}", key)
-                .replace("{{ VAR_VAL }}", val)
+                .replace("{{ VAR_VAL }}", &format!("var(--{})", key))
         };
 
         rules.push(CSSRule {
