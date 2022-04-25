@@ -38,39 +38,46 @@ struct CSSRule {
     declarations: Vec<(String, String)>,
 }
 
+/// Derive `CSSRule`s using `FromVariableMap`
+fn from_variable_map(config: &Config, inst: &FromVariableMap) -> Vec<CSSRule> {
+    let mut rules = vec![];
+
+    let err_msg_for_missing_map = format!(
+        "{}: There is no variable map named {}",
+        inst.description,
+        inst.map_name
+    );
+
+    let variable_map = config.variable_maps
+        .get(&inst.map_name)
+        .expect(&err_msg_for_missing_map);
+
+    for (key, val) in variable_map {
+        let inject_variables = |string: &String| {
+            string
+                .replace("{{ VAR_KEY }}", key)
+                .replace("{{ VAR_VAL }}", val)
+        };
+
+        rules.push(CSSRule {
+            selector: inject_variables(&inst.css_selector),
+            declarations: vec![(
+                inject_variables(&inst.css_property),
+                inject_variables(&inst.css_value),
+            )],
+        });
+    }
+
+    rules
+}
 
 fn generate_rules(config: Config) -> Vec<CSSRule> {
     let mut rules = Vec::new();
 
-    for instruction in config.instructions {
+    for instruction in &config.instructions {
         match instruction {
             Instruction::FromVariableMap(inst) => {
-
-                let err_msg_for_missing_map = format!(
-                    "{}: There is no variable map named {}",
-                    inst.description,
-                    inst.map_name
-                );
-
-                let variable_map = config.variable_maps
-                    .get(&inst.map_name)
-                    .expect(&err_msg_for_missing_map);
-
-                for (key, val) in variable_map {
-                    let inject_variables = |string: &String| {
-                        string
-                            .replace("{{ VAR_KEY }}", key)
-                            .replace("{{ VAR_VAL }}", val)
-                    };
-
-                    rules.push(CSSRule {
-                        selector: inject_variables(&inst.css_selector),
-                        declarations: vec![(
-                            inject_variables(&inst.css_property),
-                            inject_variables(&inst.css_value),
-                        )],
-                    });
-                }
+                rules.extend(from_variable_map(&config, &inst))
             }
         }
     }
