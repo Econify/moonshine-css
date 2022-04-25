@@ -1,7 +1,7 @@
 
 use serde::Deserialize;
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::BufReader;
 
@@ -9,9 +9,9 @@ use std::io::BufReader;
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 struct Config {
-    color: HashMap<String, String>,
-    font: HashMap<String, String>,
-    gradient: HashMap<String, String>,
+    color: BTreeMap<String, String>,
+    font: BTreeMap<String, String>,
+    gradient: BTreeMap<String, String>,
     font_size: Vec<f32>,
     line_height: Vec<f32>,
     opacity: Vec<u32>,
