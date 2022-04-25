@@ -55,22 +55,22 @@ fn generate_rules(config: Config) -> Vec<Rule> {
                 let variable_map = config.variable_maps
                     .get(&inst.map_name)
                     .expect(&err_msg_for_missing_map);
+
                 
                 for (key, val) in variable_map {
                     let mut rule = Rule::default();
 
-                    rule.selector = inst.css_selector
-                        .replace("{{ VAR_KEY }}", key)
-                        .replace("{{ VAR_VAL }}", val);
-                    
+                    let inject_variables = |string: &String| {
+                        string
+                            .replace("{{ VAR_KEY }}", key)
+                            .replace("{{ VAR_VAL }}", val)
+                    };
+
+                    rule.selector = inject_variables(&inst.css_selector);
 
                     rule.declarations = vec![(
-                        inst.css_property
-                            .replace("{{ VAR_KEY }}", key)
-                            .replace("{{ VAR_VAL }}", val),
-                        inst.css_value
-                            .replace("{{ VAR_KEY }}", key)
-                            .replace("{{ VAR_VAL }}", val),
+                        inject_variables(&inst.css_property),
+                        inject_variables(&inst.css_value),
                     )];
 
                     rules.push(rule);
