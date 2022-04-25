@@ -24,10 +24,10 @@ struct Config {
 #[derive(Default)]
 struct Rule {
     selector: String,
-    declarations: HashMap<String, String>,
+    declarations: Vec<(String, String)>,
 }
 
-fn create_rules_from_config(config: Config) -> Vec<Rule> {
+fn generate_rules(config: Config) -> Vec<Rule> {
     let mut rules = Vec::new();
 
     // Text Color
@@ -35,8 +35,8 @@ fn create_rules_from_config(config: Config) -> Vec<Rule> {
 
     for (name, value)  in config.color {
         let mut rule = Rule::default();
-        rule.selector = name;
-        rule.declarations.insert("color".to_string(), value);
+        rule.selector = format!(".{}", name);
+        rule.declarations.push(("color".to_string(), value));
         rules.push(rule);
     }
 
@@ -48,6 +48,22 @@ fn create_rules_from_config(config: Config) -> Vec<Rule> {
     rules
 }
 
+fn stringify_rules(rules: Vec<Rule>) -> String {
+    let mut css = String::new();
+
+    for rule in rules {
+        let inner = rule.declarations.iter()
+            .map(|(k, v)| format!("{}:{};", k, v))
+            .collect::<Vec<String>>()
+            .join("");
+
+        let line = format!("{}{{{}}}\n", rule.selector, inner);
+        css.push_str(&line);
+    }
+
+    css
+}
+
 fn main() {
     let path = std::env::args().nth(1)
         .unwrap_or("config.json".to_string());
@@ -55,4 +71,7 @@ fn main() {
     let file = File::open(path).unwrap();
     let reader = BufReader::new(file);
     let config: Config = serde_json::from_reader(reader).unwrap();
+    let rules = generate_rules(config);
+    let css = stringify_rules(rules);
+    println!("{}", css);
 }
