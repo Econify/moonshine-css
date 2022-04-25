@@ -71,8 +71,26 @@ fn from_variable_map(config: &Config, inst: &FromVariableMap) -> Vec<CSSRule> {
     rules
 }
 
+fn global_variable_rule(config: &Config) -> CSSRule {
+    let mut rule = CSSRule::default();
+    rule.selector = ":root".to_string();
+
+    for (_map_name, map) in &config.variable_maps {
+        for (key, val) in map {
+            rule.declarations.push((
+                format!("--{}", key),
+                format!("{}", val),
+            ))
+        }
+    }
+
+    rule
+}
+
 fn generate_rules(config: Config) -> Vec<CSSRule> {
     let mut rules = Vec::new();
+
+    rules.push(global_variable_rule(&config));
 
     for instruction in &config.instructions {
         match instruction {
