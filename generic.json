@@ -1,0 +1,46 @@
+{
+    "variables": {
+        "s0.5": "0.125rem",
+        "s1": "0.25rem",
+        "s1.5": "0.375rem",
+        "s2": "0.5rem",
+        "s2.5": "0.625rem",
+        "s3": "0.75rem",
+        "s3.5": "0.875rem",
+        "s4": "1rem",
+        "s5": "1.25rem",
+        "s6": "1.5rem",
+        "s7": "1.75rem",
+        "s8": "2rem",
+        "s9": "2.25rem",
+        "s10": "2.5rem",
+        "s11": "2.75rem",
+        "s12": "3rem",
+        "s14": "3.5rem",
+        "s16": "4rem",
+        "s20": "5rem",
+        "s24": "6rem",
+        "s28": "7rem",
+        "s32": "8rem",
+        "s36": "9rem",
+        "s40": "10rem",
+        "s52": "13rem",
+        "s56": "14rem",
+        "s60": "15rem",
+        "s64": "16rem",
+        "s72": "18rem",
+        "s80": "20rem",
+        "s96": "24rem"
+    },
+    "classes": [
+      {
+        "property": "color",
+        "prefix": "text-",
+        "values": {
+          "gray0": "#f8f9fa",
+          "gray1": "#f1f3f5",
+          "gray2": "#e9ecef"
+        }
+      }
+    ]
+  }
