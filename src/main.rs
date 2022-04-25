@@ -5,20 +5,31 @@ use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::BufReader;
 
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+#[serde(tag = "method")]
+pub enum Instruction {
+    FromVariableMap(FromVariableMap),
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct FromVariableMap {
+    description: String,
+    map_name: String,
+    css_selector: String,
+    css_property: String,
+    css_value: String,
+}
+
+
+pub type VariableMap = BTreeMap<String, String>;
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 struct Config {
-    color: BTreeMap<String, String>,
-    font: BTreeMap<String, String>,
-    gradient: BTreeMap<String, String>,
-    font_size: Vec<f32>,
-    line_height: Vec<f32>,
-    opacity: Vec<u32>,
-    border_radius: Vec<u32>,
-    paragraph_spacing: Vec<u32>,
-    letter_spacing: Vec<u32>,
-    spacing: Vec<u32>,
+    variable_maps: BTreeMap<String, VariableMap>,
+    instructions: Vec<Instruction>,
 }
 
 #[derive(Default)]
@@ -27,23 +38,46 @@ struct Rule {
     declarations: Vec<(String, String)>,
 }
 
+
 fn generate_rules(config: Config) -> Vec<Rule> {
     let mut rules = Vec::new();
 
-    // Text Color
-    const TEXT_COLOR_PREFIX: &'static str = "";
+    for instruction in config.instructions {
+        match instruction {
+            Instruction::FromVariableMap(inst) => {
 
-    for (name, value)  in config.color {
-        let mut rule = Rule::default();
-        rule.selector = format!(".{}", name);
-        rule.declarations.push(("color".to_string(), value));
-        rules.push(rule);
+                let err_msg_for_missing_map = format!(
+                    "{}: There is no variable map named {}",
+                    inst.description,
+                    inst.map_name
+                );
+
+                let variable_map = config.variable_maps
+                    .get(&inst.map_name)
+                    .expect(&err_msg_for_missing_map);
+                
+                for (key, val) in variable_map {
+                    let mut rule = Rule::default();
+
+                    rule.selector = inst.css_selector
+                        .replace("{{ VAR_KEY }}", key)
+                        .replace("{{ VAR_VAL }}", val);
+                    
+
+                    rule.declarations = vec![(
+                        inst.css_property
+                            .replace("{{ VAR_KEY }}", key)
+                            .replace("{{ VAR_VAL }}", val),
+                        inst.css_value
+                            .replace("{{ VAR_KEY }}", key)
+                            .replace("{{ VAR_VAL }}", val),
+                    )];
+
+                    rules.push(rule);
+                }
+            }
+        }
     }
-
-    // Background Color
-    // Display
-    // Flex Related
-    // Grid Related
 
     rules
 }
