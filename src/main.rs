@@ -27,8 +27,8 @@ struct Rule {
     declarations: HashMap<String, String>,
 }
 
-fn create_css_from_config(config: Config) {
-    let mut rules: HashMap<String, String> = HashMap::new();
+fn create_rules_from_config(config: Config) -> Vec<Rule> {
+    let mut rules = Vec::new();
 
     // Text Color
     const TEXT_COLOR_PREFIX: &'static str = "";
@@ -37,12 +37,15 @@ fn create_css_from_config(config: Config) {
         let mut rule = Rule::default();
         rule.selector = name;
         rule.declarations.insert("color".to_string(), value);
+        rules.push(rule);
     }
 
     // Background Color
     // Display
     // Flex Related
     // Grid Related
+
+    rules
 }
 
 fn main() {
