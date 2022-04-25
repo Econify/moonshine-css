@@ -168,10 +168,18 @@
     },
     "instructions": [
         {
-            "description": "Generate Text Colors",
+            "description": "Text Colors",
             "method": "fromVariableMap",
             "mapName": "colors",
-            "cssSelector": ".text-{{ VAR_KEY }}",
+            "cssSelector": ".{{ VAR_KEY }}",
+            "cssProperty": "color",
+            "cssValue": "{{ VAR_VAL }}"
+        },
+        {
+            "description": "Background Colors",
+            "method": "fromVariableMap",
+            "mapName": "colors",
+            "cssSelector": ".bg-{{ VAR_KEY }}",
             "cssProperty": "color",
             "cssValue": "{{ VAR_VAL }}"
         }

@@ -33,13 +33,13 @@ struct Config {
 }
 
 #[derive(Default)]
-struct Rule {
+struct CSSRule {
     selector: String,
     declarations: Vec<(String, String)>,
 }
 
 
-fn generate_rules(config: Config) -> Vec<Rule> {
+fn generate_rules(config: Config) -> Vec<CSSRule> {
     let mut rules = Vec::new();
 
     for instruction in config.instructions {
@@ -56,24 +56,20 @@ fn generate_rules(config: Config) -> Vec<Rule> {
                     .get(&inst.map_name)
                     .expect(&err_msg_for_missing_map);
 
-                
                 for (key, val) in variable_map {
-                    let mut rule = Rule::default();
-
                     let inject_variables = |string: &String| {
                         string
                             .replace("{{ VAR_KEY }}", key)
                             .replace("{{ VAR_VAL }}", val)
                     };
 
-                    rule.selector = inject_variables(&inst.css_selector);
-
-                    rule.declarations = vec![(
-                        inject_variables(&inst.css_property),
-                        inject_variables(&inst.css_value),
-                    )];
-
-                    rules.push(rule);
+                    rules.push(CSSRule {
+                        selector: inject_variables(&inst.css_selector),
+                        declarations: vec![(
+                            inject_variables(&inst.css_property),
+                            inject_variables(&inst.css_value),
+                        )],
+                    });
                 }
             }
         }
@@ -82,7 +78,7 @@ fn generate_rules(config: Config) -> Vec<Rule> {
     rules
 }
 
-fn stringify_rules(rules: Vec<Rule>) -> String {
+fn stringify_rules(rules: Vec<CSSRule>) -> String {
     let mut css = String::new();
 
     for rule in rules {
