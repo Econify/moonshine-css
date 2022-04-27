@@ -13,6 +13,7 @@ pub enum Instruction {
     FromVariableMap(FromVariableMap),
     SingleRuleFromVariableGroup(FromVariableMap),
     ManyRulesFromVariableMatrix(ManyRulesFromVariableMatrix),
+    // ManyRulesFromVariableMap(ManyRulesFromVariableMatrix),
 }
 
 
@@ -20,6 +21,15 @@ pub enum Instruction {
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct FromVariableMap {
+    description: String,
+    map_name: String,
+    selector: String,
+    declarations: BTreeMap<String, String>
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct ManyRulesFromVariableMap {
     description: String,
     map_name: String,
     selector: String,
@@ -50,7 +60,7 @@ struct Config {
 #[derive(Default)]
 struct CSSRule {
     selector: String,
-    declarations: Vec<(String, String)>,
+    declarations: BTreeMap<String, String>,
 }
 
 fn err_msg_for_missing_map(description: &str, map_name: &str) -> String {
@@ -68,7 +78,7 @@ fn single_rule_from_variable_map(config: &Config, inst: &FromVariableMap) -> Vec
         .expect(&err_msg_for_missing_map(&inst.description, &inst.map_name));
 
     let selector = inst.selector.clone();
-    let mut declarations = vec![];
+    let mut declarations = BTreeMap::new();
 
     for (var_key, var_val) in variable_map {
         let inject_variables = |s: &String| s
@@ -76,10 +86,10 @@ fn single_rule_from_variable_map(config: &Config, inst: &FromVariableMap) -> Vec
             .replace("{{ VAL }}", var_val);
 
         for (property, value) in &inst.declarations {
-                declarations.push((
-                    inject_variables(&property),
-                    inject_variables(&value),
-                ))
+            declarations.insert(
+                inject_variables(&property),
+                inject_variables(&value),
+            );
         }
     }
 
@@ -107,12 +117,13 @@ fn many_rules_from_variable_matrix(config: &Config, inst: &ManyRulesFromVariable
                 .replace("{{ KEY_B }}", key_b)
                 .replace("{{ VAL_A }}", val_a)
                 .replace("{{ VAL_B }}", val_b);
+            
             rules.push(CSSRule {
                 selector: inject_variables(&inst.css_selector),
-                declarations: vec![(
+                declarations: BTreeMap::from([(
                     inject_variables(&inst.css_property),
-                    inject_variables(&inst.css_value),
-                )],
+                    inject_variables(&inst.css_value)
+                )]),
             });
         }
     }
@@ -157,6 +168,9 @@ fn generate_rules(config: Config) -> Vec<CSSRule> {
             Instruction::ManyRulesFromVariableMatrix(inst) => {
                 rules.extend(many_rules_from_variable_matrix(&config, &inst))
             }
+            // Instruction::ManyRulesFromVariableMap(inst) => {
+            //     rules.extend(many_rules_from_variable_matrix(&config, &inst))
+            // }
         }
     }
 
