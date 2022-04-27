@@ -166,7 +166,7 @@
         {
             "description": "Define Color Variables",
             "method": "singleRuleFromVariableGroup",
-            "mapName": "colors",
+            "variableGroup": "colors",
             "selector": ":root",
             "declarations": {
                 "--{{ KEY }}": "{{ VAL }}"
@@ -175,7 +175,7 @@
         {
             "description": "Define Spacing Variables",
             "method": "singleRuleFromVariableGroup",
-            "mapName": "spacing",
+            "variableGroup": "spacing",
             "selector": ":root",
             "declarations": {
                 "--s{{ KEY }}": "{{ VAL }}"
@@ -184,7 +184,7 @@
         {
             "description": "Text Colors",
             "method": "manyRulesFromVariableGroup",
-            "mapName": "colors",
+            "variableGroup": "colors",
             "rules": [
                 {
                     "selector": ".text-{{ KEY }}",
@@ -197,7 +197,7 @@
         {
             "description": "Background Colors",
             "method": "manyRulesFromVariableGroup",
-            "mapName": "colors",
+            "variableGroup": "colors",
             "rules": [
                 {
                     "selector": ".bg-{{ KEY }}",
@@ -210,7 +210,7 @@
         {
             "description": "Margin",
             "method": "manyRulesFromVariableGroup",
-            "mapName": "spacing",
+            "variableGroup": "spacing",
             "rules": [
                 {
                     "selector": ".m-{{ KEY }}",
@@ -261,7 +261,7 @@
         {
             "description": "Padding",
             "method": "manyRulesFromVariableGroup",
-            "mapName": "spacing",
+            "variableGroup": "spacing",
             "rules": [
                 {
                     "selector": ".p-{{ KEY }}",

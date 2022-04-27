@@ -20,7 +20,7 @@ pub enum Instruction {
 #[serde(rename_all = "camelCase")]
 pub struct FromVariableGroup {
     description: String,
-    map_name: String,
+    variable_group: String,
     selector: String,
     declarations: BTreeMap<String, String>
 }
@@ -29,7 +29,7 @@ pub struct FromVariableGroup {
 #[serde(rename_all = "camelCase")]
 pub struct ManyRulesFromVariableGroup {
     description: String,
-    map_name: String,
+    variable_group: String,
     rules: Vec<CSSRule>,
 }
 
@@ -49,19 +49,19 @@ struct CSSRule {
     declarations: BTreeMap<String, String>,
 }
 
-fn err_msg_for_missing_map(description: &str, map_name: &str) -> String {
+fn err_msg_for_missing_map(description: &str, variable_group: &str) -> String {
     format!(
         "{}: There is no variable map named {}",
         description,
-        map_name
+        variable_group
     )
 }
 
 /// Derive a single `CSSRule` using `FromVariableGroup`
 fn many_rules_from_variable_group(config: &Config, inst: &ManyRulesFromVariableGroup) -> Vec<CSSRule> {
     let variable_group = config.variable_groups
-        .get(&inst.map_name)
-        .expect(&err_msg_for_missing_map(&inst.description, &inst.map_name));
+        .get(&inst.variable_group)
+        .expect(&err_msg_for_missing_map(&inst.description, &inst.variable_group));
 
     let mut rules = vec![];
 
@@ -90,8 +90,8 @@ fn many_rules_from_variable_group(config: &Config, inst: &ManyRulesFromVariableG
 /// Derive a single `CSSRule` using `FromVariableGroup`
 fn single_rule_from_variable_group(config: &Config, inst: &FromVariableGroup) -> Vec<CSSRule> {
     let variable_group = config.variable_groups
-        .get(&inst.map_name)
-        .expect(&err_msg_for_missing_map(&inst.description, &inst.map_name));
+        .get(&inst.variable_group)
+        .expect(&err_msg_for_missing_map(&inst.description, &inst.variable_group));
 
     let selector = inst.selector.clone();
     let mut declarations = BTreeMap::new();
