@@ -10,17 +10,15 @@ use std::fs;
 #[serde(rename_all = "camelCase")]
 #[serde(tag = "method")]
 pub enum Instruction {
-    FromVariableMap(FromVariableMap),
-    SingleRuleFromVariableGroup(FromVariableMap),
-    ManyRulesFromVariableMatrix(ManyRulesFromVariableMatrix),
-    // ManyRulesFromVariableMap(ManyRulesFromVariableMatrix),
+    SingleRuleFromVariableGroup(FromVariableGroup),
+    ManyRulesFromVariableGroup(ManyRulesFromVariableGroup),
 }
 
 
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct FromVariableMap {
+pub struct FromVariableGroup {
     description: String,
     map_name: String,
     selector: String,
@@ -29,35 +27,23 @@ pub struct FromVariableMap {
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct ManyRulesFromVariableMap {
+pub struct ManyRulesFromVariableGroup {
     description: String,
     map_name: String,
-    selector: String,
-    declarations: BTreeMap<String, String>
-}
-
-#[derive(Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct ManyRulesFromVariableMatrix {
-    description: String,
-    map_name_a: String,
-    map_name_b: String,
-    css_selector: String,
-    css_property: String,
-    css_value: String,
+    rules: Vec<CSSRule>,
 }
 
 
-pub type VariableMap = BTreeMap<String, String>;
+pub type VariableGroup = BTreeMap<String, String>;
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 struct Config {
-    variable_maps: BTreeMap<String, VariableMap>,
+    variable_groups: BTreeMap<String, VariableGroup>,
     instructions: Vec<Instruction>,
 }
 
-#[derive(Default)]
+#[derive(Deserialize, Debug, Default)]
 struct CSSRule {
     selector: String,
     declarations: BTreeMap<String, String>,
@@ -71,16 +57,46 @@ fn err_msg_for_missing_map(description: &str, map_name: &str) -> String {
     )
 }
 
-/// Derive a single `CSSRule` using `FromVariableMap`
-fn single_rule_from_variable_map(config: &Config, inst: &FromVariableMap) -> Vec<CSSRule> {
-    let variable_map = config.variable_maps
+/// Derive a single `CSSRule` using `FromVariableGroup`
+fn many_rules_from_variable_group(config: &Config, inst: &ManyRulesFromVariableGroup) -> Vec<CSSRule> {
+    let variable_group = config.variable_groups
+        .get(&inst.map_name)
+        .expect(&err_msg_for_missing_map(&inst.description, &inst.map_name));
+
+    let mut rules = vec![];
+
+    for rule in &inst.rules {
+        for (var_key, var_val) in variable_group {
+            let inject_variables = |s: &String| s
+                .replace("{{ KEY }}", var_key)
+                .replace("{{ VAL }}", var_val);
+            
+            rules.push(CSSRule {
+                selector: inject_variables(&rule.selector),
+                declarations: rule.declarations.iter().map(|(property, value)| {
+                    (
+                        inject_variables(&property),
+                        inject_variables(&value),
+                    )
+                }).collect()
+            })
+        }
+
+    }
+
+    rules
+}
+
+/// Derive a single `CSSRule` using `FromVariableGroup`
+fn single_rule_from_variable_group(config: &Config, inst: &FromVariableGroup) -> Vec<CSSRule> {
+    let variable_group = config.variable_groups
         .get(&inst.map_name)
         .expect(&err_msg_for_missing_map(&inst.description, &inst.map_name));
 
     let selector = inst.selector.clone();
     let mut declarations = BTreeMap::new();
 
-    for (var_key, var_val) in variable_map {
+    for (var_key, var_val) in variable_group {
         let inject_variables = |s: &String| s
             .replace("{{ KEY }}", var_key)
             .replace("{{ VAL }}", var_val);
@@ -98,79 +114,17 @@ fn single_rule_from_variable_map(config: &Config, inst: &FromVariableMap) -> Vec
     ]
 }
 
-/// Derive many `CSSRule`s using `ManyRulesFromVariableMatrix`
-fn many_rules_from_variable_matrix(config: &Config, inst: &ManyRulesFromVariableMatrix) -> Vec<CSSRule> {
-    let mut rules = vec![];
-
-    let variable_map_a = config.variable_maps
-        .get(&inst.map_name_a)
-        .expect(&err_msg_for_missing_map(&inst.description, &inst.map_name_a));
-
-    let variable_map_b = config.variable_maps
-        .get(&inst.map_name_b)
-        .expect(&err_msg_for_missing_map(&inst.description, &inst.map_name_b));
-
-    for (key_a, val_a) in variable_map_a {
-        for (key_b, val_b) in variable_map_b {
-            let inject_variables = |s: &String| s
-                .replace("{{ KEY_A }}", key_a)
-                .replace("{{ KEY_B }}", key_b)
-                .replace("{{ VAL_A }}", val_a)
-                .replace("{{ VAL_B }}", val_b);
-            
-            rules.push(CSSRule {
-                selector: inject_variables(&inst.css_selector),
-                declarations: BTreeMap::from([(
-                    inject_variables(&inst.css_property),
-                    inject_variables(&inst.css_value)
-                )]),
-            });
-        }
-    }
-
-    rules
-}
-
-/// Derive `CSSRule`s using `FromVariableMap`
-fn from_variable_map(config: &Config, inst: &FromVariableMap) -> Vec<CSSRule> {
-    let variable_map = config.variable_maps
-        .get(&inst.map_name)
-        .expect(&err_msg_for_missing_map(&inst.description, &inst.map_name));
-    
-    variable_map.iter().map(|(var_key, var_val)| {
-        let inject_variables = |s: &String| s
-            .replace("{{ KEY }}", var_key)
-            .replace("{{ VAL }}", var_val);
-        
-        CSSRule {
-            selector: inject_variables(&inst.selector),
-            declarations: inst.declarations.iter().map(|(property, value)| {
-                (
-                    inject_variables(&property),
-                    inject_variables(&value),
-                )
-            }).collect()
-        }
-    }).collect()
-}
-
 fn generate_rules(config: Config) -> Vec<CSSRule> {
     let mut rules = Vec::new();
 
     for instruction in &config.instructions {
         match instruction {
-            Instruction::FromVariableMap(inst) => {
-                rules.extend(from_variable_map(&config, &inst))
-            }
             Instruction::SingleRuleFromVariableGroup(inst) => {
-                rules.extend(single_rule_from_variable_map(&config, &inst))
+                rules.extend(single_rule_from_variable_group(&config, &inst))
             }
-            Instruction::ManyRulesFromVariableMatrix(inst) => {
-                rules.extend(many_rules_from_variable_matrix(&config, &inst))
+            Instruction::ManyRulesFromVariableGroup(inst) => {
+                rules.extend(many_rules_from_variable_group(&config, &inst))
             }
-            // Instruction::ManyRulesFromVariableMap(inst) => {
-            //     rules.extend(many_rules_from_variable_matrix(&config, &inst))
-            // }
         }
     }
 

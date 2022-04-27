@@ -1,11 +1,5 @@
 {
-    "variableMaps": {
-        "cardinal_directions": {
-            "t": "top",
-            "b": "bottom",
-            "l": "left",
-            "r": "right"
-        },
+    "variableGroups": {
         "spacing": {
             "1": "0.25rem",
             "2": "0.5rem",
@@ -189,50 +183,131 @@
         },
         {
             "description": "Text Colors",
-            "method": "fromVariableMap",
+            "method": "manyRulesFromVariableGroup",
             "mapName": "colors",
-            "selector": ".text-{{ KEY }}",
-            "declarations": {
-                "color": "var(--{{ KEY }})"
-            }
+            "rules": [
+                {
+                    "selector": ".text-{{ KEY }}",
+                    "declarations": {
+                        "color": "var(--{{ KEY }})"
+                    }
+                }
+            ]
         },
         {
             "description": "Background Colors",
-            "method": "fromVariableMap",
+            "method": "manyRulesFromVariableGroup",
             "mapName": "colors",
-            "selector": ".bg-{{ KEY }}",
-            "declarations": {
-                "background-color": "var(--{{ KEY }})"
-            }
+            "rules": [
+                {
+                    "selector": ".bg-{{ KEY }}",
+                    "declarations": {
+                        "background-color": "var(--{{ KEY }})"
+                    }
+                }
+            ]
         },
         {
             "description": "Margin",
-            "method": "fromVariableMap",
+            "method": "manyRulesFromVariableGroup",
             "mapName": "spacing",
-            "selector": ".m-{{ KEY }}",
-            "declarations": {
-                "margin": "var(--s{{ KEY }})"
-            }
+            "rules": [
+                {
+                    "selector": ".m-{{ KEY }}",
+                    "declarations": {
+                        "margin": "var(--s{{ KEY }})"
+                    }
+                },
+                {
+                    "selector": ".mx-{{ KEY }}",
+                    "declarations": {
+                        "margin-right": "var(--s{{ KEY }})",
+                        "margin-left": "var(--s{{ KEY }})"
+                    }
+                },
+                {
+                    "selector": ".my-{{ KEY }}",
+                    "declarations": {
+                        "margin-top": "var(--s{{ KEY }})",
+                        "margin-bottom": "var(--s{{ KEY }})"
+                    }
+                },
+                {
+                    "selector": ".mt-{{ KEY }}",
+                    "declarations": {
+                        "margin-top": "var(--s{{ KEY }})"
+                    }
+                },
+                {
+                    "selector": ".mb-{{ KEY }}",
+                    "declarations": {
+                        "margin-bottom": "var(--s{{ KEY }})"
+                    }
+                },
+                {
+                    "selector": ".ml-{{ KEY }}",
+                    "declarations": {
+                        "margin-left": "var(--s{{ KEY }})"
+                    }
+                },
+                {
+                    "selector": ".mr-{{ KEY }}",
+                    "declarations": {
+                        "margin-right": "var(--s{{ KEY }})"
+                    }
+                }
+            ]
         },
         {
-            "description": "Margin Horizontal",
-            "method": "fromVariableMap",
+            "description": "Padding",
+            "method": "manyRulesFromVariableGroup",
             "mapName": "spacing",
-            "selector": ".mx-{{ KEY }}",
-            "declarations": {
-                "margin-right": "var(--s{{ KEY }})",
-                "margin-left": "var(--s{{ KEY }})"
-            }
-        },
-        {
-            "description": "Margin Vertical",
-            "method": "fromVariableMap",
-            "mapName": "spacing",
-            "selector": ".my-{{ KEY }}",
-            "declarations": {
-                "margin-top": "var(--s{{ KEY }})",
-                "margin-bottom": "var(--s{{ KEY }})"
-            }
+            "rules": [
+                {
+                    "selector": ".p-{{ KEY }}",
+                    "declarations": {
+                        "padding": "var(--s{{ KEY }})"
+                    }
+                },
+                {
+                    "selector": ".px-{{ KEY }}",
+                    "declarations": {
+                        "padding-right": "var(--s{{ KEY }})",
+                        "padding-left": "var(--s{{ KEY }})"
+                    }
+                },
+                {
+                    "selector": ".py-{{ KEY }}",
+                    "declarations": {
+                        "padding-top": "var(--s{{ KEY }})",
+                        "padding-bottom": "var(--s{{ KEY }})"
+                    }
+                },
+                {
+                    "selector": ".pt-{{ KEY }}",
+                    "declarations": {
+                        "padding-top": "var(--s{{ KEY }})"
+                    }
+                },
+                {
+                    "selector": ".pb-{{ KEY }}",
+                    "declarations": {
+                        "padding-bottom": "var(--s{{ KEY }})"
+                    }
+                },
+                {
+                    "selector": ".pl-{{ KEY }}",
+                    "declarations": {
+                        "padding-left": "var(--s{{ KEY }})"
+                    }
+                },
+                {
+                    "selector": ".pr-{{ KEY }}",
+                    "declarations": {
+                        "padding-right": "var(--s{{ KEY }})"
+                    }
+                }
+            ]
         }
     ]
 }
