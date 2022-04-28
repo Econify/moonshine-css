@@ -19,6 +19,7 @@ pub enum Instruction {
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct FromVariableGroup {
+    id: String,
     description: String,
     variable_group: String,
     selector: String,
@@ -28,6 +29,7 @@ pub struct FromVariableGroup {
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ManyRulesFromVariableGroup {
+    id: String,
     description: String,
     variable_group: String,
     rules: Vec<CSSRule>,
@@ -115,20 +117,26 @@ fn single_rule_from_variable_group(config: &Config, inst: &FromVariableGroup) ->
 }
 
 fn generate_rules(config: Config) -> Vec<CSSRule> {
-    let mut rules = Vec::new();
+    let mut rules_by_id = BTreeMap::new();
 
     for instruction in &config.instructions {
         match instruction {
             Instruction::SingleRuleFromVariableGroup(inst) => {
-                rules.extend(single_rule_from_variable_group(&config, &inst))
+                rules_by_id.insert(inst.id.clone(), single_rule_from_variable_group(&config, &inst));
             }
             Instruction::ManyRulesFromVariableGroup(inst) => {
-                rules.extend(many_rules_from_variable_group(&config, &inst))
+                rules_by_id.insert(inst.id.clone(), many_rules_from_variable_group(&config, &inst));
             }
         }
     }
 
-    rules
+    let mut all_rules = vec![];
+
+    for (_id, rules) in rules_by_id {
+        all_rules.extend(rules);
+    }
+
+    all_rules
 }
 
 fn stringify_rules(rules: Vec<CSSRule>) -> String {

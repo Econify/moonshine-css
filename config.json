@@ -164,6 +164,7 @@
     },
     "instructions": [
         {
+            "id": "define-color-variables",
             "description": "Define Color Variables",
             "method": "singleRuleFromVariableGroup",
             "variableGroup": "colors",
@@ -173,6 +174,7 @@
             }
         },
         {
+            "id": "define-spacing-variables",
             "description": "Define Spacing Variables",
             "method": "singleRuleFromVariableGroup",
             "variableGroup": "spacing",
@@ -182,6 +184,7 @@
             }
         },
         {
+            "id": "text-colors",
             "description": "Text Colors",
             "method": "manyRulesFromVariableGroup",
             "variableGroup": "colors",
@@ -195,6 +198,7 @@
             ]
         },
         {
+            "id": "background-colors",
             "description": "Background Colors",
             "method": "manyRulesFromVariableGroup",
             "variableGroup": "colors",
@@ -208,6 +212,7 @@
             ]
         },
         {
+            "id": "margin",
             "description": "Margin",
             "method": "manyRulesFromVariableGroup",
             "variableGroup": "spacing",
@@ -259,6 +264,7 @@
             ]
         },
         {
+            "id": "padding",
             "description": "Padding",
             "method": "manyRulesFromVariableGroup",
             "variableGroup": "spacing",
