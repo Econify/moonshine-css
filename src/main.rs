@@ -12,9 +12,18 @@ use std::fs;
 pub enum Instruction {
     SingleRuleFromVariableGroup(FromVariableGroup),
     ManyRulesFromVariableGroup(ManyRulesFromVariableGroup),
+    AddClassModifier(AddClassModifier),
 }
 
-
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct AddClassModifier {
+    id: String,
+    description: String,
+    affected_ids: Vec<String>,
+    class_prefix: String,
+    represents_pseudo_class: String,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -45,7 +54,7 @@ struct Config {
     instructions: Vec<Instruction>,
 }
 
-#[derive(Deserialize, Debug, Default)]
+#[derive(Deserialize, Debug, Default, Clone)]
 struct CSSRule {
     selector: String,
     declarations: BTreeMap<String, String>,
@@ -56,6 +65,14 @@ fn err_msg_for_missing_map(description: &str, variable_group: &str) -> String {
         "{}: There is no variable map named {}",
         description,
         variable_group
+    )
+}
+
+fn err_msg_for_missing_instruction(description: &str, id: &str) -> String {
+    format!(
+        "{}: There is no instruction named {}",
+        description,
+        id
     )
 }
 
@@ -116,8 +133,38 @@ fn single_rule_from_variable_group(config: &Config, inst: &FromVariableGroup) ->
     ]
 }
 
+/// Derive a new `CSSRule` for each existing one that was created
+/// by an instruction with an ID in `affected_ids`
+fn add_class_modifier(
+    inst: &AddClassModifier,
+    rules_by_id: &BTreeMap<String, Vec<CSSRule>>
+) -> Vec<CSSRule> {
+    let mut new_rules: Vec<CSSRule> = vec![];
+
+    for id in &inst.affected_ids {
+        let rules = rules_by_id.get(&id.clone())
+            .expect(&err_msg_for_missing_instruction(&inst.description, &id));
+
+        for rule in rules.iter() {
+
+            // Skipping rules that don't target classes
+            if !rule.selector.starts_with(".") { continue }
+
+            let with_prefix = rule.selector.replacen(".", &inst.class_prefix, 1);
+            let selector = format!(".{}:{}", with_prefix, inst.represents_pseudo_class);
+
+            new_rules.push(CSSRule {
+                selector,
+                ..rule.clone()
+            });
+        }
+    }
+
+    new_rules
+}
+
 fn generate_rules(config: Config) -> Vec<CSSRule> {
-    let mut rules_by_id = BTreeMap::new();
+    let mut rules_by_id: BTreeMap<String, Vec<CSSRule>> = BTreeMap::new();
 
     for instruction in &config.instructions {
         match instruction {
@@ -126,6 +173,9 @@ fn generate_rules(config: Config) -> Vec<CSSRule> {
             }
             Instruction::ManyRulesFromVariableGroup(inst) => {
                 rules_by_id.insert(inst.id.clone(), many_rules_from_variable_group(&config, &inst));
+            }
+            Instruction::AddClassModifier(inst) => {
+                rules_by_id.insert(inst.id.clone(), add_class_modifier(&inst, &rules_by_id));
             }
         }
     }

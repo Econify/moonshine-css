@@ -314,6 +314,19 @@
                     }
                 }
             ]
+        },
+        {
+            "id": "hover",
+            "description": "Hover",
+            "method": "addClassModifier",
+            "classPrefix": "hover\\:",
+            "representsPseudoClass": "hover",
+            "affectedIds": [
+                "margin", 
+                "padding",
+                "text-colors",
+                "background-colors"
+            ]
         }
     ]
 }
