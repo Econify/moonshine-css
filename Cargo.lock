@@ -3,7 +3,7 @@
 version = 3
 
 [[package]]
-name = "byocss"
+name = "atomic-classes"
 version = "0.1.0"
 dependencies = [
  "serde",
