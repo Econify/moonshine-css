@@ -1,0 +1,180 @@
+[
+    {
+        "id": "define-color-variables",
+        "description": "Define Color Variables",
+        "method": "singleRuleFromTokenGroup",
+        "tokenGroupName": "colors",
+        "selector": ":root",
+        "declarations": {
+            "--{{ KEY }}": "{{ VAL }}"
+        }
+    },
+    {
+        "id": "define-spacing-variables",
+        "description": "Define Spacing Variables",
+        "method": "singleRuleFromTokenGroup",
+        "tokenGroupName": "spacing",
+        "selector": ":root",
+        "declarations": {
+            "--s{{ KEY }}": "{{ VAL }}"
+        }
+    },
+    {
+        "id": "text-colors",
+        "description": "Text Colors",
+        "method": "manyRulesFromTokenGroup",
+        "tokenGroupName": "colors",
+        "rules": [
+            {
+                "selector": ".text-{{ KEY }}",
+                "declarations": {
+                    "color": "var(--{{ KEY }})"
+                }
+            }
+        ]
+    },
+    {
+        "id": "background-colors",
+        "description": "Background Colors",
+        "method": "manyRulesFromTokenGroup",
+        "tokenGroupName": "colors",
+        "rules": [
+            {
+                "selector": ".bg-{{ KEY }}",
+                "declarations": {
+                    "background-color": "var(--{{ KEY }})"
+                }
+            }
+        ]
+    },
+    {
+        "id": "margin",
+        "description": "Margin",
+        "method": "manyRulesFromTokenGroup",
+        "tokenGroupName": "spacing",
+        "rules": [
+            {
+                "selector": ".m-{{ KEY }}",
+                "declarations": {
+                    "margin": "var(--s{{ KEY }})"
+                }
+            },
+            {
+                "selector": ".mx-{{ KEY }}",
+                "declarations": {
+                    "margin-right": "var(--s{{ KEY }})",
+                    "margin-left": "var(--s{{ KEY }})"
+                }
+            },
+            {
+                "selector": ".my-{{ KEY }}",
+                "declarations": {
+                    "margin-top": "var(--s{{ KEY }})",
+                    "margin-bottom": "var(--s{{ KEY }})"
+                }
+            },
+            {
+                "selector": ".mt-{{ KEY }}",
+                "declarations": {
+                    "margin-top": "var(--s{{ KEY }})"
+                }
+            },
+            {
+                "selector": ".mb-{{ KEY }}",
+                "declarations": {
+                    "margin-bottom": "var(--s{{ KEY }})"
+                }
+            },
+            {
+                "selector": ".ml-{{ KEY }}",
+                "declarations": {
+                    "margin-left": "var(--s{{ KEY }})"
+                }
+            },
+            {
+                "selector": ".mr-{{ KEY }}",
+                "declarations": {
+                    "margin-right": "var(--s{{ KEY }})"
+                }
+            }
+        ]
+    },
+    {
+        "id": "padding",
+        "description": "Padding",
+        "method": "manyRulesFromTokenGroup",
+        "tokenGroupName": "spacing",
+        "rules": [
+            {
+                "selector": ".p-{{ KEY }}",
+                "declarations": {
+                    "padding": "var(--s{{ KEY }})"
+                }
+            },
+            {
+                "selector": ".px-{{ KEY }}",
+                "declarations": {
+                    "padding-right": "var(--s{{ KEY }})",
+                    "padding-left": "var(--s{{ KEY }})"
+                }
+            },
+            {
+                "selector": ".py-{{ KEY }}",
+                "declarations": {
+                    "padding-top": "var(--s{{ KEY }})",
+                    "padding-bottom": "var(--s{{ KEY }})"
+                }
+            },
+            {
+                "selector": ".pt-{{ KEY }}",
+                "declarations": {
+                    "padding-top": "var(--s{{ KEY }})"
+                }
+            },
+            {
+                "selector": ".pb-{{ KEY }}",
+                "declarations": {
+                    "padding-bottom": "var(--s{{ KEY }})"
+                }
+            },
+            {
+                "selector": ".pl-{{ KEY }}",
+                "declarations": {
+                    "padding-left": "var(--s{{ KEY }})"
+                }
+            },
+            {
+                "selector": ".pr-{{ KEY }}",
+                "declarations": {
+                    "padding-right": "var(--s{{ KEY }})"
+                }
+            }
+        ]
+    },
+    {
+        "id": "hover",
+        "description": "Hover",
+        "method": "copyExistingRules",
+        "newSelector": ".hover\\:{{ PREV_SELECTOR_CLASS_NAME }}:hover",
+        "affectedIds": [
+            "margin",
+            "padding",
+            "text-colors",
+            "background-colors"
+        ]
+    },
+    {
+        "id": "medium-screen-size",
+        "description": "Medium Screen Size",
+        "method": "copyExistingRules",
+        "@identifier": "@media (min-width: 768px)",
+        "newSelector": ".md\\:{{ PREV_SELECTOR_CLASS_NAME }}",
+        "affectedIds": [
+            "margin",
+            "padding",
+            "text-colors",
+            "background-colors",
+            "hover"
+        ]
+    }
+]

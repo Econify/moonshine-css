@@ -3,7 +3,7 @@
 version = 3
 
 [[package]]
-name = "atomic-classes"
+name = "atomic-styles"
 version = "0.1.0"
 dependencies = [
  "serde",

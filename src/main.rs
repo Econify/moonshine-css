@@ -1,5 +1,5 @@
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use std::collections::BTreeMap;
 use std::fs::File;
@@ -9,83 +9,83 @@ use std::fs;
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 #[serde(tag = "method")]
-pub enum Instruction {
-    SingleRuleFromVariableGroup(FromVariableGroup),
-    ManyRulesFromVariableGroup(ManyRulesFromVariableGroup),
-    AddClassModifier(AddClassModifier),
+pub enum Transformation {
+    SingleRuleFromTokenGroup(FromTokenGroup),
+    ManyRulesFromTokenGroup(ManyRulesFromTokenGroup),
+    CopyExistingRules(CopyExistingRules),
 }
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct AddClassModifier {
+pub struct CopyExistingRules{
     id: String,
     description: String,
     affected_ids: Vec<String>,
-    class_prefix: String,
-    represents_pseudo_class: String,
+    #[serde(rename = "@identifier")]
+    at_rule_identifier: Option<String>,
+    new_selector: String,
 }
+
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct FromVariableGroup {
+pub struct FromTokenGroup {
     id: String,
     description: String,
-    variable_group: String,
+    token_group_name: String,
     selector: String,
     declarations: BTreeMap<String, String>
 }
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct ManyRulesFromVariableGroup {
+pub struct ManyRulesFromTokenGroup {
     id: String,
     description: String,
-    variable_group: String,
+    token_group_name: String,
     rules: Vec<CSSRule>,
 }
 
+pub type TokenGroup = BTreeMap<String, String>;
+pub type TokenGroups = BTreeMap<String, TokenGroup>;
+pub type Transformations = Vec<Transformation>;
 
-pub type VariableGroup = BTreeMap<String, String>;
 
-#[derive(Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-struct Config {
-    variable_groups: BTreeMap<String, VariableGroup>,
-    instructions: Vec<Instruction>,
-}
-
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Serialize, Debug, Default, Clone)]
 struct CSSRule {
     selector: String,
     declarations: BTreeMap<String, String>,
 }
 
-fn err_msg_for_missing_map(description: &str, variable_group: &str) -> String {
+fn err_msg_for_missing_map(token_group_name: &str) -> String {
     format!(
-        "{}: There is no variable map named {}",
-        description,
-        variable_group
+        "There is no input group named \"{}\"",
+        token_group_name,
     )
 }
 
-fn err_msg_for_missing_instruction(description: &str, id: &str) -> String {
+fn err_msg_for_missing_transformation(description: &str, id: &str) -> String {
     format!(
-        "{}: There is no instruction named {}",
+        "{}: There is no transformation named {}",
         description,
         id
     )
 }
 
-/// Derive a single `CSSRule` using `FromVariableGroup`
-fn many_rules_from_variable_group(config: &Config, inst: &ManyRulesFromVariableGroup) -> Vec<CSSRule> {
-    let variable_group = config.variable_groups
-        .get(&inst.variable_group)
-        .expect(&err_msg_for_missing_map(&inst.description, &inst.variable_group));
+/// Derive a single `CSSRule` using `FromTokenGroup`
+fn many_rules_from_token_group_name(
+    token_groups: &TokenGroups,
+    transformation: &ManyRulesFromTokenGroup,
+    intermediate: &mut Intermediate,
+) {
+    let token_group_name = token_groups
+        .get(&transformation.token_group_name)
+        .expect(&err_msg_for_missing_map(&transformation.token_group_name));
 
     let mut rules = vec![];
 
-    for rule in &inst.rules {
-        for (var_key, var_val) in variable_group {
+    for rule in &transformation.rules {
+        for (var_key, var_val) in token_group_name {
             let inject_variables = |s: &String| s
                 .replace("{{ KEY }}", var_key)
                 .replace("{{ VAL }}", var_val);
@@ -100,27 +100,33 @@ fn many_rules_from_variable_group(config: &Config, inst: &ManyRulesFromVariableG
                 }).collect()
             })
         }
-
     }
 
-    rules
+    intermediate.normal_rules.insert(transformation.id.clone(), RuleFamily {
+        description: transformation.description.clone(),
+        css_rules: rules,
+    });
 }
 
-/// Derive a single `CSSRule` using `FromVariableGroup`
-fn single_rule_from_variable_group(config: &Config, inst: &FromVariableGroup) -> Vec<CSSRule> {
-    let variable_group = config.variable_groups
-        .get(&inst.variable_group)
-        .expect(&err_msg_for_missing_map(&inst.description, &inst.variable_group));
+/// Derive a single `CSSRule` using `FromTokenGroup`
+fn single_rule_from_token_group_name(
+    token_groups: &TokenGroups,
+    transformation: &FromTokenGroup,
+    intermediate: &mut Intermediate
+) {
+    let token_group = token_groups
+        .get(&transformation.token_group_name)
+        .expect(&err_msg_for_missing_map(&transformation.token_group_name));
 
-    let selector = inst.selector.clone();
+    let selector = transformation.selector.clone();
     let mut declarations = BTreeMap::new();
 
-    for (var_key, var_val) in variable_group {
+    for (var_key, var_val) in token_group {
         let inject_variables = |s: &String| s
             .replace("{{ KEY }}", var_key)
             .replace("{{ VAL }}", var_val);
 
-        for (property, value) in &inst.declarations {
+        for (property, value) in &transformation.declarations {
             declarations.insert(
                 inject_variables(&property),
                 inject_variables(&value),
@@ -128,30 +134,29 @@ fn single_rule_from_variable_group(config: &Config, inst: &FromVariableGroup) ->
         }
     }
 
-    vec![
-        CSSRule { selector, declarations }
-    ]
+    intermediate.normal_rules.insert(transformation.id.clone(), RuleFamily {
+        description: transformation.description.clone(),
+        css_rules: vec![CSSRule { selector, declarations }]
+    });
 }
 
-/// Derive a new `CSSRule` for each existing one that was created
-/// by an instruction with an ID in `affected_ids`
-fn add_class_modifier(
-    inst: &AddClassModifier,
-    rules_by_id: &BTreeMap<String, Vec<CSSRule>>
-) -> Vec<CSSRule> {
+/// Copy existing rules into a media query block
+fn copy_existing_rules(
+    transformation: &CopyExistingRules,
+    intermediate: &mut Intermediate,
+) {
     let mut new_rules: Vec<CSSRule> = vec![];
 
-    for id in &inst.affected_ids {
-        let rules = rules_by_id.get(&id.clone())
-            .expect(&err_msg_for_missing_instruction(&inst.description, &id));
+    for id in &transformation.affected_ids {
+        let rule_family = intermediate.normal_rules.get(&id.clone())
+            .expect(&err_msg_for_missing_transformation(&transformation.description, &id));
 
-        for rule in rules.iter() {
+        for rule in rule_family.css_rules.iter() {
+            let mut selector = transformation.new_selector.clone();
 
-            // Skipping rules that don't target classes
-            if !rule.selector.starts_with(".") { continue }
-
-            let with_prefix = rule.selector.replacen(".", &inst.class_prefix, 1);
-            let selector = format!(".{}:{}", with_prefix, inst.represents_pseudo_class);
+            let prev_class_name = rule.selector.replacen(".", "", 1);
+            selector = selector.replace("{{ PREV_SELECTOR_CLASS_NAME }}", &prev_class_name);
+            selector = selector.replace("{{ PREV_SELECTOR }}", &rule.selector);
 
             new_rules.push(CSSRule {
                 selector,
@@ -160,36 +165,87 @@ fn add_class_modifier(
         }
     }
 
-    new_rules
+    match &transformation.at_rule_identifier {
+        Some(identifier) => {
+            intermediate.at_rules.insert(transformation.id.clone(), AtRule {
+                identifier: identifier.clone(),
+                description: transformation.description.clone(),
+                css_rules: new_rules,
+            });
+        },
+        None => {
+            intermediate.normal_rules.insert(transformation.id.clone(), RuleFamily {
+                description: transformation.description.clone(),
+                css_rules: new_rules,
+            });
+        }
+    }
+
+
 }
 
-fn generate_rules(config: Config) -> Vec<CSSRule> {
-    let mut rules_by_id: BTreeMap<String, Vec<CSSRule>> = BTreeMap::new();
+type TransformationID = String;
 
-    for instruction in &config.instructions {
-        match instruction {
-            Instruction::SingleRuleFromVariableGroup(inst) => {
-                rules_by_id.insert(inst.id.clone(), single_rule_from_variable_group(&config, &inst));
+#[derive(Default, Serialize)]
+struct Intermediate {
+    normal_rules: BTreeMap<TransformationID, RuleFamily>,
+    at_rules: BTreeMap<TransformationID, AtRule>,
+}
+
+#[derive(Default, Serialize)]
+struct RuleFamily {
+    description: String,
+    css_rules: Vec<CSSRule>,
+}
+
+#[derive(Default, Serialize)]
+struct AtRule {
+    identifier: String,
+    description: String,
+    css_rules: Vec<CSSRule>,
+}
+
+fn apply_transformations(
+    token_groups: TokenGroups,
+    transformations: Transformations,
+) -> Intermediate {
+    let mut intermediate = Intermediate::default();
+
+    for transformation in &transformations {
+        match transformation {
+            Transformation::SingleRuleFromTokenGroup(transformation) => {
+                single_rule_from_token_group_name(&token_groups, &transformation, &mut intermediate);
             }
-            Instruction::ManyRulesFromVariableGroup(inst) => {
-                rules_by_id.insert(inst.id.clone(), many_rules_from_variable_group(&config, &inst));
+            Transformation::ManyRulesFromTokenGroup(transformation) => {
+                many_rules_from_token_group_name(&token_groups, &transformation, &mut intermediate);
             }
-            Instruction::AddClassModifier(inst) => {
-                rules_by_id.insert(inst.id.clone(), add_class_modifier(&inst, &rules_by_id));
+            Transformation::CopyExistingRules(transformation) => {
+                copy_existing_rules(transformation, &mut intermediate);
             }
         }
     }
 
-    let mut all_rules = vec![];
-
-    for (_id, rules) in rules_by_id {
-        all_rules.extend(rules);
-    }
-
-    all_rules
+    intermediate
 }
 
-fn stringify_rules(rules: Vec<CSSRule>) -> String {
+fn stringify_intermediate(intermediate: &Intermediate) -> String {
+    let mut css = String::new();
+
+    for (_id, rule_family) in &intermediate.normal_rules {
+        let block = stringify_rules(&rule_family.css_rules);
+        css = format!("{}{}", css, block);
+    }
+
+    for (_id, at_rule) in &intermediate.at_rules {
+        let mut block = stringify_rules(&at_rule.css_rules);
+        block = format!("{} {{\n{}}}", at_rule.identifier, block);
+        css = format!("{}{}", css, block);
+    }
+
+    css   
+}
+
+fn stringify_rules(rules: &Vec<CSSRule>) -> String {
     let mut css = String::new();
 
     for rule in rules {
@@ -205,14 +261,25 @@ fn stringify_rules(rules: Vec<CSSRule>) -> String {
     css
 }
 
-fn main() {
-    let path = std::env::args().nth(1)
-        .unwrap_or("config.json".to_string());
 
-    let file = File::open(path).unwrap();
-    let reader = BufReader::new(file);
-    let config: Config = serde_json::from_reader(reader).unwrap();
-    let rules = generate_rules(config);
-    let css = stringify_rules(rules);
-    fs::write("./build.css", css).expect("Unable to write file")
+fn main() {
+    let path_to_tokens = std::env::args().nth(1)
+        .unwrap_or("atomic-styles.design-tokens.json".to_string());
+    let tokens_file = File::open(path_to_tokens).unwrap();
+    let reader = BufReader::new(tokens_file);
+    let inputs: TokenGroups = serde_json::from_reader(reader).unwrap();
+
+
+    let path_to_transformations = std::env::args().nth(2)
+        .unwrap_or("atomic-styles.transformations.json".to_string());
+    let inputs_file = File::open(path_to_transformations).unwrap();
+    let reader = BufReader::new(inputs_file);
+    let transformations: Transformations = serde_json::from_reader(reader).unwrap();
+
+
+    let intermediate = apply_transformations(inputs, transformations);
+    let css = stringify_intermediate(&intermediate);
+    let intermediate = serde_json::to_string_pretty(&intermediate).unwrap();
+    fs::write("./build.css", css).expect("Unable to write file");
+    fs::write("./intermediate.json", intermediate).expect("Unable to write file");
 }
