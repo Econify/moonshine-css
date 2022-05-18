@@ -1,0 +1,12 @@
+{
+  "name": "simple",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "distill --dev",
+    "build": "distill"
+  },
+  "dependencies": {
+    "@econify/moonshine-css": "file:../.."
+  }
+}

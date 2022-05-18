@@ -1,0 +1,5 @@
+{
+  "name": "@moonshine/flex",
+  "version": "0.1.0",
+  "module": "flex.yaml"
+}
