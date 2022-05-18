@@ -1,0 +1,13 @@
+{
+  "tokens": [
+    "styles/atomic-styles.design-tokens.json"
+  ],
+  "plugins": [
+    "styles/atomic-styles.transformations.json"
+  ],
+  "output": {
+    "styles": "styles/atomic-styles.css",
+    "types": "styles/atomic-styles.d.ts",
+    "snippets": ".vscode/atomic-styles.code-snippets"
+  }
+}
