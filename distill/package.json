@@ -1,0 +1,15 @@
+{
+  "name": "@moonshine-css/distill",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "distill": "./invoke_distill_bin.js"
+  },
+  "scripts": {
+    "test": "cargo test --all"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

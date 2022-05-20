@@ -1,9 +1,9 @@
 {
     "designTokens": [
-        "../examples/advanced/atomic-styles.design-tokens.json"
+        "./advanced/atomic-styles.design-tokens.json"
     ],
     "transformations": [
-        "../examples/advanced/atomic-styles.transformations.json"
+        "./advanced/atomic-styles.transformations.json"
     ],
     "output": {
         "css": "./dist/styles.css",
