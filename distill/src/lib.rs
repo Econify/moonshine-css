@@ -10,7 +10,20 @@ pub enum Transformation {
     SingleRuleFromTokenGroup(FromTokenGroup),
     ManyRulesFromTokenGroup(ManyRulesFromTokenGroup),
     CopyExistingRules(CopyExistingRules),
+    NoTransformation(NoTransformation),
 }
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct NoTransformation {
+    id: String,
+    description: String,
+    #[serde(rename = "@identifier")]
+    at_rule_identifier: Option<String>,
+    rules: Vec<CSSRule>,
+}
+
+
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -181,6 +194,28 @@ fn copy_existing_rules(
 
 }
 
+/// Insert given rules directly into the intermediate
+fn no_transformation(
+    transformation: &NoTransformation,
+    intermediate: &mut Intermediate
+) {
+    match &transformation.at_rule_identifier {
+        Some(identifier) => {
+            intermediate.at_rules.insert(transformation.id.clone(), AtRule {
+                identifier: identifier.clone(),
+                description: transformation.description.clone(),
+                css_rules: transformation.rules.clone(),
+            });
+        },
+        None => {
+            intermediate.normal_rules.insert(transformation.id.clone(), RuleFamily {
+                description: transformation.description.clone(),
+                css_rules: transformation.rules.clone(),
+            });
+        }
+    };
+}
+
 type TransformationID = String;
 
 #[derive(Default, Serialize)]
@@ -206,6 +241,9 @@ impl Intermediate {
                 }
                 Transformation::CopyExistingRules(transformation) => {
                     copy_existing_rules(transformation, &mut intermediate);
+                }
+                Transformation::NoTransformation(transformation) => {
+                    no_transformation(transformation, &mut intermediate);
                 }
             }
         }
