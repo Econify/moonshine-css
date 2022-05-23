@@ -16,7 +16,7 @@ jobs:
   build_ubuntu:
     runs-on: ubuntu-18.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install Rust Toolchain
         uses: actions-rs/toolchain@v1
       - name: Build
@@ -32,7 +32,7 @@ jobs:
   build_macos:
     runs-on: macos-10.15
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install Rust Toolchain
         uses: actions-rs/toolchain@v1
       - name: Build
@@ -48,7 +48,7 @@ jobs:
   build_windows:
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install Rust Toolchain
         uses: actions-rs/toolchain@v1
       - name: Build
@@ -61,44 +61,62 @@ jobs:
           name: distill-for-windows.exe
           path: dist/
 
+  build_bundle:
+    runs-on: ubuntu-latest
+    steps:  
+      - uses: actions/checkout@v3
+      
+      - name: Install Dependencies
+        run: npm ci
+        # run: yarn install --frozen-lockfile     
+      
+      - name: Run Unit Tests
+        working-directory: ./services/graphql
+        run: npm run test
+        
+      - name: Run package
+        working-directory: ./services/graphql
+        run: npm run build  
+
   publish_npm_package:
-    needs: [build_ubuntu, build_macos, build_windows]
-    runs-on: ubuntu-18.04
+    name: Create Release
+    needs: [build_ubuntu, build_macos, build_windows, build_bundle]
+    runs-on: ubuntu-latest
+    outputs:
+      NEW_TAG: ${{ steps.version.outputs.NEW_TAG }}    
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-          node-version: '16'
+          fetch-depth: 0
+#           ref: ${{ env.GIT_REF }}
+#           token: ${{ secrets.ACTION_TOKEN }}
+
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+          
       - uses: actions/download-artifact@v2
         with:
           path: temp_dist 
+
       - name: Flatten Binary Directory
         run: |
           mkdir dist
           mv temp_dist/**/* dist || true
           rmdir dist/**/* || true
           rm -rf temp_dist
+
       - name: Grant Permissions
         run: chmod +x dist/*
+
       - name: Setup Package Registry Credentials
         run: echo "not necessary yet!"
+
       - name: Preview Publish
         run: npm pack
-      - name: Publish Package
-        run: echo "not necessary yet!"
-        
-  release-candidate:
-    name: Create Release
-    runs-on: ubuntu-latest
-    outputs:
-      NEW_TAG: ${{ steps.version.outputs.NEW_TAG }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-#           ref: ${{ env.GIT_REF }}
-#           token: ${{ secrets.ACTION_TOKEN }}
 
       - name: Automated Version Bump
         uses: phips28/gh-action-bump-version@master
@@ -118,7 +136,7 @@ jobs:
         id: changelog
         env:
           GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
-        uses: gandarez/changelog-action@v1.0.4
+        uses: gandarez/changelog-action@v1.2.0
         with:
           exclude: |
             ^CI: version bump to.*
@@ -131,3 +149,8 @@ jobs:
           body: ${{steps.changelog.outputs.changelog}}
         env:
           GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
+   
+      - name: Publish Package
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
