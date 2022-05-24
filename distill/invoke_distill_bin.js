@@ -5,15 +5,14 @@ const path = require('path');
 const os = require('os');
 const fs = require('fs');
 
-
 const binaryPaths = {
-    "Linux": path.join(__dirname, "target/release/distill"),
-    "Windows_NT": path.join(__dirname, "target/release/distill"),
-    "Darwin": path.join(__dirname, "target/release/distill"),
+  "Linux": path.join(__dirname, "dist/ubuntu/distill"),
+  "Windows_NT": path.join(__dirname, "dist/windows/distill.exe"),
+  "Darwin": path.join(__dirname, "dist/osx/distill"),
 };
 
 // Collecting command line arguments
-const [_interpreter, _parentCommand, ...args] = process.argv;
+const [_interpreter, _scriptName, ...args] = process.argv;
 
 let binaryPath = binaryPaths[os.type()];
 

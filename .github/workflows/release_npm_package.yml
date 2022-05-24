@@ -21,13 +21,11 @@ jobs:
         uses: actions-rs/toolchain@v1
       - name: Build
         run: cd distill && cargo build --release
-      - name: Rename Binary
-        run: mv distill/target/release/distill distill-for-ubuntu
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: distill-for-ubuntu
-          path: dist/
+          name: ubuntu
+          path: target/release/distill
 
   build_macos:
     runs-on: macos-10.15
@@ -37,13 +35,11 @@ jobs:
         uses: actions-rs/toolchain@v1
       - name: Build
         run: cd distill && cargo build --release
-      - name: Rename Binary
-        run: mv distill/target/release/distill distill-for-osx
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: distill-for-osx
-          path: dist/
+          name: osx
+          path: target/release/distill
 
   build_windows:
     runs-on: windows-2022
@@ -53,13 +49,13 @@ jobs:
         uses: actions-rs/toolchain@v1
       - name: Build
         run: cd distill && cargo build --release
-      - name: Rename Binary
-        run: mv distill/target/release/distill.exe distill-for-windows.exe
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: distill-for-windows.exe
-          path: dist/
+          name: windows
+          path: target/release/distill.exe
+
+
 
   build_bundle:
     runs-on: ubuntu-latest
@@ -98,25 +94,22 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
 
-      - uses: actions/download-artifact@v2
+      - name: Download Binaries
+        uses: actions/download-artifact@v2
         with:
-          path: temp_dist
-
-      - name: Flatten Binary Directory
-        run: |
-          mkdir dist
-          mv temp_dist/**/* dist || true
-          rmdir dist/**/* || true
-          rm -rf temp_dist
+          path: dist
 
       - name: Grant Permissions
-        run: chmod +x dist/*
+        run: chmod +x dist/**/*
 
       - name: Setup Package Registry Credentials
         run: echo "not necessary yet!"
 
       - name: Preview Publish
         run: npm pack
+
+      - name: List Dir
+        run: ls -R
 
       - name: Automated Version Bump
         uses: phips28/gh-action-bump-version@master

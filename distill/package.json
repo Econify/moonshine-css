@@ -6,6 +6,10 @@
   "bin": {
     "distill": "./invoke_distill_bin.js"
   },
+  "files": [
+    "invoke_distill.js",
+    "dist"
+  ],
   "scripts": {
     "test": "cargo test --all"
   },
