@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "bin": {
-    "distill": "./invoke_distill_bin.js"
+    "distill": "./invoke_distill.js"
   },
   "files": [
     "invoke_distill.js",
