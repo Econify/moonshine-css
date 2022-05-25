@@ -1,5 +1,6 @@
 import React from "react";
-import { tokens2variableMap, cssFromVarMap } from "./export";
+import cssFromVarMap from "./cssFromVarMap";
+import tokens2variableMap from "./tokens2variableMap";
 
 // Rename to theme provider
 export default function CssVariableInjector({ tokens, rootVars }) {

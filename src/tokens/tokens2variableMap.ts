@@ -1,27 +1,27 @@
-import type { ITokens } from '../types';
-import { capitalize } from './capitalize';
+import type { ITokens } from "../types";
+import capitalize from "./capitalize";
 
 interface ITokens2VarMapOptions {
   onPropNotFound?: (info: { category: string }) => void;
 }
 
 export const propShortcuts = {
-  color: ['', ''],
-  font: ['', ''],
-  gradient: ['g', ''],
-  spacing: ['s', 'px'],
-  letterSpacing: ['ls', 'px'],
-  paragraphSpacing: ['ps', 'px'],
-  borderRadius: ['br', 'px'],
-  opacity: ['o', '%'],
-  lineHeight: ['lh', 'em'],
-  fontSize: ['fs', 'em'],
+  color: ["", ""],
+  font: ["", ""],
+  gradient: ["g", ""],
+  spacing: ["s", "px"],
+  letterSpacing: ["ls", "px"],
+  paragraphSpacing: ["ps", "px"],
+  borderRadius: ["br", "px"],
+  opacity: ["o", "%"],
+  lineHeight: ["lh", "em"],
+  fontSize: ["fs", "em"],
   headlines: null, // ignore
 };
 
-export const disablePropCapitalize = ['color', 'font'];
+export const disablePropCapitalize = ["color", "font"];
 
-export function tokens2variableMap(
+export default function tokens2variableMap(
   tokens: ITokens,
   { onPropNotFound }: ITokens2VarMapOptions = {}
 ): Record<string, string> {

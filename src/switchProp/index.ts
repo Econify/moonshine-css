@@ -1,1 +1,0 @@
-export { switchProp } from "./switchProp";
