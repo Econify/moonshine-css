@@ -84,6 +84,6 @@ export default Demo() {
 };
 ```
 
-## Acknoledgements
+## Acknowledgements
 
 TBD
