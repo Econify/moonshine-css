@@ -7,8 +7,8 @@
 - 🥃 Minimal and simple atomic CSS framework
 - ⚗️ 100% customizable - build your own CSS framework
 - 🦀 Blazing fast generator written in Rust
-- 🐜 Tiny `1.1 kB` runtime
-- ⚛️ React integration
+- 🐜 Tiny `1.7 kB` runtime
+- ⚛️ CSS-in-JS library for React
 
 ## Install
 
@@ -24,7 +24,7 @@ Create a `.moonshinerc` file in your project root.
 by running
 
 ```
-distill --init
+npx distill --init
 ```
 
 or by creating a file manually:
@@ -57,9 +57,7 @@ or by creating a file manually:
 then run
 
 ```bash
-distill --watch
-# or
-npx @econify/moonshine-css --watch
+npx distill --watch
 ```
 
 ## Usage
