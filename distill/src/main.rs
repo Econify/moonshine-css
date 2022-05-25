@@ -44,7 +44,7 @@ fn main() {
     for path in config.design_tokens {
         let file = fs::File::open(path).unwrap();
         let reader = BufReader::new(file);
-        let token_groups: TokenGroups = serde_json::from_reader(reader).unwrap();       
+        let token_groups: TokenGroups = serde_json::from_reader(reader).unwrap();
         for (id, token_group) in token_groups {
             all_token_groups.insert(id, token_group);
         }
@@ -55,7 +55,7 @@ fn main() {
     for path in config.transformations {
         let file = fs::File::open(path).unwrap();
         let reader = BufReader::new(file);
-        let transformations: Transformations = serde_json::from_reader(reader).unwrap();       
+        let transformations: Transformations = serde_json::from_reader(reader).unwrap();
         for transformation in transformations {
             all_transformations.push(transformation);
         }
