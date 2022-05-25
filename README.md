@@ -70,13 +70,14 @@ import "atomic-styles.css";
 import { styled } from "@econify/moonshine-css";
 
 const Button = styled.button(
-  "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+  "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
+  ({ isPrimary }) => isPrimary && "bg-primary text-white"
 );
 
 export default Demo() {
   return (
     <div>
-      <Button>Click me</Button>
+      <Button isPrimary={true}>Click me</Button>
     </div>
   );
 };
