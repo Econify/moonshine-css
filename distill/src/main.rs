@@ -1,11 +1,35 @@
-
+mod init;
+mod io;
 mod lib;
 
-use lib::{Transformations, TokenGroups, Intermediate};
-use serde::{Deserialize};
-use std::io::BufReader;
-use std::path::Path;
+use clap::Parser;
+use init::initialize_moonshinerc;
+use io::write_file_creating_dirs;
+use lib::{Intermediate, TokenGroups, Transformations};
+use serde::Deserialize;
 use std::fs;
+use std::io::BufReader;
+use std::path::{Path, PathBuf};
+
+#[derive(Parser, Debug)]
+#[clap(author, version, about, long_about = None)]
+struct Args {
+    /// Sets a custom config file
+    #[clap(short, long, parse(from_os_str), value_name = "FILE")]
+    config: Option<PathBuf>,
+
+    /// Initialize .moonshinerc
+    #[clap(short, long, parse(from_occurrences))]
+    init: usize,
+
+    /// Enable watcher mode
+    #[clap(short, long, parse(from_occurrences))]
+    watch: usize,
+
+    /// Turn debugging information on
+    #[clap(short, long, parse(from_occurrences))]
+    debug: usize,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -32,12 +56,22 @@ impl RCFile {
     }
 }
 
-
 fn main() {
-    let path_to_config = std::env::args().nth(1)
-        .unwrap_or("./.moonshinerc".to_string());
-    
-    let config = RCFile::load_from_json(&path_to_config);
+    let args = Args::parse();
+    let _debug_enabled = args.debug > 0;
+    let _watch_enabled = args.watch > 0;
+
+    let value = args
+        .config
+        .as_deref()
+        .unwrap_or(Path::new("./.moonshinerc"));
+
+    if args.init != 0 {
+        initialize_moonshinerc(&value.to_str().unwrap());
+        std::process::exit(0);
+    }
+
+    let config = RCFile::load_from_json(&value.to_str().unwrap());
 
     let mut all_token_groups = TokenGroups::new();
 
@@ -74,11 +108,4 @@ fn main() {
         Some(path) => write_file_creating_dirs(&path, &json),
         None => (),
     };
-}
-
-fn write_file_creating_dirs(path: &str, contents: &str) {
-    let path = Path::new(path);
-    let parent_dir = path.clone().parent().unwrap();
-    fs::create_dir_all(parent_dir).unwrap();
-    fs::write(path.clone(), contents).unwrap();
 }
