@@ -100,12 +100,12 @@ fn main() {
     let json = serde_json::to_string_pretty(&intermediate).unwrap();
 
     match config.output.css {
-        Some(path) => write_file_creating_dirs(&path, &css),
+        Some(path) => write_file_creating_dirs(&path, &css).unwrap(),
         None => (),
     };
 
     match config.output.json {
-        Some(path) => write_file_creating_dirs(&path, &json),
+        Some(path) => write_file_creating_dirs(&path, &json).unwrap(),
         None => (),
     };
 }
