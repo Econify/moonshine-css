@@ -1,0 +1,13 @@
+[package]
+name = "distill"
+version = "0.1.0"
+edition = "2021"
+
+[profile.release]
+codegen-units = 1 # Removes dead code
+opt-level = "s" # Optimizes for size
+lto = true
+
+[dependencies]
+serde = { version = "1.0.136", features = ["derive"] }
+serde_json = "1.0.79"

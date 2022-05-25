@@ -20,6 +20,37 @@
         }
     },
     {
+        "id": "font-weight",
+        "description": "Font Weight",
+        "method": "noTransformation",
+        "rules": [
+            {
+                "selector": ".font-light",
+                "declarations": {
+                    "font-weight": "light"
+                }
+            },
+            {
+                "selector": ".font-regular",
+                "declarations": {
+                    "font-weight": "regular"
+                }
+            },
+            {
+                "selector": ".font-bold",
+                "declarations": {
+                    "font-weight": "bold"
+                }
+            },
+            {
+                "selector": ".font-semibold",
+                "declarations": {
+                    "font-weight": "semibold"
+                }
+            }
+        ]
+    },
+    {
         "id": "text-colors",
         "description": "Text Colors",
         "method": "manyRulesFromTokenGroup",
