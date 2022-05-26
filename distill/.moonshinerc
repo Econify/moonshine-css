@@ -1,0 +1,12 @@
+{
+    "designTokens": [
+        "./atomic-design-tokens.yml"
+    ],
+    "templates": [
+        "./atomic-styles.yml"
+    ],
+    "output": {
+        "css": "./dist/styles.css",
+        "json": "./dist/styles.json"
+    }
+}

@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 #[serde(tag = "method")]
 pub enum Transformation {
@@ -13,7 +13,7 @@ pub enum Transformation {
     NoTransformation(NoTransformation),
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct NoTransformation {
     id: String,
@@ -25,7 +25,7 @@ pub struct NoTransformation {
 
 
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Serialize,Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct CopyExistingRules{
     id: String,
@@ -37,23 +37,23 @@ pub struct CopyExistingRules{
 }
 
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct FromTokenGroup {
-    id: String,
-    description: String,
-    token_group_name: String,
-    selector: String,
-    declarations: BTreeMap<String, String>
+    pub id: String,
+    pub description: String,
+    pub token_group_name: String,
+    pub selector: String,
+    pub declarations: BTreeMap<String, String>
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ManyRulesFromTokenGroup {
-    id: String,
-    description: String,
-    token_group_name: String,
-    rules: Vec<CSSRule>,
+    pub id: String,
+    pub description: String,
+    pub token_group_name: String,
+    pub rules: Vec<CSSRule>,
 }
 
 pub type TokenGroup = BTreeMap<String, String>;
@@ -62,9 +62,9 @@ pub type Transformations = Vec<Transformation>;
 
 
 #[derive(Deserialize, Serialize, Debug, Default, Clone)]
-struct CSSRule {
-    selector: String,
-    declarations: BTreeMap<String, String>,
+pub struct CSSRule {
+    pub selector: String,
+    pub declarations: BTreeMap<String, String>,
 }
 
 fn err_msg_for_missing_map(token_group_name: &str) -> String {
