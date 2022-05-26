@@ -1,0 +1,70 @@
+
+# Flexbox
+flex:
+  display: flex
+
+inline-flex:
+  display: inline-flex
+
+flex-auto:
+  flex: 1 1 auto
+  min-width: 0
+  min-height: 0
+
+flex-none:
+  flex: none
+
+flex-wrap:
+  flex-wrap: wrap
+
+flex-wrap-reverse:
+  flex-wrap: wrap-reverse
+
+flex-no-wrap:
+  flex-wrap: nowrap
+
+flex-column:
+  flex-direction: column
+
+flex-column-reverse:
+  flex-direction: column-reverse
+
+flex-row:
+  flex-direction: row
+
+flex-row-reverse:
+  flex-direction: row-reverse
+
+$alignments:
+  start: flex-start
+  end: flex-end
+  center: center 
+  baseline: baseline
+  stretch: stretch
+
+# Align Items
+items-[$alignments.key]:
+  align-items: $alignments.value
+
+# Align Self
+self-[$alignments.key]:
+  align-self: $alignments.value
+
+# Justify Content
+justify-[$alignments.key]:
+  justify-content: $alignments.value
+
+# Align Content
+content-[$alignments.key]:
+  align-content: $alignments.value
+
+$orderings:
+  1: 1
+  2: 2
+  3: 3
+
+order-[$orderings.key]:
+  order: $orderings.key
+
+order-last:
+  order: 99999

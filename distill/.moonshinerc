@@ -3,7 +3,9 @@
         "./atomic-design-tokens.yml"
     ],
     "templates": [
-        "./tachyons.yml"
+        "./tachyons-colors.yml",
+        "./tachyons-flex.yml",
+        "./tachyons-spacing.yml"
     ],
     "output": {
         "css": "./dist/styles.css",

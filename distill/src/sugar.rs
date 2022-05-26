@@ -12,6 +12,7 @@ use super::lib::{
 };
 
 use std::collections::{HashMap, BTreeMap};
+use indexmap::IndexMap;
 
 
 const _SRC: &str = r#"
@@ -33,14 +34,30 @@ m-[$sizes.key]:
 type AtomName = String;
 type CSSProperty = String;
 type CSSValue = String;
+type VariableMaps = IndexMap<String, IndexMap<String, String>>;
 
-pub type SugarRuleSet = HashMap<AtomName, SugarBlock>;
-pub type SugarBlock = HashMap<CSSProperty, CSSValue>;
+pub type SugarRuleSet = IndexMap<AtomName, SugarBlock>;
+pub type SugarBlock = IndexMap<CSSProperty, CSSValue>;
 
 pub fn transformations_from_sugar_rules(ruleset: &SugarRuleSet) -> Transformations {
     let mut list = Vec::new();
 
+    let mut variable_maps: VariableMaps = IndexMap::new();
+
     for (atom_name_template, block) in ruleset {
+        match detect_variable_map_declaration(atom_name_template, block, &mut variable_maps) {
+            true => { continue; },
+            false => (),
+        };
+
+        match detect_variable_map_loop(atom_name_template, block, &variable_maps) {
+            None => (),
+            Some(config) => {
+                list.push(Transformation::NoTransformation(config));
+                continue;
+            }
+        }
+
         match detect_token_loop(atom_name_template, block) {
             None => (),
             Some(config) => {
@@ -71,6 +88,80 @@ pub fn transformations_from_sugar_rules(ruleset: &SugarRuleSet) -> Transformatio
     }
 
     list 
+}
+
+fn detect_variable_map_loop(
+    atom_name_template: &str,
+    block: &SugarBlock,
+    variable_maps: &VariableMaps,
+) -> Option<NoTransformation> {
+    let re = Regex::new(r"(?P<before>.*)\[\$(?P<variable_map_name>.*)(?P<key_or_value>(\.key)|(\.value))\](?P<after>.*)").unwrap();
+
+    if false == re.is_match(&atom_name_template) {
+        return None
+    }   
+
+    let variable_map_name = re
+        .replace(atom_name_template, "$variable_map_name")
+        .to_string();
+
+    let variable_map = match variable_maps.get(&variable_map_name) {
+        None => return None,
+        Some(map) => map,
+    };
+
+    let mut config = NoTransformation {
+        id: atom_name_template.to_string(),
+        description: "".to_string(),
+        at_rule_identifier: None,
+        rules: Vec::new(),
+    };
+
+    let key_list_replacer = format!("[${}.key]", variable_map_name);
+    let value_list_replacer = format!("[${}.value]", variable_map_name);
+
+    for (key, value) in variable_map {
+        let atom_name = atom_name_template
+            .replace(&key_list_replacer, &key)
+            .replace(&value_list_replacer, &value);
+
+        let mut css_rule = CSSRule {
+            selector: get_atom_selector(&atom_name),
+            declarations: BTreeMap::new(),
+        };
+
+        let key_replacer = format!("${}.key", variable_map_name);
+        let value_replacer = format!("${}.value", variable_map_name);
+
+        for (block_key, block_val) in block {
+            let css_property = block_key
+                .replace(&key_replacer, &key)
+                .replace(&value_replacer, &value);
+
+            let css_value = block_val
+                .replace(&key_replacer, &key)
+                .replace(&value_replacer, &value);
+            
+            css_rule.declarations.insert(css_property, css_value);
+        }
+
+        config.rules.push(css_rule);
+    }
+
+    Some(config)
+}
+
+fn detect_variable_map_declaration(
+    atom_name_template: &str,
+    block: &SugarBlock,
+    variable_maps: &mut VariableMaps,
+) -> bool {
+    let re = Regex::new(r"^\$(?P<variable_map_name>\S+)$").unwrap();
+    if false == re.is_match(&atom_name_template) { return false }   
+
+    let variable_map_name = re.replace(atom_name_template, "$variable_map_name").to_string();
+    variable_maps.insert(variable_map_name, block.clone());
+    true
 }
 
 fn detect_token_loop(atom_name_template: &str, block: &SugarBlock) -> Option<ManyRulesFromTokenGroup> {

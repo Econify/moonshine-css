@@ -1,0 +1,22 @@
+
+$directions:
+  t: top
+  b: bottom
+  l: left
+  r: right
+
+# Margin
+m-[$spacings.key]:
+  margin: var(--$spacings.key)
+
+mt-[$spacings.key]:
+  margin-top: var(--$spacings.key)
+
+mb-[$spacings.key]:
+  margin-bottom: var(--$spacings.key)
+
+ml-[$spacings.key]:
+  margin-left: var(--$spacings.key)
+
+mr-[$spacings.key]:
+  margin-right: var(--$spacings.key)
