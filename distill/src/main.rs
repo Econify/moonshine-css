@@ -1,8 +1,8 @@
 
-mod lib;
+mod transformation_syntax;
 mod template_syntax;
 
-use lib::{TokenGroups, Intermediate};
+use transformation_syntax::{TokenGroups, Intermediate};
 use template_syntax::{CSSTemplate, transformations_from_templates};
 use serde::{Deserialize};
 use std::io::BufReader;
@@ -79,7 +79,6 @@ fn main() {
         None => (),
     };
 }
-
 
 fn write_file_creating_dirs(path: &str, contents: &str) {
     let path = Path::new(path);

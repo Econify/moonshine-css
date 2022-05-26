@@ -1,7 +1,7 @@
 
 use regex::Regex;
 
-use super::lib::{
+use super::transformation_syntax::{
     Transformation,
     Transformations,
     ManyRulesFromTokenGroup,
