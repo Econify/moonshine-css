@@ -40,6 +40,8 @@ $alignments:
   end: flex-end
   center: center 
   baseline: baseline
+  between: space-between
+  around: space-around
   stretch: stretch
 
 # Align Items
