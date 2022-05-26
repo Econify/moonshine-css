@@ -1,5 +1,6 @@
 
 mod lib;
+mod sugar;
 
 use lib::{Transformations, TokenGroups, Intermediate};
 use serde::{Deserialize};
