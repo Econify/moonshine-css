@@ -36,20 +36,19 @@ or by creating a file manually:
       "sm": "min-width: 576px",
       "md": "min-width: 768px",
       "lg": "min-width: 992px"
+    },
+    "designTokens": [
+        "./atomic-design-tokens.yml"
+    ],
+    "templates": [
+        "./tachyons-colors.yml",
+        "./tachyons-flex.yml",
+        "./tachyons-spacing.yml"
+    ],
+    "output": {
+        "css": "./dist/styles.css",
+        "json": "./dist/styles.json"
     }
-  },
-  "plugins": [
-    "@moonshine/plugin-css-typography",
-    "@moonshine/plugin-css-grid",
-    "@moonshine/plugin-css-buttons",
-    "@moonshine/plugin-css-forms",
-    "@moonshine/plugin-css-tables",
-    "@moonshine/plugin-css-utilities"
-  ],
-  "output": {
-    "styles": "styles/atomic-styles.css",
-    "types": "styles/atomic-styles.d.ts",
-    "snippets": ".vscode/atomic-styles.code-snippets"
   }
 }
 ```
