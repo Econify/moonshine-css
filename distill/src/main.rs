@@ -1,14 +1,13 @@
 
 mod lib;
-mod sugar;
+mod template_syntax;
 
-use lib::{Transformations, TokenGroups, Intermediate};
-use sugar::{SugarRuleSet, transformations_from_sugar_rules};
+use lib::{TokenGroups, Intermediate};
+use template_syntax::{CSSTemplate, transformations_from_templates};
 use serde::{Deserialize};
 use std::io::BufReader;
 use std::path::Path;
 use std::fs;
-use serde_json as json;
 use serde_yaml as yaml;
 
 #[derive(Deserialize, Debug)]
@@ -44,7 +43,7 @@ fn main() {
     let config = RCFile::load_from_json(&path_to_config);
 
     let mut all_token_groups = TokenGroups::new();
-    let mut ruleset = SugarRuleSet::new();
+    let mut ruleset = CSSTemplate::new();
 
     for path in config.design_tokens {
         let file = fs::File::open(path).unwrap();
@@ -58,13 +57,13 @@ fn main() {
     for path in config.templates {
         let file = fs::File::open(path).unwrap();
         let reader = BufReader::new(file);
-        let partial_ruleset: SugarRuleSet = yaml::from_reader(reader).unwrap();       
+        let partial_ruleset: CSSTemplate = yaml::from_reader(reader).unwrap();       
         for (atom_name_template, block) in partial_ruleset {
             ruleset.insert(atom_name_template, block);
         }
     }
 
-    let transformations = transformations_from_sugar_rules(&ruleset);
+    let transformations = transformations_from_templates(&ruleset);
 
     let intermediate = Intermediate::build(all_token_groups, transformations);
     let css = intermediate.stringify();

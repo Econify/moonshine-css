@@ -1,6 +1,4 @@
 
-use serde_yaml as yaml;
-use serde::Deserialize;
 use regex::Regex;
 
 use super::lib::{
@@ -11,35 +9,18 @@ use super::lib::{
     CSSRule,
 };
 
-use std::collections::{HashMap, BTreeMap};
+use std::collections::{BTreeMap};
 use indexmap::IndexMap;
-
-
-const _SRC: &str = r#"
-
-bg-[$colors.key]:
-  background-color: var(--$colors.key)
-
-bg-[$colors.key]:
-  background-color: var(--$colors.key)
-
-mt-[$sizes.key]:
-  margin-top: $sizes.value
-
-m-[$sizes.key]:
-  margin: $sizes.value
-
-"#;
 
 type AtomName = String;
 type CSSProperty = String;
 type CSSValue = String;
 type VariableMaps = IndexMap<String, IndexMap<String, String>>;
 
-pub type SugarRuleSet = IndexMap<AtomName, SugarBlock>;
+pub type CSSTemplate = IndexMap<AtomName, SugarBlock>;
 pub type SugarBlock = IndexMap<CSSProperty, CSSValue>;
 
-pub fn transformations_from_sugar_rules(ruleset: &SugarRuleSet) -> Transformations {
+pub fn transformations_from_templates(ruleset: &CSSTemplate) -> Transformations {
     let mut list = Vec::new();
 
     let mut variable_maps: VariableMaps = IndexMap::new();
@@ -211,12 +192,4 @@ fn detect_token_loop(atom_name_template: &str, block: &SugarBlock) -> Option<Man
 
 fn get_atom_selector(atom_name: &str) -> String {
     format!(".{}", atom_name)
-}
-
-#[test]
-fn detect_loop() {
-    let ruleset: SugarRuleSet = yaml::from_str(_SRC).unwrap();
-
-    let transforms = transformations_from_sugar_rules(&ruleset);
-    println!("{}", yaml::to_string(&transforms).unwrap());
 }

@@ -58,6 +58,7 @@ justify-[$alignments.key]:
 content-[$alignments.key]:
   align-content: $alignments.value
 
+# Ordering
 $orderings:
   1: 1
   2: 2
