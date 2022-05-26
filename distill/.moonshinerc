@@ -3,7 +3,7 @@
         "./atomic-design-tokens.yml"
     ],
     "templates": [
-        "./atomic-styles.yml"
+        "./tachyons.yml"
     ],
     "output": {
         "css": "./dist/styles.css",

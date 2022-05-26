@@ -1,0 +1,92 @@
+
+# Flexbox
+flex:
+  display: flex
+
+inline-flex:
+  display: inline-flex
+
+flex-auto:
+  flex: 1 1 auto
+  min-width: 0
+  min-height: 0
+
+flex-none:
+  flex: none
+
+flex-wrap:
+  flex-wrap: wrap
+
+flex-wrap-reverse:
+  flex-wrap: wrap-reverse
+
+flex-no-wrap:
+  flex-wrap: nowrap
+
+flex-column:
+  flex-direction: column
+
+flex-column-reverse:
+  flex-direction: column-reverse
+
+flex-row:
+  flex-direction: row
+
+flex-row-reverse:
+  flex-direction: row-reverse
+
+# Align Items
+items-start:
+  align-items: flex-start
+
+items-end:
+  align-items: flex-end
+
+items-center:
+  align-items: center
+
+items-baseline:
+  align-items: baseline
+
+items-stretch:
+  align-items: stretch 
+
+# Align Self
+self-start:
+  align-self: flex-start
+
+self-end:
+  align-self: flex-end
+
+self-center:
+  align-self: center
+
+self-baseline:
+  align-self: baseline
+
+self-stretch:
+  align-self: stretch 
+
+# Background Colors
+bg-[$colors.key]:
+  background-color: var(--$colors.key)
+
+# Text Colors
+text-[$colors.key]:
+  color: var(--$colors.key)
+
+# Margin
+m-[$spacings.key]:
+  margin: var(--$spacings.key)
+
+mt-[$spacings.key]:
+  margin-top: var(--$spacings.key)
+
+mb-[$spacings.key]:
+  margin-bottom: var(--$spacings.key)
+
+ml-[$spacings.key]:
+  margin-left: var(--$spacings.key)
+
+mr-[$spacings.key]:
+  margin-right: var(--$spacings.key)
