@@ -81,6 +81,7 @@ fn main() {
     };
 }
 
+
 fn write_file_creating_dirs(path: &str, contents: &str) {
     let path = Path::new(path);
     let parent_dir = path.clone().parent().unwrap();

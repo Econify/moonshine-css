@@ -1,4 +1,17 @@
 
+# Flexbox
+flex:
+  display: flex
+
+flex-wrap:
+  flex-wrap: wrap
+
+flex-wrap-reverse:
+  flex-wrap: wrap-reverse
+
+flex-no-wrap:
+  flex-wrap: nowrap
+
 # Background Colors
 bg-[$colors.key]:
   background-color: var(--$colors.key)

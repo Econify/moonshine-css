@@ -7,6 +7,7 @@ use super::lib::{
     Transformation,
     Transformations,
     ManyRulesFromTokenGroup,
+    NoTransformation,
     CSSRule,
 };
 
@@ -30,7 +31,6 @@ m-[$sizes.key]:
 "#;
 
 type AtomName = String;
-type TokenGroupName = String;
 type CSSProperty = String;
 type CSSValue = String;
 
@@ -42,9 +42,32 @@ pub fn transformations_from_sugar_rules(ruleset: &SugarRuleSet) -> Transformatio
 
     for (atom_name_template, block) in ruleset {
         match detect_token_loop(atom_name_template, block) {
-            Some(config) => list.push(Transformation::ManyRulesFromTokenGroup(config)),
             None => (),
+            Some(config) => {
+                list.push(Transformation::ManyRulesFromTokenGroup(config));
+                continue;
+            }
         }
+
+        // Assuming no transformation is required
+
+        let mut rule = CSSRule {
+            selector: get_atom_selector(atom_name_template),
+            declarations: BTreeMap::new(),
+        };
+
+        for (property, value) in block {
+            rule.declarations.insert(property.to_string(), value.to_string());
+        }
+
+        let config = NoTransformation {
+            id: atom_name_template.to_string(),
+            description: "".to_string(),
+            at_rule_identifier: None,
+            rules: vec![rule],
+        };
+
+        list.push(Transformation::NoTransformation(config));
     }
 
     list 

@@ -16,24 +16,24 @@ pub enum Transformation {
 #[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct NoTransformation {
-    id: String,
-    description: String,
+    pub id: String,
+    pub description: String,
     #[serde(rename = "@identifier")]
-    at_rule_identifier: Option<String>,
-    rules: Vec<CSSRule>,
+    pub at_rule_identifier: Option<String>,
+    pub rules: Vec<CSSRule>,
 }
 
 
 
-#[derive(Deserialize, Serialize,Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct CopyExistingRules{
-    id: String,
-    description: String,
-    affected_ids: Vec<String>,
+    pub id: String,
+    pub description: String,
+    pub affected_ids: Vec<String>,
     #[serde(rename = "@identifier")]
-    at_rule_identifier: Option<String>,
-    new_selector: String,
+    pub at_rule_identifier: Option<String>,
+    pub new_selector: String,
 }
 
 
