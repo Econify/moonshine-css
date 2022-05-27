@@ -1,19 +1,27 @@
 {
-  "options": {
-    "atomStyle": "classAttribute",
-    "nonAtomIdentfier": "__non_atom__"
-  },
-  "designTokens": [
-    "./atomic-design-tokens.yml"
-  ],
-  "templates": [
-    "./templates/tachyons-border-box.yml",
-    "./templates/tachyons-colors.yml",
-    "./templates/tachyons-flex.yml",
-    "./templates/tachyons-spacing.yml"
-  ],
-  "output": {
-    "css": "./dist/styles.css",
-    "json": "./dist/styles.json"
-  }
+    "options": {
+        "atomStyle": "dataAttribute",
+        "nonAtomIdentfier": "__non_atom__",
+        "breakpointModifierStyle": "suffix",
+        "breakpointModifierSeperator": "-",
+        "breakpoints": {
+            "sm": { "minWidth": "576px" },
+            "md": { "minWidth": "768px", "maxWidth": "992px" },
+            "lg": { "minWidth": "992px" }
+        }
+    },
+    "designTokens": [
+        "./atomic-design-tokens.yml"
+    ],
+    "templates": [
+        "./tachyons-border-box.yml",
+        "./tachyons-colors.yml",
+        "./tachyons-flex.yml",
+        "./tachyons-spacing.yml"
+    ],
+    "output": {
+        "cssVariables": "./dist/variables.css",
+        "cssAtoms": "./dist/atoms.css",
+        "jsonAtoms": "./dist/atoms.json"
+    }
 }
