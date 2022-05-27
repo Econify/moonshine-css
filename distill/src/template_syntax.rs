@@ -1,6 +1,8 @@
 use indexmap::IndexMap;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+use lazy_static::lazy_static;
+
 
 use super::transformation_syntax::{
     CSSRule, CopyExistingRules, ManyRulesFromTokenGroup, NoTransformation, Transformation,
@@ -251,13 +253,15 @@ fn detect_variable_map_loop(
     variable_maps: &VariableMaps,
     options: &Options,
 ) -> Option<NoTransformation> {
-    let re = Regex::new(r"(?P<before>.*)\[\$(?P<variable_map_name>.*)(?P<key_or_value>(\.key)|(\.value))\](?P<after>.*)").unwrap();
+    lazy_static! {
+        static ref RE: Regex = Regex::new(r"(?P<before>.*)\[\$(?P<variable_map_name>.*)(?P<key_or_value>(\.key)|(\.value))\](?P<after>.*)").unwrap();
+    }
 
-    if false == re.is_match(&atom_name_template) {
+    if false == RE.is_match(&atom_name_template) {
         return None;
     }
 
-    let variable_map_name = re
+    let variable_map_name = RE
         .replace(atom_name_template, "$variable_map_name")
         .to_string();
 
@@ -332,12 +336,15 @@ fn detect_variable_map_declaration(
     block: &SugarBlock,
     variable_maps: &mut VariableMaps,
 ) -> bool {
-    let re = Regex::new(r"^\$(?P<variable_map_name>\S+)$").unwrap();
-    if false == re.is_match(&atom_name_template) {
+    lazy_static! {
+        static ref RE: Regex = Regex::new(r"^\$(?P<variable_map_name>\S+)$").unwrap();
+    }
+
+    if false == RE.is_match(&atom_name_template) {
         return false;
     }
 
-    let variable_map_name = re
+    let variable_map_name = RE
         .replace(atom_name_template, "$variable_map_name")
         .to_string();
     variable_maps.insert(variable_map_name, block.clone());
@@ -349,13 +356,15 @@ fn detect_token_loop(
     block: &SugarBlock,
     options: &Options,
 ) -> Option<ManyRulesFromTokenGroup> {
-    let re = Regex::new(r"(?P<before>.*)\[\$(?P<token_group_name>.*)(?P<key_or_value>(\.key)|(\.value))\](?P<after>.*)").unwrap();
+    lazy_static! {
+        static ref RE: Regex = Regex::new(r"(?P<before>.*)\[\$(?P<token_group_name>.*)(?P<key_or_value>(\.key)|(\.value))\](?P<after>.*)").unwrap();
+    }
 
-    if false == re.is_match(&atom_name_template) {
+    if false == RE.is_match(&atom_name_template) {
         return None;
     }
 
-    let token_group_name = re
+    let token_group_name = RE
         .replace(atom_name_template, "$token_group_name")
         .to_string();
 
