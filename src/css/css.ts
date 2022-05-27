@@ -1,4 +1,5 @@
 import type { CSS, LinariaClassName } from "../types";
+import unnest from "./unnest";
 
 const clean = (s) => s.replace(/(\n\s*)/g, "");
 const cleanWhitespace = (s) => s.replace(/\s+/g, " ");
@@ -18,7 +19,7 @@ const css: CSS = function (strings, ...rest) {
   // Temporary hack to support css in Next.js
   if (typeof window !== "undefined") {
     const style = document.createElement("style");
-    style.innerHTML = `.${id} { ${body} }`;
+    style.innerHTML = unnest(`.${id}`, body);
     document.getElementsByTagName("head")[0].appendChild(style);
   }
 
