@@ -1,7 +1,12 @@
 {
     "options": {
         "atomStyle": "classAttribute",
-        "nonAtomIdentfier": "__non_atom__"
+        "nonAtomIdentfier": "__non_atom__",
+        "breakpoints": {
+            "sm": { "minWidth": "576px" },
+            "md": { "minWidth": "768px", "maxWidth": "992px" },
+            "lg": { "minWidth": "992px" }
+        }
     },
     "designTokens": [
         "./atomic-design-tokens.yml"

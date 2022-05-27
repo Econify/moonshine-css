@@ -12,6 +12,15 @@ use super::transformation_syntax::{
 pub struct Options {
     pub non_atom_identifier: String,
     pub atom_style: AtomStyle,
+    pub breakpoints: IndexMap<String, Breakpoint>,
+}
+
+#[derive(Default, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+#[serde(default)]
+pub struct Breakpoint {
+    min_width: Option<String>,
+    max_width: Option<String>,
 }
 
 impl Default for Options {
@@ -19,6 +28,7 @@ impl Default for Options {
         Self {
             non_atom_identifier: "__non_atom__".to_string(),
             atom_style: AtomStyle::ClassAttribute,
+            breakpoints: IndexMap::default(),
         }
     }
 }
