@@ -6,6 +6,9 @@ $directions:
   r: right
 
 # Margin
+m0:
+  margin: none
+
 ma[$spacings.key]:
   margin: var(--$spacings.key)
 
@@ -30,6 +33,9 @@ mr[$spacings.key]:
   margin-right: var(--$spacings.key)
 
 # Padding
+p0:
+  padding: none
+
 pa[$spacings.key]:
   padding: var(--$spacings.key)
 

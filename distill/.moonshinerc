@@ -1,8 +1,13 @@
 {
+    "options": {
+        "atomStyle": "dataAttribute",
+        "nonAtomIdentfier": "__non_atom__"
+    },
     "designTokens": [
         "./atomic-design-tokens.yml"
     ],
     "templates": [
+        "./tachyons-border-box.yml",
         "./tachyons-colors.yml",
         "./tachyons-flex.yml",
         "./tachyons-spacing.yml"

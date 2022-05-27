@@ -1,5 +1,6 @@
 
 use regex::Regex;
+use serde::{Serialize, Deserialize};
 
 use super::transformation_syntax::{
     Transformation,
@@ -8,6 +9,31 @@ use super::transformation_syntax::{
     NoTransformation,
     CSSRule,
 };
+
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+#[serde(default)]
+pub struct Options {
+    pub non_atom_identifier: String,
+    pub atom_style: AtomStyle,
+}
+
+impl Default for Options {
+    fn default() -> Self {
+        Self {
+            non_atom_identifier: "__non_atom__".to_string(),
+            atom_style: AtomStyle::ClassAttribute,
+        }
+    }   
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum AtomStyle {
+    ClassAttribute,
+    DataAttribute,
+}
 
 use std::collections::{BTreeMap};
 use indexmap::IndexMap;
@@ -20,18 +46,30 @@ type VariableMaps = IndexMap<String, IndexMap<String, String>>;
 pub type CSSTemplate = IndexMap<AtomName, SugarBlock>;
 pub type SugarBlock = IndexMap<CSSProperty, CSSValue>;
 
-pub fn transformations_from_templates(ruleset: &CSSTemplate) -> Transformations {
+pub fn transformations_from_templates(
+    ruleset: &CSSTemplate,
+    options: &Options,
+) -> Transformations {
     let mut list = Vec::new();
 
     let mut variable_maps: VariableMaps = IndexMap::new();
 
     for (atom_name_template, block) in ruleset {
-        match detect_variable_map_declaration(atom_name_template, block, &mut variable_maps) {
+        match detect_variable_map_declaration(
+            atom_name_template,
+            block,
+            &mut variable_maps
+        ) {
             true => { continue; },
             false => (),
         };
 
-        match detect_variable_map_loop(atom_name_template, block, &variable_maps) {
+        match detect_variable_map_loop(
+            atom_name_template,
+            block,
+            &variable_maps,
+            &options,
+        ) {
             None => (),
             Some(config) => {
                 list.push(Transformation::NoTransformation(config));
@@ -39,7 +77,11 @@ pub fn transformations_from_templates(ruleset: &CSSTemplate) -> Transformations 
             }
         }
 
-        match detect_token_loop(atom_name_template, block) {
+        match detect_token_loop(
+            atom_name_template,
+            block,
+            &options,
+        ) {
             None => (),
             Some(config) => {
                 list.push(Transformation::ManyRulesFromTokenGroup(config));
@@ -50,7 +92,7 @@ pub fn transformations_from_templates(ruleset: &CSSTemplate) -> Transformations 
         // Assuming no transformation is required
 
         let mut rule = CSSRule {
-            selector: get_atom_selector(atom_name_template),
+            selector: get_selector(atom_name_template, &options),
             declarations: BTreeMap::new(),
         };
 
@@ -75,6 +117,7 @@ fn detect_variable_map_loop(
     atom_name_template: &str,
     block: &SugarBlock,
     variable_maps: &VariableMaps,
+    options: &Options,
 ) -> Option<NoTransformation> {
     let re = Regex::new(r"(?P<before>.*)\[\$(?P<variable_map_name>.*)(?P<key_or_value>(\.key)|(\.value))\](?P<after>.*)").unwrap();
 
@@ -107,7 +150,7 @@ fn detect_variable_map_loop(
             .replace(&value_list_replacer, &value);
 
         let mut css_rule = CSSRule {
-            selector: get_atom_selector(&atom_name),
+            selector: get_selector(&atom_name, &options),
             declarations: BTreeMap::new(),
         };
 
@@ -145,7 +188,11 @@ fn detect_variable_map_declaration(
     true
 }
 
-fn detect_token_loop(atom_name_template: &str, block: &SugarBlock) -> Option<ManyRulesFromTokenGroup> {
+fn detect_token_loop(
+    atom_name_template: &str,
+    block: &SugarBlock,
+    options: &Options,
+) -> Option<ManyRulesFromTokenGroup> {
     let re = Regex::new(r"(?P<before>.*)\[\$(?P<token_group_name>.*)(?P<key_or_value>(\.key)|(\.value))\](?P<after>.*)").unwrap();
 
     if false == re.is_match(&atom_name_template) {
@@ -165,7 +212,7 @@ fn detect_token_loop(atom_name_template: &str, block: &SugarBlock) -> Option<Man
         .replace(&value_list_replacer, "{{ VAL }}");
 
     let mut rule = CSSRule {
-        selector: get_atom_selector(&atom_name),
+        selector: get_selector(&atom_name, &options),
         declarations: BTreeMap::new(),
     };
 
@@ -190,6 +237,13 @@ fn detect_token_loop(atom_name_template: &str, block: &SugarBlock) -> Option<Man
     })
 }
 
-fn get_atom_selector(atom_name: &str) -> String {
-    format!(".{}", atom_name)
+fn get_selector(atom_name: &str, options: &Options) -> String {
+    if atom_name.contains(&options.non_atom_identifier) {
+        return atom_name.replace(&options.non_atom_identifier, "");
+    }
+
+    match options.atom_style {
+        AtomStyle::ClassAttribute => format!(".{}", atom_name),
+        AtomStyle::DataAttribute => format!("[{}=\"\"]", atom_name),
+    }
 }

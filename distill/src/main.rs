@@ -3,7 +3,7 @@ mod transformation_syntax;
 mod template_syntax;
 
 use transformation_syntax::{TokenGroups, Intermediate};
-use template_syntax::{CSSTemplate, transformations_from_templates};
+use template_syntax::{Options, CSSTemplate, transformations_from_templates};
 use serde::{Deserialize};
 use std::io::BufReader;
 use std::path::Path;
@@ -22,6 +22,7 @@ pub struct OutputPaths {
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct RCFile {
+    pub options: Options,
     pub design_tokens: Vec<String>,
     pub templates: Vec<String>,
     pub output: OutputPaths,
@@ -29,23 +30,23 @@ pub struct RCFile {
 
 impl RCFile {
     pub fn load_from_json(path: &str) -> Self {
-        let config_file = fs::File::open(&path).unwrap();
-        let reader = BufReader::new(config_file);
+        let rc_file_file = fs::File::open(&path).unwrap();
+        let reader = BufReader::new(rc_file_file);
         serde_json::from_reader(reader).unwrap()
     }
 }
 
 
 fn main() {
-    let path_to_config = std::env::args().nth(1)
+    let path_to_rc_file = std::env::args().nth(1)
         .unwrap_or("./.moonshinerc".to_string());
     
-    let config = RCFile::load_from_json(&path_to_config);
+    let rc_file = RCFile::load_from_json(&path_to_rc_file);
 
     let mut all_token_groups = TokenGroups::new();
     let mut ruleset = CSSTemplate::new();
 
-    for path in config.design_tokens {
+    for path in rc_file.design_tokens {
         let file = fs::File::open(path).unwrap();
         let reader = BufReader::new(file);
         let token_groups: TokenGroups = yaml::from_reader(reader).unwrap();       
@@ -54,7 +55,7 @@ fn main() {
         }
     }
 
-    for path in config.templates {
+    for path in rc_file.templates {
         let file = fs::File::open(path).unwrap();
         let reader = BufReader::new(file);
         let partial_ruleset: CSSTemplate = yaml::from_reader(reader).unwrap();       
@@ -63,18 +64,18 @@ fn main() {
         }
     }
 
-    let transformations = transformations_from_templates(&ruleset);
+    let transformations = transformations_from_templates(&ruleset, &rc_file.options);
 
     let intermediate = Intermediate::build(all_token_groups, transformations);
     let css = intermediate.stringify();
     let json = serde_json::to_string_pretty(&intermediate).unwrap();
 
-    match config.output.css {
+    match rc_file.output.css {
         Some(path) => write_file_creating_dirs(&path, &css),
         None => (),
     };
 
-    match config.output.json {
+    match rc_file.output.json {
         Some(path) => write_file_creating_dirs(&path, &json),
         None => (),
     };
