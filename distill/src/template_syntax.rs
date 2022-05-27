@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use super::transformation_syntax::{
     CSSRule, CopyExistingRules, ManyRulesFromTokenGroup, NoTransformation, Transformation,
-    Transformations,
+    Transformations, TokenGroups, FromTokenGroup,
 };
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -71,6 +71,28 @@ impl Default for TemplateOptions {
             include_breakpoints: true,
         }
     }
+}
+
+pub fn transformations_from_tokens(
+    tokens: &TokenGroups
+) -> Transformations {
+    let mut list = Vec::new();
+
+    for (id, token_group) in tokens {
+        let config = FromTokenGroup {
+            id: format!("root-variables-{}", id),
+            description: "".to_string(),
+            selector: ":root".to_string(),
+            token_group_name: id.to_string(),
+            declarations: IndexMap::from([
+                ("--{{ KEY }}".to_string(), "--{{ VAL }}".to_string())
+            ])
+        };
+
+        list.push(Transformation::SingleRuleFromTokenGroup(config));
+    }
+
+    list
 }
 
 pub fn transformations_from_templates(

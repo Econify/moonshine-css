@@ -1,0 +1,54 @@
+
+# Margin
+m0:
+  margin: none
+
+ma[$spacings.key]:
+  margin: var(--$spacings.key)
+
+mh[$spacings.key]:
+  margin-left: var(--$spacings.key)
+  margin-right: var(--$spacings.key)
+
+mv[$spacings.key]:
+  margin-top: var(--$spacings.key)
+  margin-bottom: var(--$spacings.key)
+
+mt[$spacings.key]:
+  margin-top: var(--$spacings.key)
+
+mb[$spacings.key]:
+  margin-bottom: var(--$spacings.key)
+
+ml[$spacings.key]:
+  margin-left: var(--$spacings.key)
+
+mr[$spacings.key]:
+  margin-right: var(--$spacings.key)
+
+# Padding
+p0:
+  padding: none
+
+pa[$spacings.key]:
+  padding: var(--$spacings.key)
+
+ph[$spacings.key]:
+  padding-left: var(--$spacings.key)
+  padding-right: var(--$spacings.key)
+
+pv[$spacings.key]:
+  padding-top: var(--$spacings.key)
+  padding-bottom: var(--$spacings.key)
+
+pt[$spacings.key]:
+  padding-top: var(--$spacings.key)
+
+pb[$spacings.key]:
+  padding-bottom: var(--$spacings.key)
+
+pl[$spacings.key]:
+  padding-left: var(--$spacings.key)
+
+pr[$spacings.key]:
+  padding-right: var(--$spacings.key)

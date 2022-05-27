@@ -1,0 +1,7 @@
+# Background Colors
+bg-[$colors.key]:
+  background-color: var(--$colors.key)
+
+# Text Colors
+text-[$colors.key]:
+  color: var(--$colors.key)
