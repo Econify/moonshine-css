@@ -1,3 +1,6 @@
+"@options":
+  include_breakpoints: false
+
 ?
   __non_atom__
   html,

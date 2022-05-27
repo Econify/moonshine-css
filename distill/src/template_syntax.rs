@@ -3,7 +3,8 @@ use regex::Regex;
 use serde::{Deserialize, Serialize};
 
 use super::transformation_syntax::{
-    CSSRule, ManyRulesFromTokenGroup, NoTransformation, Transformation, Transformations,
+    CSSRule, CopyExistingRules, ManyRulesFromTokenGroup, NoTransformation, Transformation,
+    Transformations,
 };
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -32,7 +33,6 @@ pub struct Breakpoint {
     max_width: Option<String>,
 }
 
-
 impl Default for Options {
     fn default() -> Self {
         Self {
@@ -60,26 +60,47 @@ type VariableMaps = IndexMap<String, IndexMap<String, String>>;
 pub type CSSTemplate = IndexMap<AtomName, SugarBlock>;
 pub type SugarBlock = IndexMap<CSSProperty, CSSValue>;
 
+#[derive(Debug)]
+pub struct TemplateOptions {
+    include_breakpoints: bool,
+}
+
+impl Default for TemplateOptions {
+    fn default() -> Self {
+        Self {
+            include_breakpoints: true,
+        }
+    }
+}
+
 pub fn transformations_from_templates(
     rulesets: &Vec<CSSTemplate>,
     options: &Options,
 ) -> Transformations {
     let mut list = Vec::new();
+    let mut ids_affected_by_breakpoints: Vec<String> = Vec::new();
 
     for ruleset in rulesets {
         let mut variable_maps: VariableMaps = IndexMap::new();
+        let mut template_options = TemplateOptions::default();
 
         for (atom_name_template, block) in ruleset {
+            match detect_template_options(atom_name_template, block, &mut template_options) {
+                true => continue,
+                false => (),
+            }
+
             match detect_variable_map_declaration(atom_name_template, block, &mut variable_maps) {
-                true => {
-                    continue;
-                }
+                true => continue,
                 false => (),
             };
 
             match detect_variable_map_loop(atom_name_template, block, &variable_maps, &options) {
                 None => (),
                 Some(config) => {
+                    if template_options.include_breakpoints {
+                        ids_affected_by_breakpoints.push(config.id.clone());
+                    }
                     list.push(Transformation::NoTransformation(config));
                     continue;
                 }
@@ -88,6 +109,9 @@ pub fn transformations_from_templates(
             match detect_token_loop(atom_name_template, block, &options) {
                 None => (),
                 Some(config) => {
+                    if template_options.include_breakpoints {
+                        ids_affected_by_breakpoints.push(config.id.clone());
+                    }
                     list.push(Transformation::ManyRulesFromTokenGroup(config));
                     continue;
                 }
@@ -112,11 +136,87 @@ pub fn transformations_from_templates(
                 rules: vec![rule],
             };
 
+            if template_options.include_breakpoints {
+                ids_affected_by_breakpoints.push(config.id.clone());
+            }
+
             list.push(Transformation::NoTransformation(config));
         }
     }
 
+    let breakpoint_transforms = get_breakpoints(ids_affected_by_breakpoints, &options);
+    list.extend(breakpoint_transforms);
+
     list
+}
+
+fn get_breakpoints(affected_ids: Vec<String>, options: &Options) -> Vec<Transformation> {
+    let mut list = vec![];
+
+    for (name, bp) in &options.breakpoints {
+        let at_rule_identifier = build_media_query(&bp);
+
+        if at_rule_identifier.is_none() {
+            continue;
+        }
+
+        let mut selector = match options.atom_style {
+            AtomStyle::ClassAttribute => "{{ PREV_SELECTOR_CLASS_NAME }}".to_string(),
+            AtomStyle::DataAttribute => "{{ PREV_SELECTOR_DATA_ATTR }}".to_string(),
+        };
+
+        let sep = options.breakpoint_modifier_seperator.to_string();
+
+        match options.breakpoint_modifier_style {
+            BreakpointModifierStyle::Prefix => {
+                selector = format!("{}{}{}", name, sep, selector);
+            }
+            BreakpointModifierStyle::Suffix => {
+                selector = format!("{}{}{}", selector, sep, name);
+            }
+        }
+
+        let config = CopyExistingRules {
+            id: format!("breakpoint-{}", name),
+            description: "".to_string(),
+            at_rule_identifier,
+            affected_ids: affected_ids.clone(),
+            new_selector: get_selector(&selector, &options),
+        };
+
+        list.push(Transformation::CopyExistingRules(config));
+    }
+
+    list
+}
+
+fn build_media_query(bp: &Breakpoint) -> Option<String> {
+    if bp.max_width.is_none() && bp.min_width.is_none() {
+        return None;
+    }
+
+    let mut at_rule_identifier = "@media ".to_string();
+
+    match &bp.min_width {
+        None => (),
+        Some(value) => {
+            let value = format!("(min-width: {})", value);
+            at_rule_identifier.push_str(&value);
+        }
+    };
+
+    match &bp.max_width {
+        None => (),
+        Some(value) => {
+            if bp.min_width.is_some() {
+                at_rule_identifier.push_str(" and ");
+            }
+            let value = format!("(max-width: {})", value);
+            at_rule_identifier.push_str(&value);
+        }
+    };
+
+    Some(at_rule_identifier)
 }
 
 fn detect_variable_map_loop(
@@ -179,6 +279,26 @@ fn detect_variable_map_loop(
     }
 
     Some(config)
+}
+
+fn detect_template_options(
+    atom_name_template: &str,
+    block: &SugarBlock,
+    template_options: &mut TemplateOptions,
+) -> bool {
+    if atom_name_template != "@options" {
+        return false;
+    }
+
+    match block.get("include_breakpoints") {
+        None => (),
+        Some(value) => {
+            let value = value.parse::<bool>().unwrap();
+            template_options.include_breakpoints = value;
+        }
+    };
+
+    true
 }
 
 fn detect_variable_map_declaration(
@@ -253,11 +373,11 @@ fn get_selector(atom_name: &str, options: &Options) -> String {
         return atom_name
             .replace(&options.non_atom_identifier, "")
             .trim()
-            .to_string()
+            .to_string();
     }
 
     match options.atom_style {
         AtomStyle::ClassAttribute => format!(".{}", atom_name.trim()),
-        AtomStyle::DataAttribute => format!("[{}=\"\"]", atom_name.trim()),
+        AtomStyle::DataAttribute => format!("[{}='']", atom_name.trim()),
     }
 }

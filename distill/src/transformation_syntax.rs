@@ -1,5 +1,6 @@
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
+use regex::Regex;
 
 #[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -163,8 +164,11 @@ fn copy_existing_rules(transformation: &CopyExistingRules, intermediate: &mut In
         for rule in rule_family.css_rules.iter() {
             let mut selector = transformation.new_selector.clone();
 
+            let data_attr_pattern = Regex::new(r"^\[(?P<data_attr>.*)=''\]$").unwrap();
+            let prev_data_attr = data_attr_pattern.replace(&rule.selector, "$data_attr");
             let prev_class_name = rule.selector.replacen(".", "", 1);
             selector = selector.replace("{{ PREV_SELECTOR_CLASS_NAME }}", &prev_class_name);
+            selector = selector.replace("{{ PREV_SELECTOR_DATA_ATTR }}", &prev_data_attr);
             selector = selector.replace("{{ PREV_SELECTOR }}", &rule.selector);
 
             new_rules.push(CSSRule {
