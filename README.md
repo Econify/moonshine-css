@@ -42,9 +42,7 @@ or by creating a file manually:
             "lg": { "minWidth": "992px" }
         }
     },
-    "designTokens": [
-        "./atomic-design-tokens.yml"
-    ],
+    "designTokens": ["./atomic-design-tokens.yml"],
     "templates": [
         "./tachyons-border-box.yml",
         "./tachyons-colors.yml",
@@ -52,8 +50,8 @@ or by creating a file manually:
         "./tachyons-spacing.yml"
     ],
     "output": {
-        "css": "./dist/styles.css",
-        "json": "./dist/styles.json"
+      "css": "./dist/styles.css",
+      "json": "./dist/styles.json"
     }
 }
 ```
@@ -86,6 +84,8 @@ export default Demo() {
   );
 };
 ```
+
+You can read more about the [runtime syntax here](./docs/RUNTIME.md).
 
 ## Acknowledgements
 

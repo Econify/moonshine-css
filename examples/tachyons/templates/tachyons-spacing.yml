@@ -1,6 +1,9 @@
+<<<<<<< HEAD:distill/tachyons-spacing.yml
 
 
 
+=======
+>>>>>>> main:examples/tachyons/templates/tachyons-spacing.yml
 $directions:
   t: top
   b: bottom

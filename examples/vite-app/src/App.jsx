@@ -3,6 +3,7 @@ import Example from "./Example";
 import { CssVariableInjector } from "@econify/moonshine-css";
 
 import "./global.css";
+import "../build/tokens.css";
 import "../build/styles.css";
 
 const tokens = {
