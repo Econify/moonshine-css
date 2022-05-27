@@ -32,8 +32,7 @@ or by creating a file manually:
 ```json
 {
     "options": {
-        "atomStyle": "dataAttribute",
-        "nonAtomIdentfier": "__non_atom__",
+        "atomStyle": "classAttribute",
         "breakpointModifierStyle": "suffix",
         "breakpointModifierSeperator": "-",
         "breakpoints": {
@@ -42,7 +41,9 @@ or by creating a file manually:
             "lg": { "minWidth": "992px" }
         }
     },
-    "designTokens": ["./atomic-design-tokens.yml"],
+    "designTokens": [
+        "./atomic-design-tokens.yml"
+    ],
     "templates": [
         "./tachyons-border-box.yml",
         "./tachyons-colors.yml",
@@ -50,8 +51,9 @@ or by creating a file manually:
         "./tachyons-spacing.yml"
     ],
     "output": {
-      "css": "./dist/styles.css",
-      "json": "./dist/styles.json"
+        "cssVariables": "./dist/variables.css",
+        "cssAtoms": "./dist/atoms.css",
+        "jsonAtoms": "./dist/atoms.json"
     }
 }
 ```
