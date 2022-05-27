@@ -48,55 +48,60 @@ type VariableMaps = IndexMap<String, IndexMap<String, String>>;
 pub type CSSTemplate = IndexMap<AtomName, SugarBlock>;
 pub type SugarBlock = IndexMap<CSSProperty, CSSValue>;
 
-pub fn transformations_from_templates(ruleset: &CSSTemplate, options: &Options) -> Transformations {
+pub fn transformations_from_templates(
+    rulesets: &Vec<CSSTemplate>,
+    options: &Options,
+) -> Transformations {
     let mut list = Vec::new();
 
-    let mut variable_maps: VariableMaps = IndexMap::new();
+    for ruleset in rulesets {
+        let mut variable_maps: VariableMaps = IndexMap::new();
 
-    for (atom_name_template, block) in ruleset {
-        match detect_variable_map_declaration(atom_name_template, block, &mut variable_maps) {
-            true => {
-                continue;
+        for (atom_name_template, block) in ruleset {
+            match detect_variable_map_declaration(atom_name_template, block, &mut variable_maps) {
+                true => {
+                    continue;
+                }
+                false => (),
+            };
+
+            match detect_variable_map_loop(atom_name_template, block, &variable_maps, &options) {
+                None => (),
+                Some(config) => {
+                    list.push(Transformation::NoTransformation(config));
+                    continue;
+                }
             }
-            false => (),
-        };
 
-        match detect_variable_map_loop(atom_name_template, block, &variable_maps, &options) {
-            None => (),
-            Some(config) => {
-                list.push(Transformation::NoTransformation(config));
-                continue;
+            match detect_token_loop(atom_name_template, block, &options) {
+                None => (),
+                Some(config) => {
+                    list.push(Transformation::ManyRulesFromTokenGroup(config));
+                    continue;
+                }
             }
-        }
 
-        match detect_token_loop(atom_name_template, block, &options) {
-            None => (),
-            Some(config) => {
-                list.push(Transformation::ManyRulesFromTokenGroup(config));
-                continue;
+            // Assuming no transformation is required
+
+            let mut rule = CSSRule {
+                selector: get_selector(atom_name_template, &options),
+                declarations: IndexMap::new(),
+            };
+
+            for (property, value) in block {
+                rule.declarations
+                    .insert(property.to_string(), value.to_string());
             }
+
+            let config = NoTransformation {
+                id: atom_name_template.to_string(),
+                description: "".to_string(),
+                at_rule_identifier: None,
+                rules: vec![rule],
+            };
+
+            list.push(Transformation::NoTransformation(config));
         }
-
-        // Assuming no transformation is required
-
-        let mut rule = CSSRule {
-            selector: get_selector(atom_name_template, &options),
-            declarations: IndexMap::new(),
-        };
-
-        for (property, value) in block {
-            rule.declarations
-                .insert(property.to_string(), value.to_string());
-        }
-
-        let config = NoTransformation {
-            id: atom_name_template.to_string(),
-            description: "".to_string(),
-            at_rule_identifier: None,
-            rules: vec![rule],
-        };
-
-        list.push(Transformation::NoTransformation(config));
     }
 
     list

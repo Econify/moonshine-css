@@ -78,7 +78,7 @@ fn main() {
     let rc_file = RCFile::load_from_json(&path_to_rc_file.to_str().unwrap());
 
     let mut all_token_groups = TokenGroups::new();
-    let mut ruleset = CSSTemplate::new();
+    let mut rulesets = Vec::new();
 
     for path in rc_file.design_tokens {
         let file = fs::File::open(path).unwrap();
@@ -92,13 +92,11 @@ fn main() {
     for path in rc_file.templates {
         let file = fs::File::open(path).unwrap();
         let reader = BufReader::new(file);
-        let partial_ruleset: CSSTemplate = yaml::from_reader(reader).unwrap();
-        for (atom_name_template, block) in partial_ruleset {
-            ruleset.insert(atom_name_template, block);
-        }
+        let ruleset: CSSTemplate = yaml::from_reader(reader).unwrap();
+        rulesets.push(ruleset);
     }
 
-    let transformations = transformations_from_templates(&ruleset, &rc_file.options);
+    let transformations = transformations_from_templates(&rulesets, &rc_file.options);
 
     let intermediate = Intermediate::build(all_token_groups, transformations);
     let css = intermediate.stringify();
