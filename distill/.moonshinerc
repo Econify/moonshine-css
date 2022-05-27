@@ -2,6 +2,8 @@
     "options": {
         "atomStyle": "classAttribute",
         "nonAtomIdentfier": "__non_atom__",
+        "breakpointModifierStyle": "suffix",
+        "breakpointModifierSeperator": "-",
         "breakpoints": {
             "sm": { "minWidth": "576px" },
             "md": { "minWidth": "768px", "maxWidth": "992px" },

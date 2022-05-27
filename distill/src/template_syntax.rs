@@ -13,6 +13,15 @@ pub struct Options {
     pub non_atom_identifier: String,
     pub atom_style: AtomStyle,
     pub breakpoints: IndexMap<String, Breakpoint>,
+    pub breakpoint_modifier_style: BreakpointModifierStyle,
+    pub breakpoint_modifier_seperator: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum BreakpointModifierStyle {
+    Prefix,
+    Suffix,
 }
 
 #[derive(Default, Debug, Serialize, Deserialize)]
@@ -23,12 +32,15 @@ pub struct Breakpoint {
     max_width: Option<String>,
 }
 
+
 impl Default for Options {
     fn default() -> Self {
         Self {
             non_atom_identifier: "__non_atom__".to_string(),
             atom_style: AtomStyle::ClassAttribute,
             breakpoints: IndexMap::default(),
+            breakpoint_modifier_style: BreakpointModifierStyle::Prefix,
+            breakpoint_modifier_seperator: ":".to_string(),
         }
     }
 }
