@@ -12,7 +12,7 @@ use std::fs;
 use std::io::BufReader;
 use std::path::{Path, PathBuf};
 use std::time::Instant;
-use template_syntax::{transformations_from_templates, CSSTemplate, Options};
+use template_syntax::{transformations_from_templates, transformations_from_tokens, CSSTemplate, Options};
 use transformation_syntax::{Intermediate, TokenGroups};
 
 #[derive(Parser, Debug)]
@@ -38,10 +38,11 @@ struct Args {
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct OutputPaths {
-    pub css: Option<String>,
+    pub css_variables: Option<String>,
+    pub css_atoms: Option<String>,
+    pub json_atoms: Option<String>,
     pub types: Option<String>,
     pub snippets: Option<String>,
-    pub json: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -98,13 +99,26 @@ fn main() {
         rulesets.push(ruleset);
     }
 
-    let transformations = transformations_from_templates(&rulesets, &rc_file.options);
+    // Global Variables
+    let root_transformations = transformations_from_tokens(&all_token_groups, &rc_file.options);
+    let root_intermediate = Intermediate::build(all_token_groups.clone(), root_transformations);
+    let root_css = root_intermediate.stringify();
 
+    // Atomic Styles
+    let transformations = transformations_from_templates(&rulesets, &rc_file.options);
     let intermediate = Intermediate::build(all_token_groups, transformations);
     let css = intermediate.stringify();
     let json = serde_json::to_string_pretty(&intermediate).unwrap();
 
-    match rc_file.output.css {
+    match rc_file.output.css_variables {
+        None => (),
+        Some(path) => match write_file_creating_dirs(&path, &root_css) {
+            Err(why) => panic!("{}", why),
+            Ok(_) => (),
+        },
+    };
+
+    match rc_file.output.css_atoms {
         None => (),
         Some(path) => match write_file_creating_dirs(&path, &css) {
             Err(why) => panic!("{}", why),
@@ -112,7 +126,7 @@ fn main() {
         },
     };
 
-    match rc_file.output.json {
+    match rc_file.output.json_atoms {
         None => (),
         Some(path) => match write_file_creating_dirs(&path, &json) {
             Err(why) => panic!("{}", why),

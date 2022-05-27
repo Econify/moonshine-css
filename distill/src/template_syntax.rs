@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use super::transformation_syntax::{
     CSSRule, CopyExistingRules, ManyRulesFromTokenGroup, NoTransformation, Transformation,
-    Transformations,
+    Transformations, TokenGroups, FromTokenGroup,
 };
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -16,6 +16,7 @@ pub struct Options {
     pub breakpoints: IndexMap<String, Breakpoint>,
     pub breakpoint_modifier_style: BreakpointModifierStyle,
     pub breakpoint_modifier_seperator: String,
+    pub root_variable_prefix: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -41,6 +42,7 @@ impl Default for Options {
             breakpoints: IndexMap::default(),
             breakpoint_modifier_style: BreakpointModifierStyle::Prefix,
             breakpoint_modifier_seperator: ":".to_string(),
+            root_variable_prefix: "_".to_string(),
         }
     }
 }
@@ -71,6 +73,30 @@ impl Default for TemplateOptions {
             include_breakpoints: true,
         }
     }
+}
+
+pub fn transformations_from_tokens(
+    tokens: &TokenGroups,
+    options: &Options,
+) -> Transformations {
+    let mut list = Vec::new();
+
+    for (id, _token_group) in tokens {
+        let root_variable_name = format!("--{}{{{{ KEY }}}}", options.root_variable_prefix);
+        let config = FromTokenGroup {
+            id: format!("root-variables-{}", id),
+            description: "".to_string(),
+            selector: ":root".to_string(),
+            token_group_name: id.to_string(),
+            declarations: IndexMap::from([
+                (root_variable_name, "{{ VAL }}".to_string())
+            ])
+        };
+
+        list.push(Transformation::SingleRuleFromTokenGroup(config));
+    }
+
+    list
 }
 
 pub fn transformations_from_templates(
@@ -336,9 +362,9 @@ fn detect_token_loop(
     let key_list_replacer = format!("[${}.key]", token_group_name);
     let value_list_replacer = format!("[${}.value]", token_group_name);
 
+
     let key_replacer = format!("${}.key", token_group_name);
     let value_replacer = format!("${}.value", token_group_name);
-
     let atom_name = atom_name_template
         .replace(&key_list_replacer, "{{ KEY }}")
         .replace(&value_list_replacer, "{{ VAL }}");
@@ -349,13 +375,19 @@ fn detect_token_loop(
     };
 
     for (property_template, value_template) in block {
+        let root_variable_name = format!("var(--{}{{{{ KEY }}}})", options.root_variable_prefix);
+        let root_variable_replacer = format!("$${}.value", token_group_name);
+
         let property = property_template
             .replace(&key_replacer, "{{ KEY }}")
             .replace(&value_replacer, "{{ VAL }}");
 
         let value = value_template
+            .replace(&root_variable_replacer, &root_variable_name)
             .replace(&key_replacer, "{{ KEY }}")
             .replace(&value_replacer, "{{ VAL }}");
+
+
 
         rule.declarations.insert(property, value);
     }

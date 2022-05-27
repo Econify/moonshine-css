@@ -1,11 +1,30 @@
 {
   "options": {
-    "atomStyle": "classAttribute",
-    "nonAtomIdentfier": "__non_atom__"
+    "atomStyle": "dataAttribute",
+    "nonAtomIdentfier": "__non_atom__",
+    "breakpointModifierStyle": "suffix",
+    "breakpointModifierSeperator": "-",
+    "breakpoints": {
+      "sm": {
+        "minWidth": "576px"
+      },
+      "md": {
+        "minWidth": "768px",
+        "maxWidth": "992px"
+      },
+      "lg": {
+        "minWidth": "992px"
+      }
+    }
   },
   "designTokens": [
     "./atomic-design-tokens.yml"
   ],
+  "output": {
+    "cssVariables": "./dist/variables.css",
+    "cssAtoms": "./dist/atoms.css",
+    "jsonAtoms": "./dist/atoms.json"
+  },
   "templates": [
     "./templates/tachyons-aspect-ratios.yml",
     "./templates/tachyons-background-position.yml",
@@ -60,9 +79,5 @@
     "./templates/techyons-line-height.yml",
     "./templates/techyons-overflow.yml",
     "./templates/techyons-word-break.yml"
-  ],
-  "output": {
-    "css": "./build/styles.css",
-    "json": "./build/styles.json"
-  }
+  ]
 }
