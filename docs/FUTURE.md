@@ -45,7 +45,7 @@ export default function Example2() {
 }
 ```
 
-# Mixing atomic css with CSS selectors
+# Mixing Atomic CSS with CSS selectors
 
 One of the problems with most CSS-in-JS frameworks is that they don't support
 arbritrary CSS selectors. The following syntax could be a solution for this. It allows developers to define custom selectors, but still locks them into the atomic design system.

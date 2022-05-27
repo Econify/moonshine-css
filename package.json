@@ -2,8 +2,13 @@
   "name": "@econify/moonshine-css",
   "version": "0.1.0",
   "description": "High-proof atomic CSS",
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "css",
+    "css-in-js",
+    "atomic css",
+    "zero-runtime",
+    "rust-lang"
+  ],
   "license": "MIT",
   "homepage": "https://github.com/econify/moonshine-css#readme",
   "repository": {
@@ -13,6 +18,16 @@
   "bugs": {
     "url": "https://github.com/econify/moonshine-css/issues"
   },
+  "contributors": [
+    {
+      "name": "Thomas Weustenfeld",
+      "email": "tw@econify.com"
+    },
+    {
+      "name": "Craig Fay",
+      "email": "craigfay@econify.com"
+    }
+  ],
   "main": "./dist/moonshine-css.cjs",
   "module": "./dist/moonshine-css.mjs",
   "types": "./dist/moonshine-css.d.ts",
@@ -25,6 +40,10 @@
   "bin": {
     "distill": "./bin/distill"
   },
+  "files": [
+    "dist",
+    "bin"
+  ],
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && vite build && dts-bundle-generator --config ./dts-bundle-generator.config.ts",
