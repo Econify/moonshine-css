@@ -39,6 +39,11 @@ or by creating a file manually:
             "sm": { "minWidth": "576px" },
             "md": { "minWidth": "768px", "maxWidth": "992px" },
             "lg": { "minWidth": "992px" }
+        },
+        "pseudoClasses": {
+            "hov": ":hover",
+            "first": ":first-child",
+            "last": ":last-child"
         }
     },
     "designTokens": [
