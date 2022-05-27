@@ -1,16 +1,10 @@
-
-use regex::Regex;
-use serde::{Serialize, Deserialize};
 use indexmap::IndexMap;
+use regex::Regex;
+use serde::{Deserialize, Serialize};
 
 use super::transformation_syntax::{
-    Transformation,
-    Transformations,
-    ManyRulesFromTokenGroup,
-    NoTransformation,
-    CSSRule,
+    CSSRule, ManyRulesFromTokenGroup, NoTransformation, Transformation, Transformations,
 };
-
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -26,7 +20,7 @@ impl Default for Options {
             non_atom_identifier: "__non_atom__".to_string(),
             atom_style: AtomStyle::ClassAttribute,
         }
-    }   
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -36,7 +30,6 @@ pub enum AtomStyle {
     DataAttribute,
 }
 
-
 type AtomName = String;
 type CSSProperty = String;
 type CSSValue = String;
@@ -45,30 +38,20 @@ type VariableMaps = IndexMap<String, IndexMap<String, String>>;
 pub type CSSTemplate = IndexMap<AtomName, SugarBlock>;
 pub type SugarBlock = IndexMap<CSSProperty, CSSValue>;
 
-pub fn transformations_from_templates(
-    ruleset: &CSSTemplate,
-    options: &Options,
-) -> Transformations {
+pub fn transformations_from_templates(ruleset: &CSSTemplate, options: &Options) -> Transformations {
     let mut list = Vec::new();
 
     let mut variable_maps: VariableMaps = IndexMap::new();
 
     for (atom_name_template, block) in ruleset {
-        match detect_variable_map_declaration(
-            atom_name_template,
-            block,
-            &mut variable_maps
-        ) {
-            true => { continue; },
+        match detect_variable_map_declaration(atom_name_template, block, &mut variable_maps) {
+            true => {
+                continue;
+            }
             false => (),
         };
 
-        match detect_variable_map_loop(
-            atom_name_template,
-            block,
-            &variable_maps,
-            &options,
-        ) {
+        match detect_variable_map_loop(atom_name_template, block, &variable_maps, &options) {
             None => (),
             Some(config) => {
                 list.push(Transformation::NoTransformation(config));
@@ -76,11 +59,7 @@ pub fn transformations_from_templates(
             }
         }
 
-        match detect_token_loop(
-            atom_name_template,
-            block,
-            &options,
-        ) {
+        match detect_token_loop(atom_name_template, block, &options) {
             None => (),
             Some(config) => {
                 list.push(Transformation::ManyRulesFromTokenGroup(config));
@@ -96,7 +75,8 @@ pub fn transformations_from_templates(
         };
 
         for (property, value) in block {
-            rule.declarations.insert(property.to_string(), value.to_string());
+            rule.declarations
+                .insert(property.to_string(), value.to_string());
         }
 
         let config = NoTransformation {
@@ -109,7 +89,7 @@ pub fn transformations_from_templates(
         list.push(Transformation::NoTransformation(config));
     }
 
-    list 
+    list
 }
 
 fn detect_variable_map_loop(
@@ -121,8 +101,8 @@ fn detect_variable_map_loop(
     let re = Regex::new(r"(?P<before>.*)\[\$(?P<variable_map_name>.*)(?P<key_or_value>(\.key)|(\.value))\](?P<after>.*)").unwrap();
 
     if false == re.is_match(&atom_name_template) {
-        return None
-    }   
+        return None;
+    }
 
     let variable_map_name = re
         .replace(atom_name_template, "$variable_map_name")
@@ -164,7 +144,7 @@ fn detect_variable_map_loop(
             let css_value = block_val
                 .replace(&key_replacer, &key)
                 .replace(&value_replacer, &value);
-            
+
             css_rule.declarations.insert(css_property, css_value);
         }
 
@@ -180,9 +160,13 @@ fn detect_variable_map_declaration(
     variable_maps: &mut VariableMaps,
 ) -> bool {
     let re = Regex::new(r"^\$(?P<variable_map_name>\S+)$").unwrap();
-    if false == re.is_match(&atom_name_template) { return false }   
+    if false == re.is_match(&atom_name_template) {
+        return false;
+    }
 
-    let variable_map_name = re.replace(atom_name_template, "$variable_map_name").to_string();
+    let variable_map_name = re
+        .replace(atom_name_template, "$variable_map_name")
+        .to_string();
     variable_maps.insert(variable_map_name, block.clone());
     true
 }
@@ -195,10 +179,12 @@ fn detect_token_loop(
     let re = Regex::new(r"(?P<before>.*)\[\$(?P<token_group_name>.*)(?P<key_or_value>(\.key)|(\.value))\](?P<after>.*)").unwrap();
 
     if false == re.is_match(&atom_name_template) {
-        return None
+        return None;
     }
 
-    let token_group_name = re.replace(atom_name_template, "$token_group_name").to_string();
+    let token_group_name = re
+        .replace(atom_name_template, "$token_group_name")
+        .to_string();
 
     let key_list_replacer = format!("[${}.key]", token_group_name);
     let value_list_replacer = format!("[${}.value]", token_group_name);
@@ -216,7 +202,6 @@ fn detect_token_loop(
     };
 
     for (property_template, value_template) in block {
-
         let property = property_template
             .replace(&key_replacer, "{{ KEY }}")
             .replace(&value_replacer, "{{ VAL }}");
