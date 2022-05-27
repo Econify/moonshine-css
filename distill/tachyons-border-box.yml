@@ -1,0 +1,43 @@
+
+$selectors:
+  html: 0
+  body: 0
+  div: 0
+  article: 0
+  section: 0
+  main: 0
+  footer: 0
+  header: 0
+  form: 0
+  fieldset: 0
+  legend: 0
+  pre: 0
+  code: 0
+  a: 0
+  h1: 0
+  h2: 0
+  h3: 0
+  h4: 0
+  h5: 0
+  h6: 0
+  p: 0
+  ul: 0
+  ol: 0
+  li: 0
+  dl: 0
+  dt: 0
+  dd: 0
+  textarea: 0
+  table: 0 
+  td: 0
+  th: 0
+  tr: 0
+  input[type="email"]: 0
+  input[type="number"]: 0
+  input[type="password"]: 0
+  input[type="tel"]: 0
+  input[type="text"]: 0
+  input[type="url"]: 0
+
+__non_atom__[$selectors.key]:
+  box-sizing: border-box

@@ -1,9 +1,8 @@
 
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
+use indexmap::IndexMap;
 
-
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 #[serde(tag = "method")]
 pub enum Transformation {
@@ -13,58 +12,58 @@ pub enum Transformation {
     NoTransformation(NoTransformation),
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct NoTransformation {
-    id: String,
-    description: String,
+    pub id: String,
+    pub description: String,
     #[serde(rename = "@identifier")]
-    at_rule_identifier: Option<String>,
-    rules: Vec<CSSRule>,
+    pub at_rule_identifier: Option<String>,
+    pub rules: Vec<CSSRule>,
 }
 
 
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct CopyExistingRules{
-    id: String,
-    description: String,
-    affected_ids: Vec<String>,
+    pub id: String,
+    pub description: String,
+    pub affected_ids: Vec<String>,
     #[serde(rename = "@identifier")]
-    at_rule_identifier: Option<String>,
-    new_selector: String,
+    pub at_rule_identifier: Option<String>,
+    pub new_selector: String,
 }
 
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct FromTokenGroup {
-    id: String,
-    description: String,
-    token_group_name: String,
-    selector: String,
-    declarations: BTreeMap<String, String>
+    pub id: String,
+    pub description: String,
+    pub token_group_name: String,
+    pub selector: String,
+    pub declarations: IndexMap<String, String>
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ManyRulesFromTokenGroup {
-    id: String,
-    description: String,
-    token_group_name: String,
-    rules: Vec<CSSRule>,
+    pub id: String,
+    pub description: String,
+    pub token_group_name: String,
+    pub rules: Vec<CSSRule>,
 }
 
-pub type TokenGroup = BTreeMap<String, String>;
-pub type TokenGroups = BTreeMap<String, TokenGroup>;
+pub type TokenGroup = IndexMap<String, String>;
+pub type TokenGroups = IndexMap<String, TokenGroup>;
 pub type Transformations = Vec<Transformation>;
 
 
 #[derive(Deserialize, Serialize, Debug, Default, Clone)]
-struct CSSRule {
-    selector: String,
-    declarations: BTreeMap<String, String>,
+pub struct CSSRule {
+    pub selector: String,
+    pub declarations: IndexMap<String, String>,
 }
 
 fn err_msg_for_missing_map(token_group_name: &str) -> String {
@@ -129,7 +128,7 @@ fn single_rule_from_token_group_name(
         .expect(&err_msg_for_missing_map(&transformation.token_group_name));
 
     let selector = transformation.selector.clone();
-    let mut declarations = BTreeMap::new();
+    let mut declarations = IndexMap::new();
 
     for (var_key, var_val) in token_group {
         let inject_variables = |s: &String| s
@@ -220,8 +219,8 @@ type TransformationID = String;
 
 #[derive(Default, Serialize)]
 pub struct Intermediate {
-    normal_rules: BTreeMap<TransformationID, RuleFamily>,
-    at_rules: BTreeMap<TransformationID, AtRule>,
+    normal_rules: IndexMap<TransformationID, RuleFamily>,
+    at_rules: IndexMap<TransformationID, AtRule>,
 }
 
 impl Intermediate {
