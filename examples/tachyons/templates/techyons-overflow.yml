@@ -1,0 +1,16 @@
+# OVERFLOW
+
+$overflow:
+  visible: visible
+  hidden: hidden
+  scroll: scroll
+  auto: auto
+
+overflow-[$overflow.key]:
+  overflow: $overflow.value
+
+overflow-x-[$overflow.key]:
+  overflow-x: $overflow.value
+
+overflow-y-[$overflow.key]:
+  overflow-y: $overflow.value

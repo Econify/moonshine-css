@@ -1,0 +1,13 @@
+# POSITIONING
+# Docs: http://tachyons.io/docs/layout/position/
+
+$position:
+  absolute: absolute
+  fixed: fixed
+  relative: relative
+  sticky: sticky
+  static: static
+
+# BUG: [$position.key]: not supported
+p-[$position.key]:
+  position: $position.value

@@ -1,0 +1,34 @@
+# NEGATIVE MARGINS
+
+# Base:
+#   n = negative
+
+# Modifiers:
+#   a = all
+#   t = top
+#   r = right
+#   b = bottom
+#   l = left
+
+#   1 = 1st step in spacing scale
+#   2 = 2nd step in spacing scale
+#   3 = 3rd step in spacing scale
+#   4 = 4th step in spacing scale
+#   5 = 5th step in spacing scale
+#   6 = 6th step in spacing scale
+#   7 = 7th step in spacing scale
+
+na[$spacings.key]:
+  margin: calc(-1 * var(--$spacings.value))
+
+nl[$spacings.key]:
+  margin-left: calc(-1 * var(--$spacings.value))
+
+nr[$spacings.key]:
+  margin-right: calc(-1 * var(--$spacings.value))
+
+nb[$spacings.key]:
+  margin-bottom: calc(-1 * var(--$spacings.value))
+
+nt[$spacings.key]:
+  margin-top: calc(-1 * var(--$spacings.value))

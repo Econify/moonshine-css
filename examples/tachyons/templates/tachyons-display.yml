@@ -1,0 +1,41 @@
+#  DISPLAY
+#  Docs: http://tachyons.io/docs/layout/display
+#  Base:
+#   d = display
+#  Modifiers:
+#   n     = none
+#   b     = block
+#   ib    = inline-block
+#   it    = inline-table
+#   t     = table
+#   tc    = table-cell
+#   t-row          = table-row
+#   t-columm       = table-column
+#   t-column-group = table-column-group
+
+$display:
+  n: none
+  i: inline
+  b: block
+  ib: inline-block
+  it: inline-table
+  t: table
+  tc: table-cell
+
+d[$display.key]:
+  display: $display.value
+
+$display-table:
+  row: row
+  row-group: row-group
+  column: column
+  column-group: column-group
+
+dt-[$display-table.key]:
+  display: table-$display-table.key
+
+# This will set table to full width and then
+# all cells will be equal width
+dt--fixed:
+  table-layout: fixed
+  width: 100%

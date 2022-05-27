@@ -1,8 +1,31 @@
+# SPACING
+# Docs: http://tachyons.io/docs/layout/spacing/
+
+# An eight step powers of two scale ranging from 0 to 16rem.
+
+# Base:
+#   p = padding
+#   m = margin
+
+# Modifiers:
+#   a = all
+#   h = horizontal
+#   v = vertical
+#   t = top
+#   r = right
+#   b = bottom
+#   l = left
+
+#   0 = none
+#   1 = 1st step in spacing scale
+#   2 = 2nd step in spacing scale
+#   3 = 3rd step in spacing scale
+#   4 = 4th step in spacing scale
+#   5 = 5th step in spacing scale
+#   6 = 6th step in spacing scale
+#   7 = 7th step in spacing scale
 
 # Margin
-m0:
-  margin: none
-
 ma[$spacings.key]:
   margin: var(--$spacings.key)
 
@@ -27,9 +50,6 @@ mr[$spacings.key]:
   margin-right: var(--$spacings.key)
 
 # Padding
-p0:
-  padding: none
-
 pa[$spacings.key]:
   padding: var(--$spacings.key)
 

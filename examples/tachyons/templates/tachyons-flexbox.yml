@@ -1,35 +1,42 @@
-# Flexbox
+# FLEXBOX
+
 flex:
   display: flex
 
 inline-flex:
   display: inline-flex
 
+# /* 1. Fix for Chrome 44 bug.
+#  * https://code.google.com/p/chromium/issues/detail?id=506893 */
 flex-auto:
   flex: 1 1 auto
-  min-width: 0
-  min-height: 0
+  min-width: 0; /* 1 */
+  min-height: 0; /* 1 */
 
 flex-none:
   flex: none
 
-flex-wrap:
-  flex-wrap: wrap
-
-flex-wrap-reverse:
-  flex-wrap: wrap-reverse
-
-flex-no-wrap:
-  flex-wrap: nowrap
+# TODO:
+# flex-[row,column]:
+#   flex-direction: $
 
 flex-column:
   flex-direction: column
 
-flex-column-reverse:
-  flex-direction: column-reverse
-
 flex-row:
   flex-direction: row
+
+flex-wrap:
+  flex-wrap: wrap
+
+flex-nowrap:
+  flex-wrap: nowrap
+
+flex-wrap-reverse:
+  flex-wrap: wrap-reverse
+
+flex-column-reverse:
+  flex-direction: column-reverse
 
 flex-row-reverse:
   flex-direction: row-reverse
@@ -61,12 +68,28 @@ content-[$alignments.key]:
 
 # Order
 $orderings:
+  0: 0
   1: 1
   2: 2
   3: 3
+  4: 4
+  5: 5
+  6: 6
+  7: 7
+  8: 8
+  last: 99999
 
 order-[$orderings.key]:
   order: $orderings.key
 
-order-last:
-  order: 99999
+flex-grow-0:
+  flex-grow: 0
+
+flex-grow-1:
+  flex-grow: 1
+
+flex-shrink-0:
+  flex-shrink: 0
+
+flex-shrink-1:
+  flex-shrink: 1
