@@ -1,0 +1,20 @@
+# TEXT TRANSFORM
+# Docs: http://tachyons.io/docs/typography/text-transform/
+
+# Base:
+#   tt = text-transform
+
+# Modifiers
+#   c = capitalize
+#   l = lowercase
+#   u = uppercase
+#   n = none
+
+$text-transform:
+  c: capitalize
+  l: lowercase
+  u: uppercase
+  n: none
+
+tt[$text-transform.key]:
+  text-transform: $text-transform.value

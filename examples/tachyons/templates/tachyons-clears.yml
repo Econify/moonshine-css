@@ -1,0 +1,28 @@
+# CLEARFIX
+# http://tachyons.io/docs/layout/clearfix/
+
+# Nicolas Gallaghers Clearfix solution
+# Ref: http://nicolasgallagher.com/micro-clearfix-hack/
+
+cf:before:
+  content: " "
+  display: table
+
+cf:after:
+  content: " "
+  display: table
+
+cf:after:
+  clear: both
+
+cf:
+  "*zoom": 1
+
+$sides:
+  l: left
+  r: right
+  b: both
+  n: none
+
+c[$sides.key]:
+  clear: $sides.value

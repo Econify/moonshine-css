@@ -1,0 +1,15 @@
+# SKINS
+# Docs: http://tachyons.io/docs/themes/skins/
+
+# Classes for setting foreground and background colors on elements.
+# If you haven't declared a border color, but set border on an element, it will
+# be set to the current text color.
+
+# Text Colors
+# TODO: Support [$colors.key]:
+text-[$colors.key]:
+  color: var(--$colors.key)
+
+# Background Colors
+bg-[$colors.key]:
+  background-color: var(--$colors.key)

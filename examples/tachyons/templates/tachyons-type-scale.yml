@@ -1,0 +1,36 @@
+# TYPE SCALE
+# Docs: http://tachyons.io/docs/typography/scale/
+
+# Base:
+# f = font-size
+
+# Modifiers
+#   1 = 1st step in size scale
+#   2 = 2nd step in size scale
+#   3 = 3rd step in size scale
+#   4 = 4th step in size scale
+#   5 = 5th step in size scale
+#   6 = 6th step in size scale
+#   7 = 7th step in size scale
+
+#  For Hero/Marketing Titles
+#
+#  These generally are too large for mobile
+#  so be careful using them on smaller screens.
+
+# TODO: Multiselector
+
+f-6:
+  font-size: 6rem
+f-headline:
+  font-size: 6rem
+
+f-5:
+  font-size: 5rem
+f-subheadline:
+  font-size: 5rem
+
+#  Type Scale
+
+f[$font-sizes.key]:
+  font-size: $font-sizes.value

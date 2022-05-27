@@ -1,0 +1,13 @@
+# WORD BREAK
+
+#   Base:
+#     word = word-break
+
+word-normal:
+  word-break: normal
+
+word-wrap:
+  word-break: break-all
+
+word-nowrap:
+  word-break: keep-all
