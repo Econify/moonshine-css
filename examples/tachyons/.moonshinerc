@@ -1,6 +1,6 @@
 {
   "options": {
-    "atomStyle": "dataAttribute",
+    "atomStyle": "classAttribute",
     "nonAtomIdentfier": "__non_atom__",
     "breakpointModifierStyle": "suffix",
     "breakpointModifierSeperator": "-",
@@ -15,6 +15,11 @@
       "lg": {
         "minWidth": "992px"
       }
+    },
+    "pseudoClasses": {
+      "hov": ":hover",
+      "first": ":first-child",
+      "last": ":last-child"
     }
   },
   "designTokens": [

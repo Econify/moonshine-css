@@ -13,15 +13,17 @@ use super::transformation_syntax::{
 pub struct Options {
     pub non_atom_identifier: String,
     pub atom_style: AtomStyle,
-    pub breakpoints: IndexMap<String, Breakpoint>,
-    pub breakpoint_modifier_style: BreakpointModifierStyle,
-    pub breakpoint_modifier_seperator: String,
     pub root_variable_prefix: String,
+    pub breakpoints: IndexMap<String, Breakpoint>,
+    pub breakpoint_modifier_style: ModifierStyle,
+    pub breakpoint_modifier_seperator: String,
+    pub pseudo_class_modifier_style: ModifierStyle,
+    pub pseudo_class_modifier_seperator: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub enum BreakpointModifierStyle {
+pub enum ModifierStyle {
     Prefix,
     Suffix,
 }
@@ -39,10 +41,12 @@ impl Default for Options {
         Self {
             non_atom_identifier: "__non_atom__".to_string(),
             atom_style: AtomStyle::ClassAttribute,
-            breakpoints: IndexMap::default(),
-            breakpoint_modifier_style: BreakpointModifierStyle::Prefix,
-            breakpoint_modifier_seperator: ":".to_string(),
             root_variable_prefix: "_".to_string(),
+            breakpoints: IndexMap::default(),
+            breakpoint_modifier_style: ModifierStyle::Prefix,
+            breakpoint_modifier_seperator: ":".to_string(),
+            pseudo_class_modifier_style: ModifierStyle::Prefix,
+            pseudo_class_modifier_seperator: ":".to_string(),
         }
     }
 }
@@ -65,12 +69,14 @@ pub type SugarBlock = IndexMap<CSSProperty, CSSValue>;
 #[derive(Debug)]
 pub struct TemplateOptions {
     include_breakpoints: bool,
+    include_pseudo_classes: bool,
 }
 
 impl Default for TemplateOptions {
     fn default() -> Self {
         Self {
             include_breakpoints: true,
+            include_pseudo_classes: true,
         }
     }
 }
@@ -194,10 +200,10 @@ fn get_breakpoints(affected_ids: Vec<String>, options: &Options) -> Vec<Transfor
         let sep = options.breakpoint_modifier_seperator.to_string();
 
         match options.breakpoint_modifier_style {
-            BreakpointModifierStyle::Prefix => {
+            ModifierStyle::Prefix => {
                 selector = format!("{}{}{}", name, sep, selector);
             }
-            BreakpointModifierStyle::Suffix => {
+            ModifierStyle::Suffix => {
                 selector = format!("{}{}{}", selector, sep, name);
             }
         }
