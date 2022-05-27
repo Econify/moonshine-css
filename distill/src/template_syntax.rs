@@ -238,11 +238,14 @@ fn detect_token_loop(
 
 fn get_selector(atom_name: &str, options: &Options) -> String {
     if atom_name.contains(&options.non_atom_identifier) {
-        return atom_name.replace(&options.non_atom_identifier, "");
+        return atom_name
+            .replace(&options.non_atom_identifier, "")
+            .trim()
+            .to_string()
     }
 
     match options.atom_style {
-        AtomStyle::ClassAttribute => format!(".{}", atom_name),
-        AtomStyle::DataAttribute => format!("[{}=\"\"]", atom_name),
+        AtomStyle::ClassAttribute => format!(".{}", atom_name.trim()),
+        AtomStyle::DataAttribute => format!("[{}=\"\"]", atom_name.trim()),
     }
 }
