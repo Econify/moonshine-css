@@ -54,3 +54,5 @@ _backup
 
 # Rust
 target
+bin/*
+_experiments
