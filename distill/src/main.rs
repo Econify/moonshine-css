@@ -100,7 +100,7 @@ fn main() {
     }
 
     // Global Variables
-    let root_transformations = transformations_from_tokens(&all_token_groups);
+    let root_transformations = transformations_from_tokens(&all_token_groups, &rc_file.options);
     let root_intermediate = Intermediate::build(all_token_groups.clone(), root_transformations);
     let root_css = root_intermediate.stringify();
 

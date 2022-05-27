@@ -4,51 +4,51 @@ m0:
   margin: none
 
 ma[$spacings.key]:
-  margin: var(--$spacings.key)
+  margin: $$spacings.value
 
 mh[$spacings.key]:
-  margin-left: var(--$spacings.key)
-  margin-right: var(--$spacings.key)
+  margin-left: $$spacings.value
+  margin-right: $$spacings.value
 
 mv[$spacings.key]:
-  margin-top: var(--$spacings.key)
-  margin-bottom: var(--$spacings.key)
+  margin-top: $$spacings.value
+  margin-bottom: $$spacings.value
 
 mt[$spacings.key]:
-  margin-top: var(--$spacings.key)
+  margin-top: $$spacings.value
 
 mb[$spacings.key]:
-  margin-bottom: var(--$spacings.key)
+  margin-bottom: $$spacings.value
 
 ml[$spacings.key]:
-  margin-left: var(--$spacings.key)
+  margin-left: $$spacings.value
 
 mr[$spacings.key]:
-  margin-right: var(--$spacings.key)
+  margin-right: $$spacings.value
 
 # Padding
 p0:
   padding: none
 
 pa[$spacings.key]:
-  padding: var(--$spacings.key)
+  padding: $$spacings.value
 
 ph[$spacings.key]:
-  padding-left: var(--$spacings.key)
-  padding-right: var(--$spacings.key)
+  padding-left: $$spacings.value
+  padding-right: $$spacings.value
 
 pv[$spacings.key]:
-  padding-top: var(--$spacings.key)
-  padding-bottom: var(--$spacings.key)
+  padding-top: $$spacings.value
+  padding-bottom: $$spacings.value
 
 pt[$spacings.key]:
-  padding-top: var(--$spacings.key)
+  padding-top: $$spacings.value
 
 pb[$spacings.key]:
-  padding-bottom: var(--$spacings.key)
+  padding-bottom: $$spacings.value
 
 pl[$spacings.key]:
-  padding-left: var(--$spacings.key)
+  padding-left: $$spacings.value
 
 pr[$spacings.key]:
-  padding-right: var(--$spacings.key)
+  padding-right: $$spacings.value
