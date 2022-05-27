@@ -1,0 +1,19 @@
+{
+    "options": {
+        "atomStyle": "classAttribute",
+        "nonAtomIdentfier": "__non_atom__"
+    },
+    "designTokens": [
+        "./atomic-design-tokens.yml"
+    ],
+    "templates": [
+        "./tachyons-border-box.yml",
+        "./tachyons-colors.yml",
+        "./tachyons-flex.yml",
+        "./tachyons-spacing.yml"
+    ],
+    "output": {
+        "css": "./dist/styles.css",
+        "json": "./dist/styles.json"
+    }
+}

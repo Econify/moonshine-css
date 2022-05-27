@@ -1,0 +1,12 @@
+{
+  "designTokens": [
+    "./styles/tokens.json"
+  ],
+  "transformations": [
+    "./styles/transformations.json"
+  ],
+  "output": {
+    "css": "./build/styles.css",
+    "json": "./build/styles.json"
+  }
+}
