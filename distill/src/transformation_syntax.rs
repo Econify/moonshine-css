@@ -1,6 +1,5 @@
-
-use serde::{Deserialize, Serialize};
 use indexmap::IndexMap;
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -22,11 +21,9 @@ pub struct NoTransformation {
     pub rules: Vec<CSSRule>,
 }
 
-
-
 #[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct CopyExistingRules{
+pub struct CopyExistingRules {
     pub id: String,
     pub description: String,
     pub affected_ids: Vec<String>,
@@ -35,7 +32,6 @@ pub struct CopyExistingRules{
     pub new_selector: String,
 }
 
-
 #[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct FromTokenGroup {
@@ -43,7 +39,7 @@ pub struct FromTokenGroup {
     pub description: String,
     pub token_group_name: String,
     pub selector: String,
-    pub declarations: IndexMap<String, String>
+    pub declarations: IndexMap<String, String>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -59,7 +55,6 @@ pub type TokenGroup = IndexMap<String, String>;
 pub type TokenGroups = IndexMap<String, TokenGroup>;
 pub type Transformations = Vec<Transformation>;
 
-
 #[derive(Deserialize, Serialize, Debug, Default, Clone)]
 pub struct CSSRule {
     pub selector: String,
@@ -67,18 +62,11 @@ pub struct CSSRule {
 }
 
 fn err_msg_for_missing_map(token_group_name: &str) -> String {
-    format!(
-        "There is no input group named \"{}\"",
-        token_group_name,
-    )
+    format!("There is no input group named \"{}\"", token_group_name,)
 }
 
 fn err_msg_for_missing_transformation(description: &str, id: &str) -> String {
-    format!(
-        "{}: There is no transformation named {}",
-        description,
-        id
-    )
+    format!("{}: There is no transformation named {}", description, id)
 }
 
 /// Derive a single `CSSRule` using `FromTokenGroup`
@@ -95,33 +83,38 @@ fn many_rules_from_token_group_name(
 
     for rule in &transformation.rules {
         for (var_key, var_val) in token_group_name {
-            let inject_variables = |s: &String| s
-                .replace("{{ KEY }}", var_key)
-                .replace("{{ VAL }}", var_val);
-            
+            let inject_variables = |s: &String| {
+                s.replace("{{ KEY }}", var_key)
+                    .replace("{{ VAL }}", var_val)
+            };
+
             rules.push(CSSRule {
                 selector: inject_variables(&rule.selector),
-                declarations: rule.declarations.iter().map(|(property, value)| {
-                    (
-                        inject_variables(&property),
-                        inject_variables(&value),
-                    )
-                }).collect()
+                declarations: rule
+                    .declarations
+                    .iter()
+                    .map(|(property, value)| {
+                        (inject_variables(&property), inject_variables(&value))
+                    })
+                    .collect(),
             })
         }
     }
 
-    intermediate.normal_rules.insert(transformation.id.clone(), RuleFamily {
-        description: transformation.description.clone(),
-        css_rules: rules,
-    });
+    intermediate.normal_rules.insert(
+        transformation.id.clone(),
+        RuleFamily {
+            description: transformation.description.clone(),
+            css_rules: rules,
+        },
+    );
 }
 
 /// Derive a single `CSSRule` using `FromTokenGroup`
 fn single_rule_from_token_group_name(
     token_groups: &TokenGroups,
     transformation: &FromTokenGroup,
-    intermediate: &mut Intermediate
+    intermediate: &mut Intermediate,
 ) {
     let token_group = token_groups
         .get(&transformation.token_group_name)
@@ -131,34 +124,41 @@ fn single_rule_from_token_group_name(
     let mut declarations = IndexMap::new();
 
     for (var_key, var_val) in token_group {
-        let inject_variables = |s: &String| s
-            .replace("{{ KEY }}", var_key)
-            .replace("{{ VAL }}", var_val);
+        let inject_variables = |s: &String| {
+            s.replace("{{ KEY }}", var_key)
+                .replace("{{ VAL }}", var_val)
+        };
 
         for (property, value) in &transformation.declarations {
-            declarations.insert(
-                inject_variables(&property),
-                inject_variables(&value),
-            );
+            declarations.insert(inject_variables(&property), inject_variables(&value));
         }
     }
 
-    intermediate.normal_rules.insert(transformation.id.clone(), RuleFamily {
-        description: transformation.description.clone(),
-        css_rules: vec![CSSRule { selector, declarations }]
-    });
+    intermediate.normal_rules.insert(
+        transformation.id.clone(),
+        RuleFamily {
+            description: transformation.description.clone(),
+            css_rules: vec![CSSRule {
+                selector,
+                declarations,
+            }],
+        },
+    );
 }
 
 /// Copy existing rules into a media query block
-fn copy_existing_rules(
-    transformation: &CopyExistingRules,
-    intermediate: &mut Intermediate,
-) {
+fn copy_existing_rules(transformation: &CopyExistingRules, intermediate: &mut Intermediate) {
     let mut new_rules: Vec<CSSRule> = vec![];
 
     for id in &transformation.affected_ids {
-        let rule_family = intermediate.normal_rules.get(&id.clone())
-            .expect(&err_msg_for_missing_transformation(&transformation.description, &id));
+        let rule_family =
+            intermediate
+                .normal_rules
+                .get(&id.clone())
+                .expect(&err_msg_for_missing_transformation(
+                    &transformation.description,
+                    &id,
+                ));
 
         for rule in rule_family.css_rules.iter() {
             let mut selector = transformation.new_selector.clone();
@@ -176,41 +176,48 @@ fn copy_existing_rules(
 
     match &transformation.at_rule_identifier {
         Some(identifier) => {
-            intermediate.at_rules.insert(transformation.id.clone(), AtRule {
-                identifier: identifier.clone(),
-                description: transformation.description.clone(),
-                css_rules: new_rules,
-            });
-        },
+            intermediate.at_rules.insert(
+                transformation.id.clone(),
+                AtRule {
+                    identifier: identifier.clone(),
+                    description: transformation.description.clone(),
+                    css_rules: new_rules,
+                },
+            );
+        }
         None => {
-            intermediate.normal_rules.insert(transformation.id.clone(), RuleFamily {
-                description: transformation.description.clone(),
-                css_rules: new_rules,
-            });
+            intermediate.normal_rules.insert(
+                transformation.id.clone(),
+                RuleFamily {
+                    description: transformation.description.clone(),
+                    css_rules: new_rules,
+                },
+            );
         }
     }
-
-
 }
 
 /// Insert given rules directly into the intermediate
-fn no_transformation(
-    transformation: &NoTransformation,
-    intermediate: &mut Intermediate
-) {
+fn no_transformation(transformation: &NoTransformation, intermediate: &mut Intermediate) {
     match &transformation.at_rule_identifier {
         Some(identifier) => {
-            intermediate.at_rules.insert(transformation.id.clone(), AtRule {
-                identifier: identifier.clone(),
-                description: transformation.description.clone(),
-                css_rules: transformation.rules.clone(),
-            });
-        },
+            intermediate.at_rules.insert(
+                transformation.id.clone(),
+                AtRule {
+                    identifier: identifier.clone(),
+                    description: transformation.description.clone(),
+                    css_rules: transformation.rules.clone(),
+                },
+            );
+        }
         None => {
-            intermediate.normal_rules.insert(transformation.id.clone(), RuleFamily {
-                description: transformation.description.clone(),
-                css_rules: transformation.rules.clone(),
-            });
+            intermediate.normal_rules.insert(
+                transformation.id.clone(),
+                RuleFamily {
+                    description: transformation.description.clone(),
+                    css_rules: transformation.rules.clone(),
+                },
+            );
         }
     };
 }
@@ -224,19 +231,24 @@ pub struct Intermediate {
 }
 
 impl Intermediate {
-    pub fn build(
-        token_groups: TokenGroups,
-        transformations: Transformations,
-    ) -> Intermediate {
+    pub fn build(token_groups: TokenGroups, transformations: Transformations) -> Intermediate {
         let mut intermediate = Intermediate::default();
 
         for transformation in &transformations {
             match transformation {
                 Transformation::SingleRuleFromTokenGroup(transformation) => {
-                    single_rule_from_token_group_name(&token_groups, &transformation, &mut intermediate);
+                    single_rule_from_token_group_name(
+                        &token_groups,
+                        &transformation,
+                        &mut intermediate,
+                    );
                 }
                 Transformation::ManyRulesFromTokenGroup(transformation) => {
-                    many_rules_from_token_group_name(&token_groups, &transformation, &mut intermediate);
+                    many_rules_from_token_group_name(
+                        &token_groups,
+                        &transformation,
+                        &mut intermediate,
+                    );
                 }
                 Transformation::CopyExistingRules(transformation) => {
                     copy_existing_rules(transformation, &mut intermediate);
@@ -264,7 +276,7 @@ impl Intermediate {
             css = format!("{}{}", css, block);
         }
 
-        css   
+        css
     }
 }
 
@@ -281,12 +293,13 @@ struct AtRule {
     css_rules: Vec<CSSRule>,
 }
 
-
 fn stringify_rules(rules: &Vec<CSSRule>) -> String {
     let mut css = String::new();
 
     for rule in rules {
-        let inner = rule.declarations.iter()
+        let inner = rule
+            .declarations
+            .iter()
             .map(|(k, v)| format!("{}:{};", k, v))
             .collect::<Vec<String>>()
             .join("");
