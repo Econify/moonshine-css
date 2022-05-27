@@ -38,4 +38,9 @@ module.exports = defineConfig({
       fileName: (format) => fileName[format],
     },
   },
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: "./test/setup.ts",
+  },
 });

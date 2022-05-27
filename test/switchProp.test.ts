@@ -1,4 +1,4 @@
-import { switchProp } from "../src/switchProp/switchProp";
+import switchProp from "../src/css/switchProp";
 
 test("switchProp optionally allows function accessor", () => {
   const props = {

@@ -3,11 +3,14 @@ use std::path::Path;
 
 const RC_FILE_SRC: &str = r#"
 {
+  "options": {
+    "atomStyle": "classAttribute"
+  },
   "designTokens": [
-    "./advanced/atomic-styles.design-tokens.json"
+    "./design-tokens.yml"
   ],
-  "transformations": [
-    "./advanced/atomic-styles.transformations.json"
+  "templates": [
+    "./templates/example.yml"
   ],
   "output": {
     "css": "./dist/styles.css",

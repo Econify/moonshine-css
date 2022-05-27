@@ -1,13 +1,17 @@
 {
-  "tokens": [
-    "styles/atomic-styles.design-tokens.json"
+  "options": {
+    "atomStyle": "classAttribute",
+    "nonAtomIdentfier": "__non_atom__"
+  },
+  "designTokens": [
+    "./tokens.json"
   ],
-  "plugins": [
-    "styles/atomic-styles.transformations.json"
+  "templates": [
+    "./text-colors.yml"
   ],
   "output": {
-    "styles": "styles/atomic-styles.css",
-    "types": "styles/atomic-styles.d.ts",
-    "snippets": ".vscode/atomic-styles.code-snippets"
+    "css": "./styles/atomic-styles.css",
+    "types": "./styles/atomic-styles.d.ts",
+    "snippets": "./.vscode/atomic-styles.code-snippets"
   }
 }

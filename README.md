@@ -37,17 +37,15 @@ or by creating a file manually:
       "md": "min-width: 768px",
       "lg": "min-width: 992px"
     },
-    "designTokens": [
-        "./atomic-design-tokens.yml"
-    ],
+    "designTokens": ["./atomic-design-tokens.yml"],
     "templates": [
-        "./tachyons-colors.yml",
-        "./tachyons-flex.yml",
-        "./tachyons-spacing.yml"
+      "./tachyons-colors.yml",
+      "./tachyons-flex.yml",
+      "./tachyons-spacing.yml"
     ],
     "output": {
-        "css": "./dist/styles.css",
-        "json": "./dist/styles.json"
+      "css": "./dist/styles.css",
+      "json": "./dist/styles.json"
     }
   }
 }
@@ -81,6 +79,8 @@ export default Demo() {
   );
 };
 ```
+
+You can read more about the [runtime syntax here](./docs/RUNTIME.md).
 
 ## Acknowledgements
 

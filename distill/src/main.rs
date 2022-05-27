@@ -11,6 +11,7 @@ use serde_yaml as yaml;
 use std::fs;
 use std::io::BufReader;
 use std::path::{Path, PathBuf};
+use std::time::Instant;
 use template_syntax::{transformations_from_templates, CSSTemplate, Options};
 use transformation_syntax::{Intermediate, TokenGroups};
 
@@ -64,6 +65,7 @@ fn main() {
     let args = Args::parse();
     let _debug_enabled = args.debug > 0;
     let _watch_enabled = args.watch > 0;
+    let exec_start = Instant::now();
 
     let path_to_rc_file = args
         .config
@@ -119,4 +121,7 @@ fn main() {
             Ok(_) => (),
         },
     };
+
+    let exec_duration = exec_start.elapsed();
+    println!("✅ Done [{:?}]", exec_duration);
 }
