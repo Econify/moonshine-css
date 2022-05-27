@@ -25,12 +25,6 @@
 #   6 = 6th step in spacing scale
 #   7 = 7th step in spacing scale
 
-$directions:
-  t: top
-  b: bottom
-  l: left
-  r: right
-
 # Margin
 ma[$spacings.key]:
   margin: var(--$spacings.key)

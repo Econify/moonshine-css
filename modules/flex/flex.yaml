@@ -1,8 +1,0 @@
----
-- id: define-flex-variables
-  description: Define Flex Variables
-  method: singleRuleFromTokenGroup
-  tokenGroupName: flex
-  selector: ""
-  declarations:
-    "--{{ KEY }}": "{{ VAL }}"
