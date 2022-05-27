@@ -1,18 +1,18 @@
 mod init;
 mod io;
-mod transformation_syntax;
 mod template_syntax;
+mod transformation_syntax;
 
 use clap::Parser;
 use init::initialize_moonshinerc;
 use io::write_file_creating_dirs;
-use transformation_syntax::{TokenGroups, Intermediate};
-use template_syntax::{Options, CSSTemplate, transformations_from_templates};
-use serde::{Deserialize};
+use serde::Deserialize;
+use serde_yaml as yaml;
 use std::fs;
 use std::io::BufReader;
 use std::path::{Path, PathBuf};
-use serde_yaml as yaml;
+use template_syntax::{transformations_from_templates, CSSTemplate, Options};
+use transformation_syntax::{Intermediate, TokenGroups};
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -71,7 +71,7 @@ fn main() {
         .unwrap_or(Path::new("./.moonshinerc"));
 
     if args.init != 0 {
-        initialize_moonshinerc(&value.to_str().unwrap());
+        initialize_moonshinerc(&path_to_rc_file.to_str().unwrap());
         std::process::exit(0);
     }
 
@@ -83,7 +83,7 @@ fn main() {
     for path in rc_file.design_tokens {
         let file = fs::File::open(path).unwrap();
         let reader = BufReader::new(file);
-        let token_groups: TokenGroups = yaml::from_reader(reader).unwrap();       
+        let token_groups: TokenGroups = yaml::from_reader(reader).unwrap();
         for (id, token_group) in token_groups {
             all_token_groups.insert(id, token_group);
         }
@@ -92,7 +92,7 @@ fn main() {
     for path in rc_file.templates {
         let file = fs::File::open(path).unwrap();
         let reader = BufReader::new(file);
-        let partial_ruleset: CSSTemplate = yaml::from_reader(reader).unwrap();       
+        let partial_ruleset: CSSTemplate = yaml::from_reader(reader).unwrap();
         for (atom_name_template, block) in partial_ruleset {
             ruleset.insert(atom_name_template, block);
         }
