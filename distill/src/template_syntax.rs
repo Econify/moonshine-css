@@ -1,6 +1,7 @@
 
 use regex::Regex;
 use serde::{Serialize, Deserialize};
+use indexmap::IndexMap;
 
 use super::transformation_syntax::{
     Transformation,
@@ -35,8 +36,6 @@ pub enum AtomStyle {
     DataAttribute,
 }
 
-use std::collections::{BTreeMap};
-use indexmap::IndexMap;
 
 type AtomName = String;
 type CSSProperty = String;
@@ -93,7 +92,7 @@ pub fn transformations_from_templates(
 
         let mut rule = CSSRule {
             selector: get_selector(atom_name_template, &options),
-            declarations: BTreeMap::new(),
+            declarations: IndexMap::new(),
         };
 
         for (property, value) in block {
@@ -151,7 +150,7 @@ fn detect_variable_map_loop(
 
         let mut css_rule = CSSRule {
             selector: get_selector(&atom_name, &options),
-            declarations: BTreeMap::new(),
+            declarations: IndexMap::new(),
         };
 
         let key_replacer = format!("${}.key", variable_map_name);
@@ -213,7 +212,7 @@ fn detect_token_loop(
 
     let mut rule = CSSRule {
         selector: get_selector(&atom_name, &options),
-        declarations: BTreeMap::new(),
+        declarations: IndexMap::new(),
     };
 
     for (property_template, value_template) in block {

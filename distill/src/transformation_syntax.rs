@@ -1,7 +1,6 @@
 
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
-
+use indexmap::IndexMap;
 
 #[derive(Deserialize, Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -44,7 +43,7 @@ pub struct FromTokenGroup {
     pub description: String,
     pub token_group_name: String,
     pub selector: String,
-    pub declarations: BTreeMap<String, String>
+    pub declarations: IndexMap<String, String>
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -56,15 +55,15 @@ pub struct ManyRulesFromTokenGroup {
     pub rules: Vec<CSSRule>,
 }
 
-pub type TokenGroup = BTreeMap<String, String>;
-pub type TokenGroups = BTreeMap<String, TokenGroup>;
+pub type TokenGroup = IndexMap<String, String>;
+pub type TokenGroups = IndexMap<String, TokenGroup>;
 pub type Transformations = Vec<Transformation>;
 
 
 #[derive(Deserialize, Serialize, Debug, Default, Clone)]
 pub struct CSSRule {
     pub selector: String,
-    pub declarations: BTreeMap<String, String>,
+    pub declarations: IndexMap<String, String>,
 }
 
 fn err_msg_for_missing_map(token_group_name: &str) -> String {
@@ -129,7 +128,7 @@ fn single_rule_from_token_group_name(
         .expect(&err_msg_for_missing_map(&transformation.token_group_name));
 
     let selector = transformation.selector.clone();
-    let mut declarations = BTreeMap::new();
+    let mut declarations = IndexMap::new();
 
     for (var_key, var_val) in token_group {
         let inject_variables = |s: &String| s
@@ -220,8 +219,8 @@ type TransformationID = String;
 
 #[derive(Default, Serialize)]
 pub struct Intermediate {
-    normal_rules: BTreeMap<TransformationID, RuleFamily>,
-    at_rules: BTreeMap<TransformationID, AtRule>,
+    normal_rules: IndexMap<TransformationID, RuleFamily>,
+    at_rules: IndexMap<TransformationID, AtRule>,
 }
 
 impl Intermediate {

@@ -1,6 +1,6 @@
 {
     "options": {
-        "atomStyle": "dataAttribute",
+        "atomStyle": "classAttribute",
         "nonAtomIdentfier": "__non_atom__"
     },
     "designTokens": [
