@@ -31,16 +31,22 @@ or by creating a file manually:
 
 ```json
 {
-  "options": {
-    "breakpoints": {
-      "sm": "min-width: 576px",
-      "md": "min-width: 768px",
-      "lg": "min-width: 992px"
+    "options": {
+        "atomStyle": "dataAttribute",
+        "nonAtomIdentfier": "__non_atom__",
+        "breakpointModifierStyle": "suffix",
+        "breakpointModifierSeperator": "-",
+        "breakpoints": {
+            "sm": { "minWidth": "576px" },
+            "md": { "minWidth": "768px", "maxWidth": "992px" },
+            "lg": { "minWidth": "992px" }
+        }
     },
     "designTokens": [
         "./atomic-design-tokens.yml"
     ],
     "templates": [
+        "./tachyons-border-box.yml",
         "./tachyons-colors.yml",
         "./tachyons-flex.yml",
         "./tachyons-spacing.yml"
@@ -49,7 +55,6 @@ or by creating a file manually:
         "css": "./dist/styles.css",
         "json": "./dist/styles.json"
     }
-  }
 }
 ```
 
