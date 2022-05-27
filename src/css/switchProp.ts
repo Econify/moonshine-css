@@ -1,6 +1,6 @@
 import type { TAtomClassesOrArray } from "../types";
 
-export function switchProp<TProps>(
+export default function switchProp<TProps>(
   prop: string,
   options: Record<
     string,

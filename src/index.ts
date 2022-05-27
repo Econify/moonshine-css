@@ -1,3 +1,3 @@
 export * from "./css";
-export * from "./switchProp";
+export * from "./tokens";
 export * from "./types";
