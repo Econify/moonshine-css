@@ -105,7 +105,6 @@ fn main() {
     let json = serde_json::to_string_pretty(&intermediate).unwrap();
 
     match rc_file.output.css {
-        Some(path) => write_file_creating_dirs(&path, &css),
         None => (),
         Some(path) => match write_file_creating_dirs(&path, &css) {
             Err(why) => panic!("{}", why),
@@ -114,7 +113,6 @@ fn main() {
     };
 
     match rc_file.output.json {
-        Some(path) => write_file_creating_dirs(&path, &json),
         None => (),
         Some(path) => match write_file_creating_dirs(&path, &json) {
             Err(why) => panic!("{}", why),

@@ -1,8 +1,6 @@
 use std::fs;
 use std::path::Path;
 
-
-
 pub fn write_file_creating_dirs(path: &str, contents: &str) -> Result<(), &'static str> {
     let path = Path::new(path);
 
