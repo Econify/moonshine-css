@@ -1,0 +1,10 @@
+# VERTICAL ALIGN
+
+$aligns:
+  base: baseline
+  mid: middle
+  top: top
+  btm: bottom
+
+v-[$aligns.key]:
+  vertical-align: $aligns.value

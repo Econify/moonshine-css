@@ -1,0 +1,20 @@
+# TEXT ALIGN
+# Docs: http://tachyons.io/docs/typography/text-align/
+
+# Base
+#   t = text-align
+
+# Modifiers
+#   l = left
+#   r = right
+#   c = center
+#   j = justify
+
+$text-aligns:
+  l: left
+  r: right
+  c: center
+  j: justify
+
+t[$text-aligns.key]:
+  text-align: $text-aligns.value

@@ -1,0 +1,10 @@
+# LINE HEIGHT / LEADING
+# Docs: http://tachyons.io/docs/typography/line-height
+
+$line-heights:
+  solid: 1
+  title: 1.25
+  copy: 1.5
+
+lh-[$line-heights.key]:
+  line-height: $line-heights.value

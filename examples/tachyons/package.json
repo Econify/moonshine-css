@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "distill --watch",
+    "dev": "npx nodemon -e yml --exec distill --watch",
     "build": "distill"
   },
   "dependencies": {

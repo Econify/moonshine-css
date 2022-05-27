@@ -1,0 +1,71 @@
+# HEIGHTS
+# Docs: http://tachyons.io/docs/layout/heights/
+
+# Base:
+#   h = height
+#   min-h = min-height
+#   min-vh = min-height vertical screen height
+#   vh = vertical screen height
+
+# Modifiers
+#   1 = 1st step in height scale
+#   2 = 2nd step in height scale
+#   3 = 3rd step in height scale
+#   4 = 4th step in height scale
+#   5 = 5th step in height scale
+
+#   -25   = literal value 25%
+#   -50   = literal value 50%
+#   -75   = literal value 75%
+#   -100  = literal value 100%
+
+#   -auto = string value of auto
+#   -inherit = string value of inherit
+
+# Height Scale
+
+$heights:
+  1: 1rem
+  2: 2rem
+  3: 4rem
+  4: 8rem
+  5: 16rem
+
+$heights-percentage:
+  25: 25%
+  50: 50%
+  75: 75%
+  100: 100%
+
+$height-viewport:
+  25: 25vh
+  50: 50vh
+  75: 75vh
+  100: 100vh
+
+h[$heights.key]:
+  height: $heights.value
+
+# Height Percentages - Based off of height of parent
+
+h-[$heights-percentage.key]:
+  height: $heights-percentage.value
+
+min-h-100:
+  min-height: 100%
+
+# Screen Height Percentage
+
+vh-[$height-viewport.key]:
+  height: $height-viewport.value
+
+min-vh-100:
+  min-height: 100vh
+
+# String Properties
+
+h-auto:
+  height: auto
+
+h-inherit:
+  height: inherit

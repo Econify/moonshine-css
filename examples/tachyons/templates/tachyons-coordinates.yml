@@ -1,0 +1,30 @@
+# COORDINATES
+# Docs: http://tachyons.io/docs/layout/position/
+
+# Use in combination with the position module.
+
+# Base:
+#   top
+#   bottom
+#   right
+#   left
+
+# TODO: Nested loops
+
+top-[$spacings.key]:
+  top: $spacings.value
+
+bottom-[$spacings.key]:
+  bottom: $spacings.value
+
+right-[$spacings.key]:
+  right: $spacings.value
+
+left-[$spacings.key]:
+  left: $spacings.value
+
+absolute--fill:
+  top: 0
+  right: 0
+  bottom: 0
+  left: 0
