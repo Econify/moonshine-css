@@ -1,9 +1,10 @@
 {
+  "options": {},
   "designTokens": [
     "./styles/tokens.json"
   ],
-  "transformations": [
-    "./styles/transformations.json"
+  "templates": [
+    "./styles/example.yml"
   ],
   "output": {
     "css": "./build/styles.css",

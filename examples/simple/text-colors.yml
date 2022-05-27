@@ -1,0 +1,3 @@
+# Text Colors
+text-[$colors.key]:
+  color: var(--$colors.key)
