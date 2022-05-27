@@ -54,5 +54,7 @@ _backup
 
 # Rust
 target
-bin/*
+bin/osx/
+bin/windows/
+bin/ubuntu/
 _experiments

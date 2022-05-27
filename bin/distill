@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+
+const spawn = require("child_process").spawn;
+const path = require("path");
+const os = require("os");
+const fs = require("fs");
+
+const binaryPaths = {
+  Linux: path.join(__dirname, "ubuntu/distill"),
+  Windows_NT: path.join(__dirname, "windows/distill.exe"),
+  Darwin: path.join(__dirname, "osx/distill"),
+};
+
+// Collecting command line arguments
+const [_interpreter, _parentCommand, ...args] = process.argv;
+
+let binaryPath = binaryPaths[os.type()];
+
+if (!fs.existsSync(binaryPath)) {
+  throw new Error("Unsupported operating system!");
+}
+
+spawn(binaryPath, args, {
+  shell: true,
+  stdio: "inherit",
+});
