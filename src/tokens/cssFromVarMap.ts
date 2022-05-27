@@ -1,6 +1,6 @@
 export type TVariableMap = { [key: string]: string };
 
-export function cssFromVarMap(setRootVariables: TVariableMap): string {
+export default function cssFromVarMap(setRootVariables: TVariableMap): string {
   const rules = Object.keys(setRootVariables)
     .map((name) => `--${name}: ${setRootVariables[name]};`)
     .join("");

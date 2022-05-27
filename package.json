@@ -13,13 +13,13 @@
   "bugs": {
     "url": "https://github.com/econify/moonshine-css/issues"
   },
-  "main": "./dist/moonshine.cjs",
-  "module": "./dist/moonshine.mjs",
-  "types": "./dist/moonshine.d.ts",
+  "main": "./dist/moonshine-css.cjs",
+  "module": "./dist/moonshine-css.mjs",
+  "types": "./dist/moonshine-css.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/moonshine.cjs",
-      "import": "./dist/moonshine.mjs"
+      "require": "./dist/moonshine-css.cjs",
+      "import": "./dist/moonshine-css.mjs"
     }
   },
   "bin": {

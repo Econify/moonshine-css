@@ -1,15 +1,18 @@
 mod init;
 mod io;
-mod lib;
+mod transformation_syntax;
+mod template_syntax;
 
 use clap::Parser;
 use init::initialize_moonshinerc;
 use io::write_file_creating_dirs;
-use lib::{Intermediate, TokenGroups, Transformations};
-use serde::Deserialize;
+use transformation_syntax::{TokenGroups, Intermediate};
+use template_syntax::{Options, CSSTemplate, transformations_from_templates};
+use serde::{Deserialize};
 use std::fs;
 use std::io::BufReader;
 use std::path::{Path, PathBuf};
+use serde_yaml as yaml;
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -43,15 +46,16 @@ pub struct OutputPaths {
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct RCFile {
+    pub options: Options,
     pub design_tokens: Vec<String>,
-    pub transformations: Vec<String>,
+    pub templates: Vec<String>,
     pub output: OutputPaths,
 }
 
 impl RCFile {
     pub fn load_from_json(path: &str) -> Self {
-        let config_file = fs::File::open(&path).unwrap();
-        let reader = BufReader::new(config_file);
+        let rc_file_file = fs::File::open(&path).unwrap();
+        let reader = BufReader::new(rc_file_file);
         serde_json::from_reader(reader).unwrap()
     }
 }
@@ -61,7 +65,7 @@ fn main() {
     let _debug_enabled = args.debug > 0;
     let _watch_enabled = args.watch > 0;
 
-    let value = args
+    let path_to_rc_file = args
         .config
         .as_deref()
         .unwrap_or(Path::new("./.moonshinerc"));
@@ -71,35 +75,37 @@ fn main() {
         std::process::exit(0);
     }
 
-    let config = RCFile::load_from_json(&value.to_str().unwrap());
+    let rc_file = RCFile::load_from_json(&path_to_rc_file.to_str().unwrap());
 
     let mut all_token_groups = TokenGroups::new();
+    let mut ruleset = CSSTemplate::new();
 
-    for path in config.design_tokens {
+    for path in rc_file.design_tokens {
         let file = fs::File::open(path).unwrap();
         let reader = BufReader::new(file);
-        let token_groups: TokenGroups = serde_json::from_reader(reader).unwrap();       
+        let token_groups: TokenGroups = yaml::from_reader(reader).unwrap();       
         for (id, token_group) in token_groups {
             all_token_groups.insert(id, token_group);
         }
     }
 
-    let mut all_transformations = Transformations::new();
-
-    for path in config.transformations {
+    for path in rc_file.templates {
         let file = fs::File::open(path).unwrap();
         let reader = BufReader::new(file);
-        let transformations: Transformations = serde_json::from_reader(reader).unwrap();       
-        for transformation in transformations {
-            all_transformations.push(transformation);
+        let partial_ruleset: CSSTemplate = yaml::from_reader(reader).unwrap();       
+        for (atom_name_template, block) in partial_ruleset {
+            ruleset.insert(atom_name_template, block);
         }
     }
 
-    let intermediate = Intermediate::build(all_token_groups, all_transformations);
+    let transformations = transformations_from_templates(&ruleset, &rc_file.options);
+
+    let intermediate = Intermediate::build(all_token_groups, transformations);
     let css = intermediate.stringify();
     let json = serde_json::to_string_pretty(&intermediate).unwrap();
 
-    match config.output.css {
+    match rc_file.output.css {
+        Some(path) => write_file_creating_dirs(&path, &css),
         None => (),
         Some(path) => match write_file_creating_dirs(&path, &css) {
             Err(why) => panic!("{}", why),
@@ -107,7 +113,8 @@ fn main() {
         },
     };
 
-    match config.output.json {
+    match rc_file.output.json {
+        Some(path) => write_file_creating_dirs(&path, &json),
         None => (),
         Some(path) => match write_file_creating_dirs(&path, &json) {
             Err(why) => panic!("{}", why),

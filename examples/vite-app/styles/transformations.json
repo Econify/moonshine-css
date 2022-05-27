@@ -1,0 +1,26 @@
+[
+    {
+        "id": "define-color-variables",
+        "description": "Define Color Variables",
+        "method": "singleRuleFromTokenGroup",
+        "tokenGroupName": "colors",
+        "selector": ":root",
+        "declarations": {
+            "--{{ KEY }}": "{{ VAL }}"
+        }
+    },
+    {
+        "id": "background-colors",
+        "description": "Background Colors",
+        "method": "manyRulesFromTokenGroup",
+        "tokenGroupName": "colors",
+        "rules": [
+            {
+                "selector": ".bg-{{ KEY }}",
+                "declarations": {
+                    "background-color": "var(--{{ KEY }})"
+                }
+            }
+        ]
+    }
+]

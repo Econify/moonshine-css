@@ -7,8 +7,8 @@
 - 🥃 Minimal and simple atomic CSS framework
 - ⚗️ 100% customizable - build your own CSS framework
 - 🦀 Blazing fast generator written in Rust
-- 🐜 Tiny `1.1 kB` runtime
-- ⚛️ React integration
+- 🐜 Tiny `1.7 kB` runtime
+- ⚛️ CSS-in-JS library for React
 
 ## Install
 
@@ -24,7 +24,7 @@ Create a `.moonshinerc` file in your project root.
 by running
 
 ```
-distill --init
+npx distill --init
 ```
 
 or by creating a file manually:
@@ -36,20 +36,19 @@ or by creating a file manually:
       "sm": "min-width: 576px",
       "md": "min-width: 768px",
       "lg": "min-width: 992px"
+    },
+    "designTokens": [
+        "./atomic-design-tokens.yml"
+    ],
+    "templates": [
+        "./tachyons-colors.yml",
+        "./tachyons-flex.yml",
+        "./tachyons-spacing.yml"
+    ],
+    "output": {
+        "css": "./dist/styles.css",
+        "json": "./dist/styles.json"
     }
-  },
-  "plugins": [
-    "@moonshine/plugin-css-typography",
-    "@moonshine/plugin-css-grid",
-    "@moonshine/plugin-css-buttons",
-    "@moonshine/plugin-css-forms",
-    "@moonshine/plugin-css-tables",
-    "@moonshine/plugin-css-utilities"
-  ],
-  "output": {
-    "styles": "styles/atomic-styles.css",
-    "types": "styles/atomic-styles.d.ts",
-    "snippets": ".vscode/atomic-styles.code-snippets"
   }
 }
 ```
@@ -57,9 +56,7 @@ or by creating a file manually:
 then run
 
 ```bash
-distill --watch
-# or
-npx @econify/moonshine-css --watch
+npx distill --watch
 ```
 
 ## Usage
@@ -72,18 +69,19 @@ import "atomic-styles.css";
 import { styled } from "@econify/moonshine-css";
 
 const Button = styled.button(
-  "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+  "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
+  ({ isPrimary }) => isPrimary && "bg-primary text-white"
 );
 
 export default Demo() {
   return (
     <div>
-      <Button>Click me</Button>
+      <Button isPrimary={true}>Click me</Button>
     </div>
   );
 };
 ```
 
-## Acknoledgements
+## Acknowledgements
 
 TBD
