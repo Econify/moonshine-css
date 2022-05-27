@@ -1,4 +1,3 @@
-
 # Flexbox
 flex:
   display: flex
@@ -38,7 +37,7 @@ flex-row-reverse:
 $alignments:
   start: flex-start
   end: flex-end
-  center: center 
+  center: center
   baseline: baseline
   between: space-between
   around: space-around

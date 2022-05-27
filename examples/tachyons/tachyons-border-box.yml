@@ -1,4 +1,3 @@
-
 $selectors:
   html: 0
   body: 0
@@ -28,7 +27,7 @@ $selectors:
   dt: 0
   dd: 0
   textarea: 0
-  table: 0 
+  table: 0
   td: 0
   th: 0
   tr: 0
