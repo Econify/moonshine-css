@@ -1,0 +1,8 @@
+# FONT STYLE
+# Docs: http://tachyons.io/docs/typography/font-style/
+
+i:
+  font-style: italic
+
+fs-normal:
+  font-style: normal

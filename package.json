@@ -2,8 +2,13 @@
   "name": "@econify/moonshine-css",
   "version": "0.1.0",
   "description": "High-proof atomic CSS",
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "css",
+    "css-in-js",
+    "atomic css",
+    "zero-runtime",
+    "rust-lang"
+  ],
   "license": "MIT",
   "homepage": "https://github.com/econify/moonshine-css#readme",
   "repository": {
@@ -13,18 +18,32 @@
   "bugs": {
     "url": "https://github.com/econify/moonshine-css/issues"
   },
-  "main": "./dist/moonshine.cjs",
-  "module": "./dist/moonshine.mjs",
-  "types": "./dist/moonshine.d.ts",
+  "contributors": [
+    {
+      "name": "Thomas Weustenfeld",
+      "email": "tw@econify.com"
+    },
+    {
+      "name": "Craig Fay",
+      "email": "craigfay@econify.com"
+    }
+  ],
+  "main": "./dist/moonshine-css.cjs",
+  "module": "./dist/moonshine-css.mjs",
+  "types": "./dist/moonshine-css.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/moonshine.cjs",
-      "import": "./dist/moonshine.mjs"
+      "require": "./dist/moonshine-css.cjs",
+      "import": "./dist/moonshine-css.mjs"
     }
   },
   "bin": {
     "distill": "./bin/distill"
   },
+  "files": [
+    "dist",
+    "bin"
+  ],
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && vite build && dts-bundle-generator --config ./dts-bundle-generator.config.ts",
@@ -42,22 +61,22 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@types/jsdom": "^16.2.14",
-    "@types/node": "^17.0.34",
+    "@types/node": "^17.0.35",
     "@types/react": "^18.0.9",
-    "@types/react-dom": "^18.0.4",
-    "@typescript-eslint/eslint-plugin": "^5.25.0",
-    "@typescript-eslint/parser": "^5.25.0",
+    "@types/react-dom": "^18.0.5",
+    "@typescript-eslint/eslint-plugin": "^5.26.0",
+    "@typescript-eslint/parser": "^5.26.0",
     "dts-bundle-generator": "^6.9.0",
-    "eslint": "^8.15.0",
+    "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react": "^7.30.0",
     "jsdom": "^19.0.0",
     "prettier": "^2.6.2",
     "rollup-plugin-license": "^2.7.0",
-    "typescript": "^4.6.4",
+    "typescript": "^4.7.2",
     "vite": "^2.9.9",
-    "vitest": "^0.12.6"
+    "vitest": "^0.12.9"
   }
 }

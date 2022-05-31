@@ -1,0 +1,790 @@
+{
+  "normal_rules": {
+    "bg-{{ KEY }}": {
+      "description": "",
+      "css_rules": [
+        {
+          "selector": ".bg-gray0",
+          "declarations": {
+            "background-color": "var(--gray0)"
+          }
+        },
+        {
+          "selector": ".bg-gray1",
+          "declarations": {
+            "background-color": "var(--gray1)"
+          }
+        },
+        {
+          "selector": ".bg-gray2",
+          "declarations": {
+            "background-color": "var(--gray2)"
+          }
+        },
+        {
+          "selector": ".bg-gray3",
+          "declarations": {
+            "background-color": "var(--gray3)"
+          }
+        },
+        {
+          "selector": ".bg-gray4",
+          "declarations": {
+            "background-color": "var(--gray4)"
+          }
+        },
+        {
+          "selector": ".bg-gray5",
+          "declarations": {
+            "background-color": "var(--gray5)"
+          }
+        },
+        {
+          "selector": ".bg-gray6",
+          "declarations": {
+            "background-color": "var(--gray6)"
+          }
+        },
+        {
+          "selector": ".bg-gray7",
+          "declarations": {
+            "background-color": "var(--gray7)"
+          }
+        },
+        {
+          "selector": ".bg-gray8",
+          "declarations": {
+            "background-color": "var(--gray8)"
+          }
+        },
+        {
+          "selector": ".bg-gray9",
+          "declarations": {
+            "background-color": "var(--gray9)"
+          }
+        },
+        {
+          "selector": ".bg-red0",
+          "declarations": {
+            "background-color": "var(--red0)"
+          }
+        },
+        {
+          "selector": ".bg-red1",
+          "declarations": {
+            "background-color": "var(--red1)"
+          }
+        },
+        {
+          "selector": ".bg-red2",
+          "declarations": {
+            "background-color": "var(--red2)"
+          }
+        },
+        {
+          "selector": ".bg-red3",
+          "declarations": {
+            "background-color": "var(--red3)"
+          }
+        },
+        {
+          "selector": ".bg-red4",
+          "declarations": {
+            "background-color": "var(--red4)"
+          }
+        },
+        {
+          "selector": ".bg-red5",
+          "declarations": {
+            "background-color": "var(--red5)"
+          }
+        },
+        {
+          "selector": ".bg-red6",
+          "declarations": {
+            "background-color": "var(--red6)"
+          }
+        },
+        {
+          "selector": ".bg-red7",
+          "declarations": {
+            "background-color": "var(--red7)"
+          }
+        },
+        {
+          "selector": ".bg-red8",
+          "declarations": {
+            "background-color": "var(--red8)"
+          }
+        },
+        {
+          "selector": ".bg-red9",
+          "declarations": {
+            "background-color": "var(--red9)"
+          }
+        },
+        {
+          "selector": ".bg-pink0",
+          "declarations": {
+            "background-color": "var(--pink0)"
+          }
+        },
+        {
+          "selector": ".bg-pink1",
+          "declarations": {
+            "background-color": "var(--pink1)"
+          }
+        },
+        {
+          "selector": ".bg-pink2",
+          "declarations": {
+            "background-color": "var(--pink2)"
+          }
+        },
+        {
+          "selector": ".bg-pink3",
+          "declarations": {
+            "background-color": "var(--pink3)"
+          }
+        },
+        {
+          "selector": ".bg-pink4",
+          "declarations": {
+            "background-color": "var(--pink4)"
+          }
+        },
+        {
+          "selector": ".bg-pink5",
+          "declarations": {
+            "background-color": "var(--pink5)"
+          }
+        },
+        {
+          "selector": ".bg-pink6",
+          "declarations": {
+            "background-color": "var(--pink6)"
+          }
+        },
+        {
+          "selector": ".bg-pink7",
+          "declarations": {
+            "background-color": "var(--pink7)"
+          }
+        },
+        {
+          "selector": ".bg-pink8",
+          "declarations": {
+            "background-color": "var(--pink8)"
+          }
+        },
+        {
+          "selector": ".bg-pink9",
+          "declarations": {
+            "background-color": "var(--pink9)"
+          }
+        },
+        {
+          "selector": ".bg-grape0",
+          "declarations": {
+            "background-color": "var(--grape0)"
+          }
+        },
+        {
+          "selector": ".bg-grape1",
+          "declarations": {
+            "background-color": "var(--grape1)"
+          }
+        },
+        {
+          "selector": ".bg-grape2",
+          "declarations": {
+            "background-color": "var(--grape2)"
+          }
+        },
+        {
+          "selector": ".bg-grape3",
+          "declarations": {
+            "background-color": "var(--grape3)"
+          }
+        },
+        {
+          "selector": ".bg-grape4",
+          "declarations": {
+            "background-color": "var(--grape4)"
+          }
+        },
+        {
+          "selector": ".bg-grape5",
+          "declarations": {
+            "background-color": "var(--grape5)"
+          }
+        },
+        {
+          "selector": ".bg-grape6",
+          "declarations": {
+            "background-color": "var(--grape6)"
+          }
+        },
+        {
+          "selector": ".bg-grape7",
+          "declarations": {
+            "background-color": "var(--grape7)"
+          }
+        },
+        {
+          "selector": ".bg-grape8",
+          "declarations": {
+            "background-color": "var(--grape8)"
+          }
+        },
+        {
+          "selector": ".bg-grape9",
+          "declarations": {
+            "background-color": "var(--grape9)"
+          }
+        },
+        {
+          "selector": ".bg-violet0",
+          "declarations": {
+            "background-color": "var(--violet0)"
+          }
+        },
+        {
+          "selector": ".bg-violet1",
+          "declarations": {
+            "background-color": "var(--violet1)"
+          }
+        },
+        {
+          "selector": ".bg-violet2",
+          "declarations": {
+            "background-color": "var(--violet2)"
+          }
+        },
+        {
+          "selector": ".bg-violet3",
+          "declarations": {
+            "background-color": "var(--violet3)"
+          }
+        },
+        {
+          "selector": ".bg-violet4",
+          "declarations": {
+            "background-color": "var(--violet4)"
+          }
+        },
+        {
+          "selector": ".bg-violet5",
+          "declarations": {
+            "background-color": "var(--violet5)"
+          }
+        },
+        {
+          "selector": ".bg-violet6",
+          "declarations": {
+            "background-color": "var(--violet6)"
+          }
+        },
+        {
+          "selector": ".bg-violet7",
+          "declarations": {
+            "background-color": "var(--violet7)"
+          }
+        },
+        {
+          "selector": ".bg-violet8",
+          "declarations": {
+            "background-color": "var(--violet8)"
+          }
+        },
+        {
+          "selector": ".bg-violet9",
+          "declarations": {
+            "background-color": "var(--violet9)"
+          }
+        },
+        {
+          "selector": ".bg-indigo0",
+          "declarations": {
+            "background-color": "var(--indigo0)"
+          }
+        },
+        {
+          "selector": ".bg-indigo1",
+          "declarations": {
+            "background-color": "var(--indigo1)"
+          }
+        },
+        {
+          "selector": ".bg-indigo2",
+          "declarations": {
+            "background-color": "var(--indigo2)"
+          }
+        },
+        {
+          "selector": ".bg-indigo3",
+          "declarations": {
+            "background-color": "var(--indigo3)"
+          }
+        },
+        {
+          "selector": ".bg-indigo4",
+          "declarations": {
+            "background-color": "var(--indigo4)"
+          }
+        },
+        {
+          "selector": ".bg-indigo5",
+          "declarations": {
+            "background-color": "var(--indigo5)"
+          }
+        },
+        {
+          "selector": ".bg-indigo6",
+          "declarations": {
+            "background-color": "var(--indigo6)"
+          }
+        },
+        {
+          "selector": ".bg-indigo7",
+          "declarations": {
+            "background-color": "var(--indigo7)"
+          }
+        },
+        {
+          "selector": ".bg-indigo8",
+          "declarations": {
+            "background-color": "var(--indigo8)"
+          }
+        },
+        {
+          "selector": ".bg-indigo9",
+          "declarations": {
+            "background-color": "var(--indigo9)"
+          }
+        },
+        {
+          "selector": ".bg-blue0",
+          "declarations": {
+            "background-color": "var(--blue0)"
+          }
+        },
+        {
+          "selector": ".bg-blue1",
+          "declarations": {
+            "background-color": "var(--blue1)"
+          }
+        },
+        {
+          "selector": ".bg-blue2",
+          "declarations": {
+            "background-color": "var(--blue2)"
+          }
+        },
+        {
+          "selector": ".bg-blue3",
+          "declarations": {
+            "background-color": "var(--blue3)"
+          }
+        },
+        {
+          "selector": ".bg-blue4",
+          "declarations": {
+            "background-color": "var(--blue4)"
+          }
+        },
+        {
+          "selector": ".bg-blue5",
+          "declarations": {
+            "background-color": "var(--blue5)"
+          }
+        },
+        {
+          "selector": ".bg-blue6",
+          "declarations": {
+            "background-color": "var(--blue6)"
+          }
+        },
+        {
+          "selector": ".bg-blue7",
+          "declarations": {
+            "background-color": "var(--blue7)"
+          }
+        },
+        {
+          "selector": ".bg-blue8",
+          "declarations": {
+            "background-color": "var(--blue8)"
+          }
+        },
+        {
+          "selector": ".bg-blue9",
+          "declarations": {
+            "background-color": "var(--blue9)"
+          }
+        },
+        {
+          "selector": ".bg-cyan0",
+          "declarations": {
+            "background-color": "var(--cyan0)"
+          }
+        },
+        {
+          "selector": ".bg-cyan1",
+          "declarations": {
+            "background-color": "var(--cyan1)"
+          }
+        },
+        {
+          "selector": ".bg-cyan2",
+          "declarations": {
+            "background-color": "var(--cyan2)"
+          }
+        },
+        {
+          "selector": ".bg-cyan3",
+          "declarations": {
+            "background-color": "var(--cyan3)"
+          }
+        },
+        {
+          "selector": ".bg-cyan4",
+          "declarations": {
+            "background-color": "var(--cyan4)"
+          }
+        },
+        {
+          "selector": ".bg-cyan5",
+          "declarations": {
+            "background-color": "var(--cyan5)"
+          }
+        },
+        {
+          "selector": ".bg-cyan6",
+          "declarations": {
+            "background-color": "var(--cyan6)"
+          }
+        },
+        {
+          "selector": ".bg-cyan7",
+          "declarations": {
+            "background-color": "var(--cyan7)"
+          }
+        },
+        {
+          "selector": ".bg-cyan8",
+          "declarations": {
+            "background-color": "var(--cyan8)"
+          }
+        },
+        {
+          "selector": ".bg-cyan9",
+          "declarations": {
+            "background-color": "var(--cyan9)"
+          }
+        },
+        {
+          "selector": ".bg-teal0",
+          "declarations": {
+            "background-color": "var(--teal0)"
+          }
+        },
+        {
+          "selector": ".bg-teal1",
+          "declarations": {
+            "background-color": "var(--teal1)"
+          }
+        },
+        {
+          "selector": ".bg-teal2",
+          "declarations": {
+            "background-color": "var(--teal2)"
+          }
+        },
+        {
+          "selector": ".bg-teal3",
+          "declarations": {
+            "background-color": "var(--teal3)"
+          }
+        },
+        {
+          "selector": ".bg-teal4",
+          "declarations": {
+            "background-color": "var(--teal4)"
+          }
+        },
+        {
+          "selector": ".bg-teal5",
+          "declarations": {
+            "background-color": "var(--teal5)"
+          }
+        },
+        {
+          "selector": ".bg-teal6",
+          "declarations": {
+            "background-color": "var(--teal6)"
+          }
+        },
+        {
+          "selector": ".bg-teal7",
+          "declarations": {
+            "background-color": "var(--teal7)"
+          }
+        },
+        {
+          "selector": ".bg-teal8",
+          "declarations": {
+            "background-color": "var(--teal8)"
+          }
+        },
+        {
+          "selector": ".bg-teal9",
+          "declarations": {
+            "background-color": "var(--teal9)"
+          }
+        },
+        {
+          "selector": ".bg-green0",
+          "declarations": {
+            "background-color": "var(--green0)"
+          }
+        },
+        {
+          "selector": ".bg-green1",
+          "declarations": {
+            "background-color": "var(--green1)"
+          }
+        },
+        {
+          "selector": ".bg-green2",
+          "declarations": {
+            "background-color": "var(--green2)"
+          }
+        },
+        {
+          "selector": ".bg-green3",
+          "declarations": {
+            "background-color": "var(--green3)"
+          }
+        },
+        {
+          "selector": ".bg-green4",
+          "declarations": {
+            "background-color": "var(--green4)"
+          }
+        },
+        {
+          "selector": ".bg-green5",
+          "declarations": {
+            "background-color": "var(--green5)"
+          }
+        },
+        {
+          "selector": ".bg-green6",
+          "declarations": {
+            "background-color": "var(--green6)"
+          }
+        },
+        {
+          "selector": ".bg-green7",
+          "declarations": {
+            "background-color": "var(--green7)"
+          }
+        },
+        {
+          "selector": ".bg-green8",
+          "declarations": {
+            "background-color": "var(--green8)"
+          }
+        },
+        {
+          "selector": ".bg-green9",
+          "declarations": {
+            "background-color": "var(--green9)"
+          }
+        },
+        {
+          "selector": ".bg-lime0",
+          "declarations": {
+            "background-color": "var(--lime0)"
+          }
+        },
+        {
+          "selector": ".bg-lime1",
+          "declarations": {
+            "background-color": "var(--lime1)"
+          }
+        },
+        {
+          "selector": ".bg-lime2",
+          "declarations": {
+            "background-color": "var(--lime2)"
+          }
+        },
+        {
+          "selector": ".bg-lime3",
+          "declarations": {
+            "background-color": "var(--lime3)"
+          }
+        },
+        {
+          "selector": ".bg-lime4",
+          "declarations": {
+            "background-color": "var(--lime4)"
+          }
+        },
+        {
+          "selector": ".bg-lime5",
+          "declarations": {
+            "background-color": "var(--lime5)"
+          }
+        },
+        {
+          "selector": ".bg-lime6",
+          "declarations": {
+            "background-color": "var(--lime6)"
+          }
+        },
+        {
+          "selector": ".bg-lime7",
+          "declarations": {
+            "background-color": "var(--lime7)"
+          }
+        },
+        {
+          "selector": ".bg-lime8",
+          "declarations": {
+            "background-color": "var(--lime8)"
+          }
+        },
+        {
+          "selector": ".bg-lime9",
+          "declarations": {
+            "background-color": "var(--lime9)"
+          }
+        },
+        {
+          "selector": ".bg-yellow0",
+          "declarations": {
+            "background-color": "var(--yellow0)"
+          }
+        },
+        {
+          "selector": ".bg-yellow1",
+          "declarations": {
+            "background-color": "var(--yellow1)"
+          }
+        },
+        {
+          "selector": ".bg-yellow2",
+          "declarations": {
+            "background-color": "var(--yellow2)"
+          }
+        },
+        {
+          "selector": ".bg-yellow3",
+          "declarations": {
+            "background-color": "var(--yellow3)"
+          }
+        },
+        {
+          "selector": ".bg-yellow4",
+          "declarations": {
+            "background-color": "var(--yellow4)"
+          }
+        },
+        {
+          "selector": ".bg-yellow5",
+          "declarations": {
+            "background-color": "var(--yellow5)"
+          }
+        },
+        {
+          "selector": ".bg-yellow6",
+          "declarations": {
+            "background-color": "var(--yellow6)"
+          }
+        },
+        {
+          "selector": ".bg-yellow7",
+          "declarations": {
+            "background-color": "var(--yellow7)"
+          }
+        },
+        {
+          "selector": ".bg-yellow8",
+          "declarations": {
+            "background-color": "var(--yellow8)"
+          }
+        },
+        {
+          "selector": ".bg-yellow9",
+          "declarations": {
+            "background-color": "var(--yellow9)"
+          }
+        },
+        {
+          "selector": ".bg-orange0",
+          "declarations": {
+            "background-color": "var(--orange0)"
+          }
+        },
+        {
+          "selector": ".bg-orange1",
+          "declarations": {
+            "background-color": "var(--orange1)"
+          }
+        },
+        {
+          "selector": ".bg-orange2",
+          "declarations": {
+            "background-color": "var(--orange2)"
+          }
+        },
+        {
+          "selector": ".bg-orange3",
+          "declarations": {
+            "background-color": "var(--orange3)"
+          }
+        },
+        {
+          "selector": ".bg-orange4",
+          "declarations": {
+            "background-color": "var(--orange4)"
+          }
+        },
+        {
+          "selector": ".bg-orange5",
+          "declarations": {
+            "background-color": "var(--orange5)"
+          }
+        },
+        {
+          "selector": ".bg-orange6",
+          "declarations": {
+            "background-color": "var(--orange6)"
+          }
+        },
+        {
+          "selector": ".bg-orange7",
+          "declarations": {
+            "background-color": "var(--orange7)"
+          }
+        },
+        {
+          "selector": ".bg-orange8",
+          "declarations": {
+            "background-color": "var(--orange8)"
+          }
+        },
+        {
+          "selector": ".bg-orange9",
+          "declarations": {
+            "background-color": "var(--orange9)"
+          }
+        }
+      ]
+    }
+  },
+  "at_rules": {}
+}

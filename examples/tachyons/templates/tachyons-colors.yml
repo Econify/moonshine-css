@@ -1,0 +1,7 @@
+# Background Colors
+bg-[$colors.key]:
+  background-color: $$colors.value
+
+# Text Colors
+text-[$colors.key]:
+  color: $$colors.value

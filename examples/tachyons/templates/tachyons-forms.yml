@@ -1,0 +1,15 @@
+# FORMS
+
+input-reset:
+  -webkit-appearance: none
+  -moz-appearance: none
+
+# TODO: Multi selector
+
+button-reset::-moz-focus-inner:
+  border: 0
+  padding: 0
+
+input-reset::-moz-focus-inner:
+  border: 0
+  padding: 0

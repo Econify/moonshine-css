@@ -1,0 +1,7 @@
+#  IMAGES
+# Docs: http://tachyons.io/docs/elements/images/
+
+# Responsive images!
+
+__non_atom__[img]:
+  max-width: 100%

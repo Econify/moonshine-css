@@ -1,84 +1,139 @@
+mod init;
+mod io;
+mod template_syntax;
+mod transformation_syntax;
 
-mod lib;
-
-use lib::{Transformations, TokenGroups, Intermediate};
-use serde::{Deserialize};
-use std::io::BufReader;
-use std::path::Path;
+use clap::Parser;
+use init::initialize_moonshinerc;
+use io::write_file_creating_dirs;
+use serde::Deserialize;
+use serde_yaml as yaml;
 use std::fs;
+use std::io::BufReader;
+use std::path::{Path, PathBuf};
+use std::time::Instant;
+use template_syntax::{transformations_from_templates, transformations_from_tokens, CSSTemplate, Options};
+use transformation_syntax::{Intermediate, TokenGroups};
+
+#[derive(Parser, Debug)]
+#[clap(author, version, about, long_about = None)]
+struct Args {
+    /// Sets a custom config file
+    #[clap(short, long, parse(from_os_str), value_name = "FILE")]
+    config: Option<PathBuf>,
+
+    /// Initialize .moonshinerc
+    #[clap(short, long, parse(from_occurrences))]
+    init: usize,
+
+    /// Enable watcher mode
+    #[clap(short, long, parse(from_occurrences))]
+    watch: usize,
+
+    /// Turn debugging information on
+    #[clap(short, long, parse(from_occurrences))]
+    debug: usize,
+}
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct OutputPaths {
-    pub css: Option<String>,
+    pub css_variables: Option<String>,
+    pub css_atoms: Option<String>,
+    pub json_atoms: Option<String>,
     pub types: Option<String>,
     pub snippets: Option<String>,
-    pub json: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct RCFile {
+    pub options: Options,
     pub design_tokens: Vec<String>,
-    pub transformations: Vec<String>,
+    pub templates: Vec<String>,
     pub output: OutputPaths,
 }
 
 impl RCFile {
     pub fn load_from_json(path: &str) -> Self {
-        let config_file = fs::File::open(&path).unwrap();
-        let reader = BufReader::new(config_file);
+        let rc_file_file = fs::File::open(&path).unwrap();
+        let reader = BufReader::new(rc_file_file);
         serde_json::from_reader(reader).unwrap()
     }
 }
 
-
 fn main() {
-    let path_to_config = std::env::args().nth(1)
-        .unwrap_or("./.moonshinerc".to_string());
-    
-    let config = RCFile::load_from_json(&path_to_config);
+    let args = Args::parse();
+    let _debug_enabled = args.debug > 0;
+    let _watch_enabled = args.watch > 0;
+    let exec_start = Instant::now();
+
+    let path_to_rc_file = args
+        .config
+        .as_deref()
+        .unwrap_or(Path::new("./.moonshinerc"));
+
+    if args.init != 0 {
+        initialize_moonshinerc(&path_to_rc_file.to_str().unwrap());
+        std::process::exit(0);
+    }
+
+    let rc_file = RCFile::load_from_json(&path_to_rc_file.to_str().unwrap());
 
     let mut all_token_groups = TokenGroups::new();
+    let mut rulesets = Vec::new();
 
-    for path in config.design_tokens {
+    for path in rc_file.design_tokens {
         let file = fs::File::open(path).unwrap();
         let reader = BufReader::new(file);
-        let token_groups: TokenGroups = serde_json::from_reader(reader).unwrap();       
+        let token_groups: TokenGroups = yaml::from_reader(reader).unwrap();
         for (id, token_group) in token_groups {
             all_token_groups.insert(id, token_group);
         }
     }
 
-    let mut all_transformations = Transformations::new();
-
-    for path in config.transformations {
+    for path in rc_file.templates {
         let file = fs::File::open(path).unwrap();
         let reader = BufReader::new(file);
-        let transformations: Transformations = serde_json::from_reader(reader).unwrap();       
-        for transformation in transformations {
-            all_transformations.push(transformation);
-        }
+        let ruleset: CSSTemplate = yaml::from_reader(reader).unwrap();
+        rulesets.push(ruleset);
     }
 
-    let intermediate = Intermediate::build(all_token_groups, all_transformations);
+    // Global Variables
+    let root_transformations = transformations_from_tokens(&all_token_groups, &rc_file.options);
+    let root_intermediate = Intermediate::build(all_token_groups.clone(), root_transformations);
+    let root_css = root_intermediate.stringify();
+
+    // Atomic Styles
+    let transformations = transformations_from_templates(&rulesets, &rc_file.options);
+    let intermediate = Intermediate::build(all_token_groups, transformations);
     let css = intermediate.stringify();
     let json = serde_json::to_string_pretty(&intermediate).unwrap();
 
-    match config.output.css {
-        Some(path) => write_file_creating_dirs(&path, &css),
+    match rc_file.output.css_variables {
         None => (),
+        Some(path) => match write_file_creating_dirs(&path, &root_css) {
+            Err(why) => panic!("{}", why),
+            Ok(_) => (),
+        },
     };
 
-    match config.output.json {
-        Some(path) => write_file_creating_dirs(&path, &json),
+    match rc_file.output.css_atoms {
         None => (),
+        Some(path) => match write_file_creating_dirs(&path, &css) {
+            Err(why) => panic!("{}", why),
+            Ok(_) => (),
+        },
     };
-}
 
-fn write_file_creating_dirs(path: &str, contents: &str) {
-    let path = Path::new(path);
-    let parent_dir = path.clone().parent().unwrap();
-    fs::create_dir_all(parent_dir).unwrap();
-    fs::write(path.clone(), contents).unwrap();
+    match rc_file.output.json_atoms {
+        None => (),
+        Some(path) => match write_file_creating_dirs(&path, &json) {
+            Err(why) => panic!("{}", why),
+            Ok(_) => (),
+        },
+    };
+
+    let exec_duration = exec_start.elapsed();
+    println!("✅ Done [{:?}]", exec_duration);
 }

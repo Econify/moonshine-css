@@ -1,0 +1,83 @@
+{
+  "options": {
+    "atomStyle": "dataAttribute",
+    "nonAtomIdentfier": "__non_atom__",
+    "breakpointModifierStyle": "suffix",
+    "breakpointModifierSeperator": "-",
+    "breakpoints": {
+      "sm": {
+        "minWidth": "576px"
+      },
+      "md": {
+        "minWidth": "768px",
+        "maxWidth": "992px"
+      },
+      "lg": {
+        "minWidth": "992px"
+      }
+    }
+  },
+  "designTokens": [
+    "./atomic-design-tokens.yml"
+  ],
+  "output": {
+    "cssVariables": "./dist/variables.css",
+    "cssAtoms": "./dist/atoms.css",
+    "jsonAtoms": "./dist/atoms.json"
+  },
+  "templates": [
+    "./templates/tachyons-aspect-ratios.yml",
+    "./templates/tachyons-background-position.yml",
+    "./templates/tachyons-background-size.yml",
+    "./templates/tachyons-border-colors.yml",
+    "./templates/tachyons-border-radius.yml",
+    "./templates/tachyons-border-style.yml",
+    "./templates/tachyons-border-widths.yml",
+    "./templates/tachyons-borders.yml",
+    "./templates/tachyons-box-shadow.yml",
+    "./templates/tachyons-box-sizing.yml",
+    "./templates/tachyons-clears.yml",
+    "./templates/tachyons-coordinates.yml",
+    "./templates/tachyons-debug-children.yml",
+    "./templates/tachyons-display.yml",
+    "./templates/tachyons-flexbox.yml",
+    "./templates/tachyons-floats.yml",
+    "./templates/tachyons-font-family.yml",
+    "./templates/tachyons-font-style.yml",
+    "./templates/tachyons-font-weight.yml",
+    "./templates/tachyons-forms.yml",
+    "./templates/tachyons-heights.yml",
+    "./templates/tachyons-hovers.yml",
+    "./templates/tachyons-images.yml",
+    "./templates/tachyons-letter-spacing.yml",
+    "./templates/tachyons-links.yml",
+    "./templates/tachyons-lists.yml",
+    "./templates/tachyons-max-widths.yml",
+    "./templates/tachyons-negative-margins.yml",
+    "./templates/tachyons-opacity.yml",
+    "./templates/tachyons-outlines.yml",
+    "./templates/tachyons-position.yml",
+    "./templates/tachyons-rotations.yml",
+    "./templates/tachyons-skins-pseudo.yml",
+    "./templates/tachyons-skins.yml",
+    "./templates/tachyons-spacing.yml",
+    "./templates/tachyons-tables.yml",
+    "./templates/tachyons-text-align.yml",
+    "./templates/tachyons-text-decoration.yml",
+    "./templates/tachyons-text-transform.yml",
+    "./templates/tachyons-type-scale.yml",
+    "./templates/tachyons-typography.yml",
+    "./templates/tachyons-utilities.yml",
+    "./templates/tachyons-vertical-align.yml",
+    "./templates/tachyons-visibility.yml",
+    "./templates/tachyons-white-space.yml",
+    "./templates/tachyons-widths.yml",
+    "./templates/tachyons-z-index.yml",
+    "./templates/teachyons-debug.yml",
+    "./templates/techyons-code.yml",
+    "./templates/techyons-debug-grid.yml",
+    "./templates/techyons-line-height.yml",
+    "./templates/techyons-overflow.yml",
+    "./templates/techyons-word-break.yml"
+  ]
+}

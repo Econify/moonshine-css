@@ -1,3 +1,7 @@
-distill:
+build:
 	cargo build
-	cp target/debug/atomic-styles ../bin/distill
+	mkdir -p ../bin/osx/
+	cp target/debug/distill ../bin/osx/distill
+
+test:
+	cargo test --all

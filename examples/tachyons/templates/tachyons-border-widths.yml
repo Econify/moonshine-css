@@ -1,0 +1,27 @@
+# BORDER WIDTHS
+# Docs: http://tachyons.io/docs/themes/borders/
+
+# Base:
+#   bw = border-width
+
+# Modifiers:
+#   0 = 0 width border
+#   1 = 1st step in border-width scale
+#   2 = 2nd step in border-width scale
+#   3 = 3rd step in border-width scale
+#   4 = 4th step in border-width scale
+#   5 = 5th step in border-width scale
+
+bw[$border-width.key]:
+  border-width: $border-width.value
+
+# TODO: Make global
+$directions:
+  t: top
+  b: bottom
+  l: left
+  r: right
+
+# Resets
+b[$directions.key]-0:
+  border-$directions.value-width: 0

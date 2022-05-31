@@ -1,4 +1,3 @@
-
 name: Release NPM Package
 
 on:
@@ -84,6 +83,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
+<<<<<<< HEAD
           fetch-depth: 0
 #           ref: ${{ env.GIT_REF }}
 #           token: ${{ secrets.GITHUB_TOKEN }}
@@ -99,6 +99,18 @@ jobs:
         with:
           path: dist
 
+=======
+          node-version: "16"
+      - uses: actions/download-artifact@v2
+        with:
+          path: temp_dist
+      - name: Flatten Binary Directory
+        run: |
+          mkdir dist
+          mv temp_dist/**/* dist || true
+          rmdir dist/**/* || true
+          rm -rf temp_dist
+>>>>>>> origin/main
       - name: Grant Permissions
         run: chmod +x dist/**/*
 

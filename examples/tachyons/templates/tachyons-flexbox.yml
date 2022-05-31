@@ -1,0 +1,95 @@
+# FLEXBOX
+
+flex:
+  display: flex
+
+inline-flex:
+  display: inline-flex
+
+# /* 1. Fix for Chrome 44 bug.
+#  * https://code.google.com/p/chromium/issues/detail?id=506893 */
+flex-auto:
+  flex: 1 1 auto
+  min-width: 0; /* 1 */
+  min-height: 0; /* 1 */
+
+flex-none:
+  flex: none
+
+# TODO:
+# flex-[row,column]:
+#   flex-direction: $
+
+flex-column:
+  flex-direction: column
+
+flex-row:
+  flex-direction: row
+
+flex-wrap:
+  flex-wrap: wrap
+
+flex-nowrap:
+  flex-wrap: nowrap
+
+flex-wrap-reverse:
+  flex-wrap: wrap-reverse
+
+flex-column-reverse:
+  flex-direction: column-reverse
+
+flex-row-reverse:
+  flex-direction: row-reverse
+
+$alignments:
+  start: flex-start
+  end: flex-end
+  center: center
+  baseline: baseline
+  between: space-between
+  around: space-around
+  stretch: stretch
+
+# Align Items
+items-[$alignments.key]:
+  align-items: $alignments.value
+
+# Align Self
+self-[$alignments.key]:
+  align-self: $alignments.value
+
+# Justify Content
+justify-[$alignments.key]:
+  justify-content: $alignments.value
+
+# Align Content
+content-[$alignments.key]:
+  align-content: $alignments.value
+
+# Order
+$orderings:
+  0: 0
+  1: 1
+  2: 2
+  3: 3
+  4: 4
+  5: 5
+  6: 6
+  7: 7
+  8: 8
+  last: 99999
+
+order-[$orderings.key]:
+  order: $orderings.key
+
+flex-grow-0:
+  flex-grow: 0
+
+flex-grow-1:
+  flex-grow: 1
+
+flex-shrink-0:
+  flex-shrink: 0
+
+flex-shrink-1:
+  flex-shrink: 1

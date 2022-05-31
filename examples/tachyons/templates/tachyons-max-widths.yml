@@ -1,0 +1,35 @@
+# MAX WIDTHS
+# Docs: http://tachyons.io/docs/layout/max-widths/
+
+# Base:
+#   mw = max-width
+
+# Modifiers
+#   1 = 1st step in width scale
+#   2 = 2nd step in width scale
+#   3 = 3rd step in width scale
+#   4 = 4th step in width scale
+#   5 = 5th step in width scale
+#   6 = 6st step in width scale
+#   7 = 7nd step in width scale
+#   8 = 8rd step in width scale
+#   9 = 9th step in width scale
+
+#   -100 = literal value 100%
+
+#   -none  = string value none
+
+# /* Max Width Percentages */
+
+mw-100:
+  max-width: 100%
+
+# /* Max Width Scale */
+
+mw[$spacings.key]:
+  max-width: $spacings.value
+
+# /* Max Width String Properties */
+
+mw-none:
+  max-width: none

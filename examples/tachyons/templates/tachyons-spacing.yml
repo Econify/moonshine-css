@@ -1,0 +1,74 @@
+# SPACING
+# Docs: http://tachyons.io/docs/layout/spacing/
+
+# An eight step powers of two scale ranging from 0 to 16rem.
+
+# Base:
+#   p = padding
+#   m = margin
+
+# Modifiers:
+#   a = all
+#   h = horizontal
+#   v = vertical
+#   t = top
+#   r = right
+#   b = bottom
+#   l = left
+
+#   0 = none
+#   1 = 1st step in spacing scale
+#   2 = 2nd step in spacing scale
+#   3 = 3rd step in spacing scale
+#   4 = 4th step in spacing scale
+#   5 = 5th step in spacing scale
+#   6 = 6th step in spacing scale
+#   7 = 7th step in spacing scale
+
+# Margin
+ma[$spacings.key]:
+  margin: $$spacings.value
+
+mh[$spacings.key]:
+  margin-left: $$spacings.value
+  margin-right: $$spacings.value
+
+mv[$spacings.key]:
+  margin-top: $$spacings.value
+  margin-bottom: $$spacings.value
+
+mt[$spacings.key]:
+  margin-top: $$spacings.value
+
+mb[$spacings.key]:
+  margin-bottom: $$spacings.value
+
+ml[$spacings.key]:
+  margin-left: $$spacings.value
+
+mr[$spacings.key]:
+  margin-right: $$spacings.value
+
+# Padding
+pa[$spacings.key]:
+  padding: $$spacings.value
+
+ph[$spacings.key]:
+  padding-left: $$spacings.value
+  padding-right: $$spacings.value
+
+pv[$spacings.key]:
+  padding-top: $$spacings.value
+  padding-bottom: $$spacings.value
+
+pt[$spacings.key]:
+  padding-top: $$spacings.value
+
+pb[$spacings.key]:
+  padding-bottom: $$spacings.value
+
+pl[$spacings.key]:
+  padding-left: $$spacings.value
+
+pr[$spacings.key]:
+  padding-right: $$spacings.value
