@@ -11,54 +11,69 @@ on:
 jobs:
   build_ubuntu:
     runs-on: ubuntu-18.04
+    defaults:
+      run:
+        working-directory: ./distill
     steps:
       - uses: actions/checkout@v3
 
       - name: Install Rust Toolchain
         uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
 
       - name: Build
-        run: cd distill && cargo build --release
+        run: cargo build --release
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: ubuntu
-          path: target/release/distill
+          path: distill/target/release/distill
 
   build_macos:
     runs-on: macos-10.15
+    defaults:
+      run:
+        working-directory: ./distill
     steps:
       - uses: actions/checkout@v3
 
       - name: Install Rust Toolchain
         uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
 
       - name: Build
-        run: cd distill && cargo build --release
+        run: cargo build --release
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: osx
-          path: target/release/distill
+          path: distill/target/release/distill
 
   build_windows:
     runs-on: windows-2022
+    defaults:
+      run:
+        working-directory: ./distill
     steps:
       - uses: actions/checkout@v3
 
       - name: Install Rust Toolchain
         uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
 
       - name: Build
-        run: cd distill && cargo build --release
+        run: cargo build --release
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: windows
-          path: target/release/distill.exe
+          path: distill/target/release/distill.exe
 
   build_and_publish_bundle:
     name: Create Release
@@ -100,19 +115,14 @@ jobs:
 
       - name: Flatten Binary Directory
         run: |
-          mkdir dist
-          mv temp_dist/**/* dist || true
-          rmdir dist/**/* || true
+          mv temp_dist/* bin/
           rm -rf temp_dist
 
       - name: Grant Permissions
-        run: chmod +x dist/**/*
-
-      # - name: Preview Publish
-      #   run: npm pack
+        run: find bin -type f | xargs chmod +x
 
       - name: List Dir
-        run: ls -R
+        run: ls -R bin
 
       - name: Automated Version Bump
         uses: phips28/gh-action-bump-version@master
