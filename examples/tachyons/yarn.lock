@@ -2,5 +2,5 @@
 # yarn lockfile v1
 
 
-"@econify/moonshine-css@file:../..":
+"moonshine-css@file:../..":
   version "0.1.0"

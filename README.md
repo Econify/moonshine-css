@@ -13,8 +13,8 @@
 ## Install
 
 ```bash
-npm install --save @econify/moonshine-css
-yarn add @econify/moonshine-css
+npm install --save moonshine-css
+yarn add moonshine-css
 ```
 
 ## Generate Styles
@@ -31,30 +31,28 @@ or by creating a file manually:
 
 ```json
 {
-    "options": {
-        "atomStyle": "classAttribute",
-        "breakpointModifierStyle": "suffix",
-        "breakpointModifierSeperator": "-",
-        "breakpoints": {
-            "sm": { "minWidth": "576px" },
-            "md": { "minWidth": "768px", "maxWidth": "992px" },
-            "lg": { "minWidth": "992px" }
-        }
-    },
-    "designTokens": [
-        "./atomic-design-tokens.yml"
-    ],
-    "templates": [
-        "./tachyons-border-box.yml",
-        "./tachyons-colors.yml",
-        "./tachyons-flex.yml",
-        "./tachyons-spacing.yml"
-    ],
-    "output": {
-        "cssVariables": "./dist/variables.css",
-        "cssAtoms": "./dist/atoms.css",
-        "jsonAtoms": "./dist/atoms.json"
+  "options": {
+    "atomStyle": "classAttribute",
+    "breakpointModifierStyle": "suffix",
+    "breakpointModifierSeperator": "-",
+    "breakpoints": {
+      "sm": { "minWidth": "576px" },
+      "md": { "minWidth": "768px", "maxWidth": "992px" },
+      "lg": { "minWidth": "992px" }
     }
+  },
+  "designTokens": ["./atomic-design-tokens.yml"],
+  "templates": [
+    "./tachyons-border-box.yml",
+    "./tachyons-colors.yml",
+    "./tachyons-flex.yml",
+    "./tachyons-spacing.yml"
+  ],
+  "output": {
+    "cssVariables": "./dist/variables.css",
+    "cssAtoms": "./dist/atoms.css",
+    "jsonAtoms": "./dist/atoms.json"
+  }
 }
 ```
 
@@ -71,7 +69,7 @@ import "atomic-styles.css";
 ```
 
 ```js
-import { styled } from "@econify/moonshine-css";
+import { styled } from "moonshine-css";
 
 const Button = styled.button(
   "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
