@@ -21,7 +21,7 @@ jobs:
         run: cd distill && cargo build --release
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ubuntu
           path: target/release/distill
@@ -38,7 +38,7 @@ jobs:
         run: cd distill && cargo build --release
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: osx
           path: target/release/distill
@@ -55,36 +55,18 @@ jobs:
         run: cd distill && cargo build --release
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: windows
           path: target/release/distill.exe
 
-  build_bundle:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Install Dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Run Linter
-        run: yarn run lint
-
-      - name: Run Unit Tests
-        run: yarn run test
-
-      - name: Run package
-        run: yarn run build
-
-  publish_npm_package:
+  build_and_publish_bundle:
     name: Create Release
     runs-on: ubuntu-latest
     needs:
       - build_ubuntu
       - build_macos
       - build_windows
-      - build_bundle
     outputs:
       NEW_TAG: ${{ steps.version.outputs.NEW_TAG }}
     steps:
@@ -99,8 +81,20 @@ jobs:
           node-version: "16.x"
           registry-url: "https://registry.npmjs.org"
 
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run Linter
+        run: yarn run lint
+
+      - name: Run Unit Tests
+        run: yarn run test
+
+      - name: Run package
+        run: yarn run build
+
       - name: Download Binaries
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           path: temp_dist
 
