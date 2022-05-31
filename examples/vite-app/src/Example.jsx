@@ -1,5 +1,5 @@
 import React from "react";
-import { cx, styled, box, css, untyped } from "@econify/moonshine-css";
+import { cx, styled, box, css, untyped } from "moonshine-css";
 
 const Box1 = styled.div("bg-blue6");
 const box4styles = css`

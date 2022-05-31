@@ -1,6 +1,6 @@
 {
-  "name": "@econify/moonshine-css",
-  "version": "0.1.1",
+  "name": "moonshine-css",
+  "version": "0.1.5",
   "description": "High-proof atomic CSS",
   "keywords": [
     "css",

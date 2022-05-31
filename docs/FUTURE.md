@@ -22,7 +22,7 @@ There are a couple of challenges with this approach however:
 A possible solution to both problems could look like this:
 
 ```tsx
-import { vx } from "@econify/moonshine-css";
+import { vx } from "moonshine-css";
 
 export default function Example2() {
   const variant = "primary";
