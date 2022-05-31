@@ -1,6 +1,6 @@
 import React from "react";
 import Example from "./Example";
-import { CssVariableInjector } from "@econify/moonshine-css";
+import { CssVariableInjector } from "moonshine-css";
 
 import "./global.css";
 import "../build/tokens.css";
