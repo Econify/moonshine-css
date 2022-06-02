@@ -236,7 +236,7 @@
     "@babel/helper-validator-identifier" "^7.16.7"
     to-fast-properties "^2.0.0"
 
-"moonshine-css@../..":
+"@econify/moonshine-css@../..":
   version "0.1.0"
 
 "@jridgewell/gen-mapping@^0.1.0":

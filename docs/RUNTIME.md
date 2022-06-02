@@ -137,7 +137,7 @@ To bypass Moonshine's typechecking and allow mixing of atomic CSS classes with o
 
 ```tsx
 import React from "react";
-import { untyped } from "moonshine-css";
+import { untyped } from "@econify/moonshine-css";
 
 import styles from "styles.module.css"; // CSS modules
 
