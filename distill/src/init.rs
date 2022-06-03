@@ -15,8 +15,9 @@ const RC_FILE_SRC: &str = r#"{
     "./templates/example.yml"
   ],
   "output": {
-    "css": "./dist/styles.css",
-    "json": "./dist/styles.json"
+    "cssVariables": "./dist/variables.css",
+    "cssAtoms": "./dist/atoms.css",
+    "jsonAtoms": "./dist/atoms.json"
   }
 }
 "#;
