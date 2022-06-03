@@ -9,7 +9,7 @@
     "zero-runtime",
     "rust-lang"
   ],
-  "license": "MIT",
+  "license": "ISC",
   "homepage": "https://github.com/econify/moonshine-css#readme",
   "repository": {
     "type": "git",
