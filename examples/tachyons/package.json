@@ -7,6 +7,6 @@
     "build": "distill"
   },
   "dependencies": {
-    "moonshine-css": "file:../.."
+    "@econify/moonshine-css": "file:../.."
   }
 }

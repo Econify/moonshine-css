@@ -13,8 +13,8 @@
 ## Install
 
 ```bash
-npm install --save moonshine-css
-yarn add moonshine-css
+npm install --save @econify/moonshine-css
+yarn add @econify/moonshine-css
 ```
 
 ## Generate Styles
@@ -69,7 +69,7 @@ import "atomic-styles.css";
 ```
 
 ```js
-import { styled } from "moonshine-css";
+import { styled } from "@econify/moonshine-css";
 
 const Button = styled.button(
   "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
