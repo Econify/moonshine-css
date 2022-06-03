@@ -1,7 +1,7 @@
 build:
-	cargo build
+	cargo build --release
 	mkdir -p ../bin/osx/
-	cp target/debug/distill ../bin/osx/distill
+	cp target/release/distill ../bin/osx/distill
 
 test:
 	cargo test --all
