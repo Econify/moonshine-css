@@ -89,6 +89,10 @@ impl ErrorHandler {
         println!("{} Failed parse RC File as JSON: {}.", ERR_PREFIX, err);
         1
     }
+    pub fn rc_file_overwrite(path_to_rc_file: &str) -> i32 {
+        println!("{} RC File already exists: `{}`.", ERR_PREFIX, path_to_rc_file);
+        1
+    }
 }
 
 

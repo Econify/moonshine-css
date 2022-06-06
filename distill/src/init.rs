@@ -1,8 +1,10 @@
 use super::io;
+use super::ErrorHandler;
 
 use io::write_file_creating_dirs;
 use std::fs;
 use std::path::Path;
+use std::process::exit;
 
 const RC_FILE_SRC: &str = r#"{
   "options": {
@@ -38,8 +40,7 @@ bg-[$colors.key]:
 
 pub fn initialize_moonshinerc(path: &str) {
     if Path::new(path).exists() {
-        println!("❗️ File \"{}\" already exists", path);
-        return;
+        exit(ErrorHandler::rc_file_overwrite(path));
     }
 
     println!("Initializing .moonshinerc");
