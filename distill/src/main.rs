@@ -8,6 +8,7 @@ use init::initialize_moonshinerc;
 use io::write_file_creating_dirs;
 use serde::Deserialize;
 use serde_yaml as yaml;
+use serde_json as json;
 use std::fs;
 use std::io::{ErrorKind, BufReader, Error as IOError};
 use std::path::{Path, PathBuf};
@@ -57,14 +58,15 @@ pub struct RCFile {
 
 impl RCFile {
     pub fn load_from_json(path: &str) -> Self {
-        let rc_file_file = match fs::File::open(&path) {
+        let rc_file_handle = match fs::File::open(&path) {
             Err(err) => exit(handle_rc_file_open_error(err)),
-            Ok(f) => f,
+            Ok(handle) => handle,
         };
 
-
-        let reader = BufReader::new(rc_file_file);
-        serde_json::from_reader(reader).unwrap()
+        match json::from_reader(BufReader::new(rc_file_handle)) {
+            Err(err) => exit(handle_rc_file_parse_error(err)),
+            Ok(deserialized) => deserialized,
+        }
     }
 }
 
@@ -76,6 +78,11 @@ fn handle_rc_file_open_error(err: IOError) -> i32 {
     };
     1
 }
+fn handle_rc_file_parse_error(err: json::Error) -> i32 {
+    println!("❗ Failed parse RC File as JSON: {}.", err);
+    1
+}
+
 
 fn main() {
     let args = Args::parse();
