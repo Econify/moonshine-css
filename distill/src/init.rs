@@ -38,7 +38,7 @@ bg-[$colors.key]:
 
 pub fn initialize_moonshinerc(path: &str) {
     if Path::new(path).exists() {
-        println!("File \"{}\" already exists", path);
+        println!("❗️ File \"{}\" already exists", path);
         return;
     }
 
@@ -50,7 +50,7 @@ pub fn initialize_moonshinerc(path: &str) {
         .expect("Unable to write design-tokens.yml to current directory");
 
     write_file_creating_dirs("./templates/example.yml", EXAMPLE_TEMPLATE_SRC)
-        .expect("Unable to write to ./templates/example.yml");
+        .expect("️❗ Unable to write to ./templates/example.yml");
 
     println!("\x1b[32mDone\x1b[0m - now run 'distill' to start using Moonshine CSS");
 }

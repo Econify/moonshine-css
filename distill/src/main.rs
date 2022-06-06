@@ -17,6 +17,10 @@ use std::time::Instant;
 use template_syntax::{transformations_from_templates, transformations_from_tokens, CSSTemplate, Options};
 use transformation_syntax::{Intermediate, TokenGroups};
 
+
+const DEFAULT_RC_FILE_NAME: &str = ".moonshinerc";
+const ERR_PREFIX: &str = "❗️";
+
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
@@ -72,17 +76,17 @@ impl RCFile {
 
 
 /// Prints diagnostic messages and returns appropriate OS error codes
-struct ErrorHandler;
+pub struct ErrorHandler;
 impl ErrorHandler {
-    fn rc_file_open(err: IOError) -> i32 {
+    pub fn rc_file_open(err: IOError) -> i32 {
         match err.kind() {
-            ErrorKind::NotFound => println!("❗️ Failed to open `{}`. File does not exist.", ".moonshinerc"),
-            _other_kind => println!("❗️ Failed to open `{}`.", ".moonshinerc"),
+            ErrorKind::NotFound => println!("{}️ Failed to open `{}`. File does not exist.", ERR_PREFIX, DEFAULT_RC_FILE_NAME),
+            _other_kind => println!("{} Failed to open `{}`.", ERR_PREFIX, DEFAULT_RC_FILE_NAME),
         };
         1
     }
-    fn rc_file_parse(err: json::Error) -> i32 {
-        println!("❗ Failed parse RC File as JSON: {}.", err);
+    pub fn rc_file_parse(err: json::Error) -> i32 {
+        println!("{} Failed parse RC File as JSON: {}.", ERR_PREFIX, err);
         1
     }
 }
@@ -97,7 +101,7 @@ fn main() {
     let path_to_rc_file = args
         .config
         .as_deref()
-        .unwrap_or(Path::new("./.moonshinerc"));
+        .unwrap_or(Path::new(DEFAULT_RC_FILE_NAME));
 
     if args.init != 0 {
         initialize_moonshinerc(&path_to_rc_file.to_str().unwrap());
