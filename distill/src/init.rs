@@ -40,7 +40,7 @@ bg-[$colors.key]:
 
 pub fn initialize_moonshinerc(path: &str) {
     if Path::new(path).exists() {
-        exit(ErrorHandler::rc_file_overwrite(path));
+        exit(ErrorHandler::rc_file_collision(path));
     }
 
     println!("Initializing .moonshinerc");
