@@ -59,28 +59,32 @@ pub struct RCFile {
 impl RCFile {
     pub fn load_from_json(path: &str) -> Self {
         let rc_file_handle = match fs::File::open(&path) {
-            Err(err) => exit(handle_rc_file_open_error(err)),
+            Err(err) => exit(ErrorHandler::rc_file_open(err)),
             Ok(handle) => handle,
         };
 
         match json::from_reader(BufReader::new(rc_file_handle)) {
-            Err(err) => exit(handle_rc_file_parse_error(err)),
+            Err(err) => exit(ErrorHandler::rc_file_parse(err)),
             Ok(deserialized) => deserialized,
         }
     }
 }
 
-/// Print diagnostic messages and return the appropriate OS error code
-fn handle_rc_file_open_error(err: IOError) -> i32 {
-    match err.kind() {
-        ErrorKind::NotFound => println!("❗️ Failed to open `{}`. File does not exist.", ".moonshinerc"),
-        _other_kind => println!("❗️ Failed to open `{}`.", ".moonshinerc"),
-    };
-    1
-}
-fn handle_rc_file_parse_error(err: json::Error) -> i32 {
-    println!("❗ Failed parse RC File as JSON: {}.", err);
-    1
+
+/// Prints diagnostic messages and returns appropriate OS error codes
+struct ErrorHandler;
+impl ErrorHandler {
+    fn rc_file_open(err: IOError) -> i32 {
+        match err.kind() {
+            ErrorKind::NotFound => println!("❗️ Failed to open `{}`. File does not exist.", ".moonshinerc"),
+            _other_kind => println!("❗️ Failed to open `{}`.", ".moonshinerc"),
+        };
+        1
+    }
+    fn rc_file_parse(err: json::Error) -> i32 {
+        println!("❗ Failed parse RC File as JSON: {}.", err);
+        1
+    }
 }
 
 
