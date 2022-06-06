@@ -9,8 +9,9 @@ use io::write_file_creating_dirs;
 use serde::Deserialize;
 use serde_yaml as yaml;
 use std::fs;
-use std::io::BufReader;
+use std::io::{ErrorKind, BufReader, Error as IOError};
 use std::path::{Path, PathBuf};
+use std::process::exit;
 use std::time::Instant;
 use template_syntax::{transformations_from_templates, transformations_from_tokens, CSSTemplate, Options};
 use transformation_syntax::{Intermediate, TokenGroups};
@@ -56,10 +57,24 @@ pub struct RCFile {
 
 impl RCFile {
     pub fn load_from_json(path: &str) -> Self {
-        let rc_file_file = fs::File::open(&path).unwrap();
+        let rc_file_file = match fs::File::open(&path) {
+            Err(err) => exit(handle_rc_file_open_error(err)),
+            Ok(f) => f,
+        };
+
+
         let reader = BufReader::new(rc_file_file);
         serde_json::from_reader(reader).unwrap()
     }
+}
+
+/// Print diagnostic messages and return the appropriate OS error code
+fn handle_rc_file_open_error(err: IOError) -> i32 {
+    match err.kind() {
+        ErrorKind::NotFound => println!("❗️ Failed to open `{}`. File does not exist.", ".moonshinerc"),
+        _other_kind => println!("❗️ Failed to open `{}`.", ".moonshinerc"),
+    };
+    1
 }
 
 fn main() {
