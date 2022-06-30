@@ -78,7 +78,7 @@
     "./templates/tachyons-white-space.yml",
     "./templates/tachyons-widths.yml",
     "./templates/tachyons-z-index.yml",
-    "./templates/teachyons-debug.yml",
+    "./templates/tachyons-debug.yml",
     "./templates/techyons-code.yml",
     "./templates/techyons-debug-grid.yml",
     "./templates/techyons-line-height.yml",

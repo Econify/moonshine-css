@@ -31,33 +31,31 @@ or by creating a file manually:
 
 ```json
 {
-    "options": {
-        "atomStyle": "classAttribute",
-        "breakpointModifierStyle": "suffix",
-        "breakpointModifierSeperator": "-",
-        "breakpoints": {
-            "sm": { "minWidth": "576px" },
-            "md": { "minWidth": "768px", "maxWidth": "992px" },
-            "lg": { "minWidth": "992px" }
-        },
-        "pseudoClasses": {
-            "hov": ":hover",
-        }
+  "options": {
+    "atomStyle": "classAttribute",
+    "breakpointModifierStyle": "suffix",
+    "breakpointModifierSeperator": "-",
+    "breakpoints": {
+      "sm": { "minWidth": "576px" },
+      "md": { "minWidth": "768px", "maxWidth": "992px" },
+      "lg": { "minWidth": "992px" }
     },
-    "designTokens": [
-        "./atomic-design-tokens.yml"
-    ],
-    "templates": [
-        "./tachyons-border-box.yml",
-        "./tachyons-colors.yml",
-        "./tachyons-flex.yml",
-        "./tachyons-spacing.yml"
-    ],
-    "output": {
-        "cssVariables": "./dist/variables.css",
-        "cssAtoms": "./dist/atoms.css",
-        "jsonAtoms": "./dist/atoms.json"
+    "pseudoClasses": {
+      "hov": ":hover",
     }
+  },
+  "designTokens": ["./atomic-design-tokens.yml"],
+  "templates": [
+    "./tachyons-border-box.yml",
+    "./tachyons-colors.yml",
+    "./tachyons-flex.yml",
+    "./tachyons-spacing.yml"
+  ],
+  "output": {
+    "cssVariables": "./dist/variables.css",
+    "cssAtoms": "./dist/atoms.css",
+    "jsonAtoms": "./dist/atoms.json"
+  }
 }
 ```
 

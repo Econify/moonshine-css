@@ -1,6 +1,6 @@
 {
   "name": "@econify/moonshine-css",
-  "version": "0.1.0",
+  "version": "0.1.9",
   "description": "High-proof atomic CSS",
   "keywords": [
     "css",
@@ -9,7 +9,7 @@
     "zero-runtime",
     "rust-lang"
   ],
-  "license": "MIT",
+  "license": "ISC",
   "homepage": "https://github.com/econify/moonshine-css#readme",
   "repository": {
     "type": "git",
