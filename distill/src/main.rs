@@ -60,41 +60,36 @@ pub struct RCFile {
     pub output: OutputPaths,
 }
 
+fn describe_rc_file_open_error(err: IOError) -> String {
+    match err.kind() {
+        ErrorKind::NotFound => format!("Cannot find RC file: `{}`", DEFAULT_RC_FILE_NAME),
+        _any_other_kind => format!("Failed to open `{}`.", DEFAULT_RC_FILE_NAME),
+    }
+}
+
 impl RCFile {
     pub fn load_from_json(path: &str) -> Self {
-        let rc_file_handle = match fs::File::open(&path) {
-            Err(err) => exit(ErrorHandler::rc_file_open(err)),
-            Ok(handle) => handle,
-        };
+        let rc_file_handle = fs::File::open(&path).unwrap_or_else(|err| {
+            Exit::with_message(
+                &describe_rc_file_open_error(err)
+            )
+        });
 
-        match json::from_reader(BufReader::new(rc_file_handle)) {
-            Err(err) => exit(ErrorHandler::rc_file_parse(err)),
-            Ok(deserialized) => deserialized,
-        }
+        json::from_reader(BufReader::new(rc_file_handle)).unwrap_or_else(|err| {
+            Exit::with_message(
+                &format!("Failed parse RC File as JSON: {}.", err)
+            )
+        })
     }
 }
 
-
-/// Prints diagnostic messages and returns appropriate OS error codes
-pub struct ErrorHandler;
-impl ErrorHandler {
-    pub fn rc_file_open(err: IOError) -> i32 {
-        match err.kind() {
-            ErrorKind::NotFound => println!("{}️ Failed to open `{}`. File does not exist.", ERR_PREFIX, DEFAULT_RC_FILE_NAME),
-            _other_kind => println!("{} Failed to open `{}`.", ERR_PREFIX, DEFAULT_RC_FILE_NAME),
-        };
-        1
-    }
-    pub fn rc_file_parse(err: json::Error) -> i32 {
-        println!("{} Failed parse RC File as JSON: {}.", ERR_PREFIX, err);
-        1
-    }
-    pub fn rc_file_collision(path_to_rc_file: &str) -> i32 {
-        println!("{} RC File already exists: `{}`.", ERR_PREFIX, path_to_rc_file);
-        1
-    }
+pub struct Exit;
+impl Exit {
+    pub fn with_message<T>(message: &str) -> T {
+        println!("{}️ {}", ERR_PREFIX, message);
+        exit(1)
+    }  
 }
-
 
 fn main() {
     let args = Args::parse();

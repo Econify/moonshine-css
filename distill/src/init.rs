@@ -1,10 +1,9 @@
 use super::io;
-use super::ErrorHandler;
+use super::{Exit};
 
 use io::write_file_creating_dirs;
 use std::fs;
 use std::path::Path;
-use std::process::exit;
 
 const RC_FILE_SRC: &str = r#"{
   "options": {
@@ -40,18 +39,26 @@ bg-[$colors.key]:
 
 pub fn initialize_moonshinerc(path: &str) {
     if Path::new(path).exists() {
-        exit(ErrorHandler::rc_file_collision(path));
+        Exit::with_message(
+            &format!("RC File already exists: `{}`.", path)
+        )
     }
 
-    println!("Initializing .moonshinerc");
+    println!("Initializing `.moonshinerc`");
 
-    fs::write(path, RC_FILE_SRC).expect("Unable to write .moonshinerc to current directory");
+    fs::write(path, RC_FILE_SRC).unwrap_or(
+        Exit::with_message(
+            &format!("Failed to write file: {}.", path)
+        )
+    );
 
-    fs::write("./design-tokens.yml", TOKENS_FILE_SRC)
-        .expect("Unable to write design-tokens.yml to current directory");
+    fs::write("./design-tokens.yml", TOKENS_FILE_SRC).unwrap_or(
+        Exit::with_message("Unable to write design-tokens.yml to current directory")
+    );
 
-    write_file_creating_dirs("./templates/example.yml", EXAMPLE_TEMPLATE_SRC)
-        .expect("️❗ Unable to write to ./templates/example.yml");
+    write_file_creating_dirs("./templates/example.yml", EXAMPLE_TEMPLATE_SRC).unwrap_or(
+        Exit::with_message("Unable to write to ./templates/example.yml")
+    );
 
     println!("\x1b[32mDone\x1b[0m - now run 'distill' to start using Moonshine CSS");
 }
