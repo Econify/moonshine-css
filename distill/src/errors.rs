@@ -10,7 +10,7 @@ pub struct Exit;
 impl Exit {
     pub fn with_message<T>(message: &str) -> T {
         println!("{}️ {}", ERR_PREFIX, message);
-        exit(1)
+        exit(1);
     }  
 }
 
