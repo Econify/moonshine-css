@@ -41,7 +41,7 @@ or by creating a file manually:
       "lg": { "minWidth": "992px" }
     },
     "pseudoClasses": {
-      "hov": ":hover",
+      "hov": ":hover"
     }
   },
   "designTokens": ["./atomic-design-tokens.yml"],

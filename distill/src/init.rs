@@ -7,7 +7,12 @@ use std::path::Path;
 
 const RC_FILE_SRC: &str = r#"{
   "options": {
-    "atomStyle": "classAttribute"
+    "atomStyle": "classAttribute",
+    "pseudoClasses": {
+        "hov": "hover",
+        "aft": "after",
+        "bef": "before"
+    }
   },
   "designTokens": [
     "./design-tokens.yml"
@@ -32,7 +37,7 @@ colors:
 
 const EXAMPLE_TEMPLATE_SRC: &str = r###"# Background Colors
 bg-[$colors.key]:
-  background-color: var(--$colors.key)
+  background-color: $$colors.value
 "###;
 
 pub fn initialize_moonshinerc(path: &Path) {

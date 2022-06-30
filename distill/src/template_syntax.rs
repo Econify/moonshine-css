@@ -1,12 +1,11 @@
 use indexmap::IndexMap;
+use lazy_static::lazy_static;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use lazy_static::lazy_static;
-
 
 use super::transformation_syntax::{
-    CSSRule, CopyExistingRules, ManyRulesFromTokenGroup, NoTransformation, Transformation,
-    Transformations, TokenGroups, FromTokenGroup,
+    CSSRule, CopyExistingRules, FromTokenGroup, ManyRulesFromTokenGroup, NoTransformation,
+    TokenGroups, Transformation, Transformations,
 };
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -15,6 +14,7 @@ use super::transformation_syntax::{
 pub struct Options {
     pub non_atom_identifier: String,
     pub atom_style: AtomStyle,
+    pub pseudo_classes: IndexMap<String, String>,
     pub root_variable_prefix: String,
     pub breakpoints: IndexMap<String, Breakpoint>,
     pub breakpoint_modifier_style: ModifierStyle,
@@ -43,12 +43,11 @@ impl Default for Options {
         Self {
             non_atom_identifier: "__non_atom__".to_string(),
             atom_style: AtomStyle::ClassAttribute,
-            root_variable_prefix: "_".to_string(),
+            pseudo_classes: IndexMap::default(),
             breakpoints: IndexMap::default(),
-            breakpoint_modifier_style: ModifierStyle::Prefix,
-            breakpoint_modifier_seperator: ":".to_string(),
-            pseudo_class_modifier_style: ModifierStyle::Prefix,
-            pseudo_class_modifier_seperator: ":".to_string(),
+            breakpoint_modifier_style: BreakpointModifierStyle::Prefix,
+            breakpoint_modifier_seperator: "\\:".to_string(),
+            root_variable_prefix: "_".to_string(),
         }
     }
 }
@@ -71,22 +70,19 @@ pub type SugarBlock = IndexMap<CSSProperty, CSSValue>;
 #[derive(Debug)]
 pub struct TemplateOptions {
     include_breakpoints: bool,
-    _include_pseudo_classes: bool, // This isn't being used currently
+    include_pseudo_classes: bool,
 }
 
 impl Default for TemplateOptions {
     fn default() -> Self {
         Self {
             include_breakpoints: true,
-            _include_pseudo_classes: true,
+            include_pseudo_classes: true,
         }
     }
 }
 
-pub fn transformations_from_tokens(
-    tokens: &TokenGroups,
-    options: &Options,
-) -> Transformations {
+pub fn transformations_from_tokens(tokens: &TokenGroups, options: &Options) -> Transformations {
     let mut list = Vec::new();
 
     for (id, _token_group) in tokens {
@@ -96,9 +92,7 @@ pub fn transformations_from_tokens(
             description: "".to_string(),
             selector: ":root".to_string(),
             token_group_name: id.to_string(),
-            declarations: IndexMap::from([
-                (root_variable_name, "{{ VAL }}".to_string())
-            ])
+            declarations: IndexMap::from([(root_variable_name, "{{ VAL }}".to_string())]),
         };
 
         list.push(Transformation::SingleRuleFromTokenGroup(config));
@@ -113,6 +107,7 @@ pub fn transformations_from_templates(
 ) -> Transformations {
     let mut list = Vec::new();
     let mut ids_affected_by_breakpoints: Vec<String> = Vec::new();
+    let mut ids_affected_by_pseudo_classes: Vec<String> = Vec::new();
 
     for ruleset in rulesets {
         let mut variable_maps: VariableMaps = IndexMap::new();
@@ -135,6 +130,9 @@ pub fn transformations_from_templates(
                     if template_options.include_breakpoints {
                         ids_affected_by_breakpoints.push(config.id.clone());
                     }
+                    if template_options.include_pseudo_classes {
+                        ids_affected_by_pseudo_classes.push(config.id.clone());
+                    }
                     list.push(Transformation::NoTransformation(config));
                     continue;
                 }
@@ -145,6 +143,9 @@ pub fn transformations_from_templates(
                 Some(config) => {
                     if template_options.include_breakpoints {
                         ids_affected_by_breakpoints.push(config.id.clone());
+                    }
+                    if template_options.include_pseudo_classes {
+                        ids_affected_by_pseudo_classes.push(config.id.clone());
                     }
                     list.push(Transformation::ManyRulesFromTokenGroup(config));
                     continue;
@@ -173,6 +174,9 @@ pub fn transformations_from_templates(
             if template_options.include_breakpoints {
                 ids_affected_by_breakpoints.push(config.id.clone());
             }
+            if template_options.include_pseudo_classes {
+                ids_affected_by_pseudo_classes.push(config.id.clone());
+            }
 
             list.push(Transformation::NoTransformation(config));
         }
@@ -180,6 +184,48 @@ pub fn transformations_from_templates(
 
     let breakpoint_transforms = get_breakpoints(ids_affected_by_breakpoints, &options);
     list.extend(breakpoint_transforms);
+
+    let pseudo_class_transforms =
+        get_pseudo_class_transforms(ids_affected_by_pseudo_classes.clone(), &options);
+
+    list.extend(pseudo_class_transforms);
+
+    list
+}
+
+fn get_pseudo_class_transforms(
+    affected_ids: Vec<String>,
+    options: &Options,
+) -> Vec<Transformation> {
+    let mut list = vec![];
+
+    for (name, pseudo_class) in &options.pseudo_classes {
+        let mut selector = match options.atom_style {
+            AtomStyle::ClassAttribute => format!("{{{{ PREV_SELECTOR_CLASS_NAME }}}}:{}", pseudo_class),
+            AtomStyle::DataAttribute => format!("{{{{ PREV_SELECTOR_DATA_ATTR }}}}:{}", pseudo_class),
+        };
+
+        let sep = options.breakpoint_modifier_seperator.to_string();
+
+        match options.breakpoint_modifier_style {
+            BreakpointModifierStyle::Prefix => {
+                selector = format!("{}{}{}", name, sep, selector);
+            }
+            BreakpointModifierStyle::Suffix => {
+                selector = format!("{}{}{}", selector, sep, name);
+            }
+        }
+
+        let config = CopyExistingRules {
+            id: format!("pseudo-class-{}", name),
+            description: "".to_string(),
+            at_rule_identifier: None,
+            affected_ids: affected_ids.clone(),
+            new_selector: get_selector(&selector, &options),
+        };
+
+        list.push(Transformation::CopyExistingRules(config));
+    }
 
     list
 }
@@ -322,6 +368,7 @@ fn detect_template_options(
     block: &SugarBlock,
     template_options: &mut TemplateOptions,
 ) -> bool {
+
     if atom_name_template != "@options" {
         return false;
     }
@@ -331,6 +378,14 @@ fn detect_template_options(
         Some(value) => {
             let value = value.parse::<bool>().unwrap();
             template_options.include_breakpoints = value;
+        }
+    };
+
+    match block.get("include_pseudo_classes") {
+        None => (),
+        Some(value) => {
+            let value = value.parse::<bool>().unwrap();
+            template_options.include_pseudo_classes = value;
         }
     };
 
@@ -377,7 +432,6 @@ fn detect_token_loop(
     let key_list_replacer = format!("[${}.key]", token_group_name);
     let value_list_replacer = format!("[${}.value]", token_group_name);
 
-
     let key_replacer = format!("${}.key", token_group_name);
     let value_replacer = format!("${}.value", token_group_name);
     let atom_name = atom_name_template
@@ -401,8 +455,6 @@ fn detect_token_loop(
             .replace(&root_variable_replacer, &root_variable_name)
             .replace(&key_replacer, "{{ KEY }}")
             .replace(&value_replacer, "{{ VAL }}");
-
-
 
         rule.declarations.insert(property, value);
     }
