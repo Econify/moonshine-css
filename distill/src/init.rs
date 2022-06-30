@@ -32,7 +32,7 @@ colors:
 
 const EXAMPLE_TEMPLATE_SRC: &str = r###"# Background Colors
 bg-[$colors.key]:
-  background-colors: var(--$colors.key)
+  background-color: var(--$colors.key)
 "###;
 
 pub fn initialize_moonshinerc(path: &Path) {

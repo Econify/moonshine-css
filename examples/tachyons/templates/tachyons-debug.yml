@@ -7,297 +7,298 @@
 # There is also a handy chrome extension that can
 # be found at http://pesticide.io
 
-__non_atom__[body]:
+__non_atom__ body:
   outline: "1px solid #2980B9!important"
 
-__non_atom__[article]:
+__non_atom__ article:
   outline: "1px solid #3498DB!important"
 
-__non_atom__[nav]:
+__non_atom__ nav:
   outline: "1px solid #0088C3!important"
 
-__non_atom__[aside]:
+__non_atom__ aside:
   outline: "1px solid #33A0CE!important"
 
-__non_atom__[section]:
+__non_atom__ section:
   outline: "1px solid #66B8DA!important"
 
-__non_atom__[header]:
+__non_atom__ header:
   outline: "1px solid #99CFE7!important"
 
-__non_atom__[footer]:
+__non_atom__ footer:
   outline: "1px solid #CCE7F3!important"
-__non_atom__[h1]:
+__non_atom__ h1:
   outline: "1px solid #162544!important"
 
-__non_atom__[h2]:
+__non_atom__ h2 :
   outline: "1px solid #314E6E!important"
 
-__non_atom__[h3]:
+__non_atom__ h3:
   outline: "1px solid #3E5E85!important"
 
-__non_atom__[h4]:
+__non_atom__ h4:
   outline: "1px solid #449BAF!important"
 
-__non_atom__[h5]:
+__non_atom__ h5:
   outline: "1px solid #C7D1CB!important"
 
-__non_atom__[h6]:
+__non_atom__ h6:
   outline: "1px solid #4371D0!important"
 
-__non_atom__[main]:
+__non_atom__ main:
   outline: "1px solid #2F4F90!important"
 
-__non_atom__[address]:
+__non_atom__ address:
   outline: "1px solid #1A2C51!important"
 
-__non_atom__[div]:
+__non_atom__ div:
   outline: "1px solid #036CDB!important"
 
-__non_atom__[p]:
+__non_atom__ p:
   outline: "1px solid #AC050B!important"
 
-__non_atom__[hr]:
+__non_atom__ hr:
   outline: "1px solid #FF063F!important"
 
-__non_atom__[pre]:
+__non_atom__ pre:
   outline: "1px solid #850440!important"
 
-__non_atom__[blockquote]:
+__non_atom__ blockquote:
   outline: "1px solid #F1B8E7!important"
 
-__non_atom__[ol]:
+__non_atom__ ol:
   outline: "1px solid #FF050C!important"
 
-__non_atom__[ul]:
+__non_atom__ ul:
   outline: "1px solid #D90416!important"
 
-__non_atom__[li]:
+__non_atom__ li:
   outline: "1px solid #D90416!important"
 
-__non_atom__[dl]:
+__non_atom__ dl:
   outline: "1px solid #FD3427!important"
 
-__non_atom__[dt]:
+__non_atom__ dt:
   outline: "1px solid #FF0043!important"
 
-__non_atom__[dd]:
+__non_atom__ dd:
   outline: "1px solid #E80174!important"
 
-__non_atom__[figure]:
+__non_atom__ figure:
   outline: "1px solid #FF00BB!important"
 
-__non_atom__[figcaption]:
+__non_atom__ figcaption:
   outline: "1px solid #BF0032!important"
 
-__non_atom__[table]:
+__non_atom__ table:
   outline: "1px solid #00CC99!important"
 
-__non_atom__[caption]:
+__non_atom__ caption:
   outline: "1px solid #37FFC4!important"
 
-__non_atom__[thead]:
+__non_atom__ thead:
   outline: "1px solid #98DACA!important"
 
-__non_atom__[tbody]:
+__non_atom__ tbody:
   outline: "1px solid #64A7A0!important"
 
-__non_atom__[tfoot]:
+__non_atom__ tfoot:
   outline: "1px solid #22746B!important"
 
-__non_atom__[tr]:
+__non_atom__ tr:
   outline: "1px solid #86C0B2!important"
 
-__non_atom__[th]:
+__non_atom__ th:
   outline: "1px solid #A1E7D6!important"
 
-__non_atom__[td]:
+__non_atom__ td:
   outline: "1px solid #3F5A54!important"
 
-__non_atom__[col]:
+__non_atom__ col:
   outline: "1px solid #6C9A8F!important"
 
-__non_atom__[colgroup]:
+__non_atom__ colgroup:
   outline: "1px solid #6C9A9D!important"
 
-__non_atom__[button]:
+__non_atom__ button:
   outline: "1px solid #DA8301!important"
 
-__non_atom__[datalist]:
+__non_atom__ datalist:
   outline: "1px solid #C06000!important"
 
-__non_atom__[fieldset]:
+__non_atom__ fieldset:
   outline: "1px solid #D95100!important"
 
-__non_atom__[form]:
+__non_atom__ form:
   outline: "1px solid #D23600!important"
 
-__non_atom__[input]:
+__non_atom__ input:
   outline: "1px solid #FCA600!important"
 
-__non_atom__[keygen]:
+__non_atom__ keygen:
   outline: "1px solid #B31E00!important"
 
-__non_atom__[label]:
+__non_atom__ label:
   outline: "1px solid #EE8900!important"
 
-__non_atom__[legend]:
+__non_atom__ legend:
   outline: "1px solid #DE6D00!important"
 
-__non_atom__[meter]:
+__non_atom__ meter:
   outline: "1px solid #E8630C!important"
 
-__non_atom__[optgroup]:
+__non_atom__ optgroup:
   outline: "1px solid #B33600!important"
 
-__non_atom__[option]:
+__non_atom__ option:
   outline: "1px solid #FF8A00!important"
 
-__non_atom__[output]:
+__non_atom__ output:
   outline: "1px solid #FF9619!important"
 
-__non_atom__[progress]:
+__non_atom__ progress:
   outline: "1px solid #E57C00!important"
 
-__non_atom__[select]:
+__non_atom__ select:
   outline: "1px solid #E26E0F!important"
 
-__non_atom__[textarea]:
+__non_atom__ textarea:
   outline: "1px solid #CC5400!important"
 
-__non_atom__[details]:
+__non_atom__ details:
   outline: "1px solid #33848F!important"
 
-__non_atom__[summary]:
+__non_atom__ summary:
   outline: "1px solid #60A1A6!important"
 
-__non_atom__[command]:
+__non_atom__ command:
   outline: "1px solid #438DA1!important"
 
-__non_atom__[menu]:
+__non_atom__ menu:
   outline: "1px solid #449DA6!important"
 
-__non_atom__[del]:
+__non_atom__ del:
   outline: "1px solid #BF0000!important"
 
-__non_atom__[ins]:
+__non_atom__ ins:
   outline: "1px solid #400000!important"
 
-__non_atom__[img]:
+__non_atom__ img:
   outline: "1px solid #22746B!important"
 
-__non_atom__[iframe]:
+__non_atom__ iframe:
   outline: "1px solid #64A7A0!important"
 
-__non_atom__[embed]:
+__non_atom__ embed:
   outline: "1px solid #98DACA!important"
 
-__non_atom__[object]:
+__non_atom__ object:
   outline: "1px solid #00CC99!important"
 
-__non_atom__[param]:
+__non_atom__ param:
   outline: "1px solid #37FFC4!important"
 
-__non_atom__[video]:
+__non_atom__ video:
   outline: "1px solid #6EE866!important"
 
-__non_atom__[audio]:
+__non_atom__ audio:
   outline: "1px solid #027353!important"
 
-__non_atom__[source]:
+__non_atom__ source:
   outline: "1px solid #012426!important"
 
-__non_atom__[canvas]:
+__non_atom__ canvas:
   outline: "1px solid #A2F570!important"
 
-__non_atom__[track]:
+__non_atom__ track:
   outline: "1px solid #59A600!important"
 
-__non_atom__[map]:
+__non_atom__ map:
   outline: "1px solid #7BE500!important"
 
-__non_atom__[area]:
+__non_atom__ area:
   outline: "1px solid #305900!important"
-__non_atom__[a]:
+
+__non_atom__ a:
   outline: "1px solid #FF62AB!important"
 
-__non_atom__[em]:
+__non_atom__ em:
   outline: "1px solid #800B41!important"
 
-__non_atom__[strong]:
+__non_atom__ strong:
   outline: "1px solid #FF1583!important"
 
-__non_atom__[i]:
+__non_atom__ i:
   outline: "1px solid #803156!important"
 
-__non_atom__[b]:
+__non_atom__ b:
   outline: "1px solid #CC1169!important"
 
-__non_atom__[u]:
+__non_atom__ u:
   outline: "1px solid #FF0430!important"
 
-__non_atom__[s]:
+__non_atom__ s:
   outline: "1px solid #F805E3!important"
 
-__non_atom__[small]:
+__non_atom__ small:
   outline: "1px solid #D107B2!important"
 
-__non_atom__[abbr]:
+__non_atom__ abbr:
   outline: "1px solid #4A0263!important"
 
-__non_atom__[q]:
+__non_atom__ q:
   outline: "1px solid #240018!important"
 
-__non_atom__[cite]:
+__non_atom__ cite:
   outline: "1px solid #64003C!important"
 
-__non_atom__[dfn]:
+__non_atom__ dfn:
   outline: "1px solid #B4005A!important"
 
-__non_atom__[sub]:
+__non_atom__ sub:
   outline: "1px solid #DBA0C8!important"
 
-__non_atom__[sup]:
+__non_atom__ sup:
   outline: "1px solid #CC0256!important"
 
-__non_atom__[time]:
+__non_atom__ time:
   outline: "1px solid #D6606D!important"
 
-__non_atom__[code]:
+__non_atom__ code:
   outline: "1px solid #E04251!important"
 
-__non_atom__[kbd]:
+__non_atom__ kbd:
   outline: "1px solid #5E001F!important"
 
-__non_atom__[samp]:
+__non_atom__ samp:
   outline: "1px solid #9C0033!important"
 
-__non_atom__[var]:
+__non_atom__ var:
   outline: "1px solid #D90047!important"
 
-__non_atom__[mark]:
+__non_atom__ mark:
   outline: "1px solid #FF0053!important"
 
-__non_atom__[bdi]:
+__non_atom__ bdi:
   outline: "1px solid #BF3668!important"
 
-__non_atom__[bdo]:
+__non_atom__ bdo:
   outline: "1px solid #6F1400!important"
 
-__non_atom__[ruby]:
+__non_atom__ ruby:
   outline: "1px solid #FF7B93!important"
 
-__non_atom__[rt]:
+__non_atom__ rt:
   outline: "1px solid #FF2F54!important"
 
-__non_atom__[rp]:
+__non_atom__ rp:
   outline: "1px solid #803E49!important"
 
-__non_atom__[span]:
+__non_atom__ span:
   outline: "1px solid #CC2643!important"
 
-__non_atom__[br]:
+__non_atom__ br:
   outline: "1px solid #DB687D!important"
 
-__non_atom__[wbr]:
+__non_atom__ wbr:
   outline: "1px solid #DB175B!important"

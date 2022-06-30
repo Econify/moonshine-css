@@ -3,5 +3,5 @@
 
 # Responsive images!
 
-__non_atom__[img]:
+__non_atom__ img:
   max-width: 100%
