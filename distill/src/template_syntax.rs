@@ -45,8 +45,10 @@ impl Default for Options {
             atom_style: AtomStyle::ClassAttribute,
             pseudo_classes: IndexMap::default(),
             breakpoints: IndexMap::default(),
-            breakpoint_modifier_style: BreakpointModifierStyle::Prefix,
+            breakpoint_modifier_style: ModifierStyle::Prefix,
             breakpoint_modifier_seperator: "\\:".to_string(),
+            pseudo_class_modifier_style: ModifierStyle::Prefix,
+            pseudo_class_modifier_seperator: "\\:".to_string(),
             root_variable_prefix: "_".to_string(),
         }
     }
@@ -207,11 +209,11 @@ fn get_pseudo_class_transforms(
 
         let sep = options.breakpoint_modifier_seperator.to_string();
 
-        match options.breakpoint_modifier_style {
-            BreakpointModifierStyle::Prefix => {
+        match options.pseudo_class_modifier_style {
+            ModifierStyle::Prefix => {
                 selector = format!("{}{}{}", name, sep, selector);
             }
-            BreakpointModifierStyle::Suffix => {
+            ModifierStyle::Suffix => {
                 selector = format!("{}{}{}", selector, sep, name);
             }
         }
