@@ -64,10 +64,8 @@ pub struct RCFile {
 impl RCFile {
     pub fn load_from_json(path: &Path) -> Self {
         let rc_file_handle = fs::File::open(&path).unwrap_or_else(|err| {
-            Exit::with_message(&errors::describe_rc_file_open_error(
-                err,
-                DEFAULT_RC_FILE_NAME,
-            ))
+            let message = &errors::describe_rc_file_open_error(err, DEFAULT_RC_FILE_NAME);
+            Exit::with_message(message)
         });
 
         json::from_reader(BufReader::new(rc_file_handle)).unwrap_or_else(|err| {
