@@ -2,7 +2,9 @@ mod init;
 mod io;
 mod template_syntax;
 mod transformation_syntax;
+mod errors;
 
+use errors::Exit;
 use clap::Parser;
 use init::initialize_moonshinerc;
 use io::write_file_creating_dirs;
@@ -10,16 +12,14 @@ use serde::Deserialize;
 use serde_yaml as yaml;
 use serde_json as json;
 use std::fs;
-use std::io::{ErrorKind, BufReader, Error as IOError};
+use std::io::{BufReader};
 use std::path::{Path, PathBuf};
-use std::process::exit;
 use std::time::Instant;
 use template_syntax::{transformations_from_templates, transformations_from_tokens, CSSTemplate, Options};
 use transformation_syntax::{Intermediate, TokenGroups};
 
 
 const DEFAULT_RC_FILE_NAME: &str = ".moonshinerc";
-const ERR_PREFIX: &str = "❗️";
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -60,18 +60,13 @@ pub struct RCFile {
     pub output: OutputPaths,
 }
 
-fn describe_rc_file_open_error(err: IOError) -> String {
-    match err.kind() {
-        ErrorKind::NotFound => format!("Cannot find RC file: `{}`", DEFAULT_RC_FILE_NAME),
-        _any_other_kind => format!("Failed to open `{}`.", DEFAULT_RC_FILE_NAME),
-    }
-}
+
 
 impl RCFile {
     pub fn load_from_json(path: &str) -> Self {
         let rc_file_handle = fs::File::open(&path).unwrap_or_else(|err| {
             Exit::with_message(
-                &describe_rc_file_open_error(err)
+                &errors::describe_rc_file_open_error(err, DEFAULT_RC_FILE_NAME)
             )
         });
 
@@ -83,13 +78,7 @@ impl RCFile {
     }
 }
 
-pub struct Exit;
-impl Exit {
-    pub fn with_message<T>(message: &str) -> T {
-        println!("{}️ {}", ERR_PREFIX, message);
-        exit(1)
-    }  
-}
+
 
 fn main() {
     let args = Args::parse();

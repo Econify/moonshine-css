@@ -1,5 +1,5 @@
 use super::io;
-use super::{Exit};
+use super::errors::Exit;
 
 use io::write_file_creating_dirs;
 use std::fs;
