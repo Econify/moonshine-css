@@ -5,11 +5,11 @@
 # Ref: http://nicolasgallagher.com/micro-clearfix-hack/
 
 cf:before:
-  content: " "
+  content: '" "'
   display: table
 
 cf:after:
-  content: " "
+  content: '" "'
   display: table
 
 cf:after:

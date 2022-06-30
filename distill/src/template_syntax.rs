@@ -15,15 +15,17 @@ pub struct Options {
     pub non_atom_identifier: String,
     pub atom_style: AtomStyle,
     pub pseudo_classes: IndexMap<String, String>,
-    pub breakpoints: IndexMap<String, Breakpoint>,
-    pub breakpoint_modifier_style: BreakpointModifierStyle,
-    pub breakpoint_modifier_seperator: String,
     pub root_variable_prefix: String,
+    pub breakpoints: IndexMap<String, Breakpoint>,
+    pub breakpoint_modifier_style: ModifierStyle,
+    pub breakpoint_modifier_seperator: String,
+    pub pseudo_class_modifier_style: ModifierStyle,
+    pub pseudo_class_modifier_seperator: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub enum BreakpointModifierStyle {
+pub enum ModifierStyle {
     Prefix,
     Suffix,
 }
@@ -246,10 +248,10 @@ fn get_breakpoints(affected_ids: Vec<String>, options: &Options) -> Vec<Transfor
         let sep = options.breakpoint_modifier_seperator.to_string();
 
         match options.breakpoint_modifier_style {
-            BreakpointModifierStyle::Prefix => {
+            ModifierStyle::Prefix => {
                 selector = format!("{}{}{}", name, sep, selector);
             }
-            BreakpointModifierStyle::Suffix => {
+            ModifierStyle::Suffix => {
                 selector = format!("{}{}{}", selector, sep, name);
             }
         }
