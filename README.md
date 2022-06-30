@@ -42,8 +42,6 @@ or by creating a file manually:
         },
         "pseudoClasses": {
             "hov": ":hover",
-            "first": ":first-child",
-            "last": ":last-child"
         }
     },
     "designTokens": [
