@@ -1,19 +1,26 @@
+mod errors;
 mod init;
 mod io;
 mod template_syntax;
 mod transformation_syntax;
 
 use clap::Parser;
+use errors::Exit;
 use init::initialize_moonshinerc;
 use io::write_file_creating_dirs;
 use serde::Deserialize;
+use serde_json as json;
 use serde_yaml as yaml;
 use std::fs;
 use std::io::BufReader;
 use std::path::{Path, PathBuf};
 use std::time::Instant;
-use template_syntax::{transformations_from_templates, transformations_from_tokens, CSSTemplate, Options};
+use template_syntax::{
+    transformations_from_templates, transformations_from_tokens, CSSTemplate, Options,
+};
 use transformation_syntax::{Intermediate, TokenGroups};
+
+const DEFAULT_RC_FILE_NAME: &str = ".moonshinerc";
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -55,10 +62,15 @@ pub struct RCFile {
 }
 
 impl RCFile {
-    pub fn load_from_json(path: &str) -> Self {
-        let rc_file_file = fs::File::open(&path).unwrap();
-        let reader = BufReader::new(rc_file_file);
-        serde_json::from_reader(reader).unwrap()
+    pub fn load_from_json(path: &Path) -> Self {
+        let rc_file_handle = fs::File::open(&path).unwrap_or_else(|err| {
+            let message = &errors::describe_rc_file_open_error(err, DEFAULT_RC_FILE_NAME);
+            Exit::with_message(message)
+        });
+
+        json::from_reader(BufReader::new(rc_file_handle)).unwrap_or_else(|err| {
+            Exit::with_message(&format!("Failed parse RC File as JSON: {}.", err))
+        })
     }
 }
 
@@ -71,31 +83,45 @@ fn main() {
     let path_to_rc_file = args
         .config
         .as_deref()
-        .unwrap_or(Path::new("./.moonshinerc"));
+        .unwrap_or(Path::new(DEFAULT_RC_FILE_NAME));
 
     if args.init != 0 {
-        initialize_moonshinerc(&path_to_rc_file.to_str().unwrap());
+        initialize_moonshinerc(&path_to_rc_file);
         std::process::exit(0);
     }
 
-    let rc_file = RCFile::load_from_json(&path_to_rc_file.to_str().unwrap());
+    let rc_file = RCFile::load_from_json(&path_to_rc_file);
 
     let mut all_token_groups = TokenGroups::new();
     let mut rulesets = Vec::new();
 
     for path in rc_file.design_tokens {
-        let file = fs::File::open(path).unwrap();
+        let file = fs::File::open(path.clone()).unwrap_or_else(|_err| {
+            Exit::with_message(&format!("Failed to open design token file: {}", path))
+        });
+
         let reader = BufReader::new(file);
-        let token_groups: TokenGroups = yaml::from_reader(reader).unwrap();
+
+        let token_groups: TokenGroups = yaml::from_reader(reader).unwrap_or_else(|err| {
+            Exit::with_message(&format!("Failed to parse `{}` as yaml: {}", path, err))
+        });
+
         for (id, token_group) in token_groups {
             all_token_groups.insert(id, token_group);
         }
     }
 
     for path in rc_file.templates {
-        let file = fs::File::open(path).unwrap();
+        let file = fs::File::open(path.clone()).unwrap_or_else(|_err| {
+            Exit::with_message(&format!("Failed to open template file: {}", path))
+        });
+
         let reader = BufReader::new(file);
-        let ruleset: CSSTemplate = yaml::from_reader(reader).unwrap();
+
+        let ruleset: CSSTemplate = yaml::from_reader(reader).unwrap_or_else(|err| {
+            Exit::with_message(&format!("Failed to parse `{}` as yaml: {}", path, err))
+        });
+
         rulesets.push(ruleset);
     }
 
@@ -108,7 +134,9 @@ fn main() {
     let transformations = transformations_from_templates(&rulesets, &rc_file.options);
     let intermediate = Intermediate::build(all_token_groups, transformations);
     let css = intermediate.stringify();
-    let json = serde_json::to_string_pretty(&intermediate).unwrap();
+
+    let json = serde_json::to_string_pretty(&intermediate)
+        .unwrap_or_else(|err| Exit::with_message(&format!("Failed to stringify JSON: {}", err)));
 
     match rc_file.output.css_variables {
         None => (),
