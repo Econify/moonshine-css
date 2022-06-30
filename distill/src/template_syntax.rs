@@ -71,14 +71,14 @@ pub type SugarBlock = IndexMap<CSSProperty, CSSValue>;
 #[derive(Debug)]
 pub struct TemplateOptions {
     include_breakpoints: bool,
-    include_pseudo_classes: bool,
+    _include_pseudo_classes: bool, // This isn't being used currently
 }
 
 impl Default for TemplateOptions {
     fn default() -> Self {
         Self {
             include_breakpoints: true,
-            include_pseudo_classes: true,
+            _include_pseudo_classes: true,
         }
     }
 }
