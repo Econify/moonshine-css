@@ -49,7 +49,12 @@ function make(tagName: string) {
 const box = new Proxy(
   {},
   {
-    get: (_target, tagName: string) => make(tagName),
+    get: (_target, tagName: string) => {
+      if (!(tagName in _target)) {
+        _target[tagName] = make(tagName);
+      }
+      return _target[tagName];
+    },
   }
 ) as StyledTags;
 
